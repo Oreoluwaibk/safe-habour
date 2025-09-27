@@ -19,7 +19,7 @@ const HowWorks = () => {
     }, []);
     
   return (
-    <div className='howowrks dashbottom md:pb-[60px]'>
+    <div className='howowrks md:pb-[60px]'>
         <p className='header'>How <ColoredText title='SafeHarbour' size={fontSize} /> works</p>
         <p className='p2'>Getting reliable care and home services has never been easier. Our simple 3-step process connects you with trusted professionals.</p>
 

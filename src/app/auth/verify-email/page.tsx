@@ -1,17 +1,18 @@
 "use client"
-import CustomAuth from '@/components/auth/CustomAuth'
-import AuthContainer from '@/components/dashboard/AuthContainer'
-import { CheckCircleOutlined, MailOutlined } from '@ant-design/icons'
-import { useRouter, useSearchParams } from 'next/navigation'
-import React from 'react'
+import React, { Suspense } from "react";
+import CustomAuth from '@/components/auth/CustomAuth';
+import AuthContainer from '@/components/dashboard/AuthContainer';
+import { CheckCircleOutlined, MailOutlined } from '@ant-design/icons';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-const Page = () => {
+const VerifyEmailClient = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('verify');
+
   return (
-    <AuthContainer>
-      {type === "true" &&<CustomAuth 
+    <>
+       {type === "true" &&<CustomAuth 
         type='otp'
         title='Check your email'
         description='We sent a verification link to adekdebby@gmail.com'
@@ -28,8 +29,18 @@ const Page = () => {
         btnTitle='Continue'
         onClick={() => router.push("/auth/login")}
       />}
-    </AuthContainer>
-  )
-}
+    </>
+  );
+};
 
-export default Page
+const Page = () => {
+  return (
+    <AuthContainer>
+      <Suspense fallback={<div>Loading...</div>}>
+        <VerifyEmailClient />
+      </Suspense>
+    </AuthContainer>
+  );
+};
+
+export default Page;

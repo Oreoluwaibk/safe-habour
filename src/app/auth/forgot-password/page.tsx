@@ -1,18 +1,18 @@
 "use client";
 
+import React, { Suspense } from "react";
 import CustomAuth from '@/components/auth/CustomAuth';
 import AuthContainer from '@/components/dashboard/AuthContainer';
 import { KeyOutlined, MailOutlined } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React from 'react';
 
-const Page = () => {
+const ForgotPasswordClient = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('email-sent');
 
   return (
-    <AuthContainer>
+    <>
       {!type && (
         <CustomAuth
           type='forgot'
@@ -33,6 +33,16 @@ const Page = () => {
           onClick={() => router.push("/auth/reset-password")}
         />
       )}
+    </>
+  );
+};
+
+const Page = () => {
+  return (
+    <AuthContainer>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ForgotPasswordClient />
+      </Suspense>
     </AuthContainer>
   );
 };

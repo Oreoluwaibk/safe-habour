@@ -1,16 +1,18 @@
-"use client"
-import CustomAuth from '@/components/auth/CustomAuth'
-import AuthContainer from '@/components/dashboard/AuthContainer'
-import { KeyOutlined } from '@ant-design/icons'
-import { useRouter, useSearchParams } from 'next/navigation'
-import React from 'react'
+"use client";
 
-const Page = () => {
+import React, { Suspense } from "react";
+import CustomAuth from '@/components/auth/CustomAuth';
+import AuthContainer from '@/components/dashboard/AuthContainer';
+import { KeyOutlined, MailOutlined } from '@ant-design/icons';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+const ResetPasswordClient = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('success');
-  return (
-    <AuthContainer>
+
+  return ( 
+    <>
       {!type && <CustomAuth 
         type='reset'
         title='Set new password'
@@ -27,8 +29,18 @@ const Page = () => {
         btnTitle='Continue'
         onClick={() => router.push("/auth/login")}
       />}
-    </AuthContainer>
-  )
-}
+    </>
+  );
+};
 
-export default Page
+const Page = () => {
+  return (
+    <AuthContainer>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ResetPasswordClient />
+      </Suspense>
+    </AuthContainer>
+  );
+};
+
+export default Page;

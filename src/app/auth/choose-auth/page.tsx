@@ -1,9 +1,8 @@
 import ChooseAuth from '@/components/auth/ChooseAuth'
-import Login from '@/components/auth/Login'
 import AuthContainer from '@/components/dashboard/AuthContainer'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
     <AuthContainer>
       <ChooseAuth />
@@ -11,4 +10,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

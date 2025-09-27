@@ -5,7 +5,7 @@ import { CheckCircleOutlined, KeyOutlined, MailOutlined } from '@ant-design/icon
 import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('verify');
@@ -32,4 +32,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

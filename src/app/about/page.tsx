@@ -1,11 +1,7 @@
 import Container from "@/components/dashboard/Container";
 import CustomLanding from "@/components/general/CustomLanding";
-import FaqComponent from "@/components/general/Faqs";
 import ImageText from "@/components/general/ImageText";
 import OurVision from "@/components/general/OurVision";
-import StillHave from "@/components/general/Stillhave";
-import { SearchOutlined } from "@ant-design/icons";
-import { Input } from "antd";
 import { Left, Right } from "../../../assets/image";
 import MeetOurTeam from "@/components/general/team/MeetOurTeam";
 

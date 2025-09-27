@@ -4,7 +4,7 @@ import AuthContainer from '@/components/dashboard/AuthContainer'
 import React, { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation';
 
-const page = () => {
+const Page = () => {
   const searchParams = useSearchParams();
   const type = searchParams.get('type');
 
@@ -17,4 +17,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

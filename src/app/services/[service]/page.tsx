@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 import React, { use, useEffect, useState } from 'react'
 import { BsArrowRightCircle } from 'react-icons/bs'
 
-const page = ({ params }: {params: Promise<{ service: string }> }) => {
+const Page = ({ params }: {params: Promise<{ service: string }> }) => {
   const { service } = use(params);
   const router = useRouter();
   const [ services, setService ] = useState<serviceType>();
@@ -48,4 +48,4 @@ const page = ({ params }: {params: Promise<{ service: string }> }) => {
   )
 }
 
-export default page
+export default Page

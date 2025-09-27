@@ -15,7 +15,7 @@ const OurVision = () => {
     useEffect(() => {
         const size = width <= 1042 ? 24 : 32;
         setFontSize(size);
-    }, []);
+    }, [width]);
     
   return (
     <div className='howowrks dashbottom md:pb-[60px]' style={{backgroundColor: "#FFF8F9"}}>

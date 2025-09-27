@@ -14,7 +14,7 @@ const Landing = () => {
     useEffect(() => {
         const size = width <= 1042 ? 40 : 72;
         setFontSize(size);
-    }, []);
+    }, [width]);
     
   return (
     <div style={{position: "relative", backgroundColor: "#FFF8F9", marginBottom: 50}} className='min-h-[675px] '>

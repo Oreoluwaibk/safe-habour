@@ -40,7 +40,7 @@ const SafeGuarantee = () => {
   return (
     <div className='howowrks dashtop dashbottom'>
         <p className='header'>Your Safety is <ColoredText title='Guaranteed' size={fontSize} /></p>
-        <p className='p2'>Every step of our process is designed with safety and trust in mind. From comprehensive background checks to secure payments, we've got you covered.</p>
+        <p className='p2'>Every step of our process is designed with safety and trust in mind. From comprehensive background checks to secure payments, we`&apos;`ve got you covered.</p>
 
        <Row className='!mt-6 md:!mt-[58px] !px-2 md:!px-[100px]' gutter={[15, 15]}>
             <Col lg={12} sm={24} xs={24} className="!flex !flex-col !gap-12">

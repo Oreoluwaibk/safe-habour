@@ -1,10 +1,9 @@
 "use client"
-import { Button, Col, Row } from 'antd'
+import { Col, Row } from 'antd'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { BgChecked, Family, R1, R3, R4, R5, Rec1, Rec2, Rec3, Rec4, Service1, Service2, Service3, Service4, SideVec, Star1, Star2, Works1, Works2, Works3, Works4 } from '../../../../assets/image'
+import { SideVec,Works1, Works2, Works3, Works4 } from '../../../../assets/image'
 import ColoredText from '@/components/general/ColoredText'
-import Search from '@/components/general/Search';
 import useWindowWidth from '@/hooks/useWindowResize'
 
 
@@ -15,7 +14,7 @@ const Landing = () => {
     useEffect(() => {
         const size = width <= 1042 ? 40 : 72;
         setFontSize(size);
-    }, []);
+    }, [width]);
     
   return (
     <div style={{position: "relative", backgroundColor: "#FFF8F9"}} className='min-h-[675px] dashbottom'>

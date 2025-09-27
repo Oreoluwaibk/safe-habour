@@ -12,7 +12,7 @@ interface FaqQuestion {
 
 const FaqComponent = () => {
     const item: CollapseProps["items"] = [
-        ...faqQuestions.map((question: FaqQuestion, i) => {
+        ...faqQuestions.map((question: FaqQuestion) => {
             return {
                 key: question.key,
                 label: question.question,

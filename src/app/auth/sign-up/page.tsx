@@ -1,7 +1,7 @@
 "use client"
 import SignUp from '@/components/auth/SignUp'
 import AuthContainer from '@/components/dashboard/AuthContainer'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSearchParams } from 'next/navigation';
 
 const Page = () => {

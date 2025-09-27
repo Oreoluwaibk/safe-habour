@@ -1,4 +1,4 @@
-import { serviceType, serviceTypes } from '@/extras/questions';
+import { serviceType } from '@/extras/questions';
 import { Button, Col, Row } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

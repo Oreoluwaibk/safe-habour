@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { ReactNode } from 'react';
 import "@/app/styles/auth.css";
 import "@/app/styles/form.css";
 import { Button, Form, Input } from 'antd';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface props {
-    icon: any;
+    icon: ReactNode;
     title: string;
     description: string;
     btnTitle: string;

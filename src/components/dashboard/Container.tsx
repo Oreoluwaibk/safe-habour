@@ -16,7 +16,7 @@ type Props = {
     active: string;
 }
 
-export const NavItem = ({ href, label, active, mobile }: any) => {
+export const NavItem = ({ href, label, active, mobile }: { href: string, label: string; active: boolean; mobile?: boolean}) => {
     return(
 
     <Link href={href}>

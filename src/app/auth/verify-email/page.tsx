@@ -1,7 +1,7 @@
 "use client"
 import CustomAuth from '@/components/auth/CustomAuth'
 import AuthContainer from '@/components/dashboard/AuthContainer'
-import { CheckCircleOutlined, KeyOutlined, MailOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, MailOutlined } from '@ant-design/icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 

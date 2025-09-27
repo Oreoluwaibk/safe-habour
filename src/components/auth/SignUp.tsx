@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import "@/app/styles/auth.css";
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd';
 import "@/app/styles/form.css";
 import Link from 'next/link';
 import Socialbtn from '../general/Socialbtn';

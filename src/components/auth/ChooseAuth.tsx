@@ -1,6 +1,6 @@
 "use client"
 import "@/app/styles/auth.css";
-import { Button, Col, Radio, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import "@/app/styles/form.css";
 import AuthChooser from "../general/AuthChooser";
 import { ArrowLeftOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";

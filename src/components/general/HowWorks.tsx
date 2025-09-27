@@ -16,7 +16,7 @@ const HowWorks = () => {
     useEffect(() => {
         const size = width <= 1042 ? 24 : 32;
         setFontSize(size);
-    }, []);
+    }, [width]);
     
   return (
     <div className='howowrks md:pb-[60px]'>

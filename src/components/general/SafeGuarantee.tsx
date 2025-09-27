@@ -1,0 +1,104 @@
+"use client"
+import React, { ReactNode, useEffect, useState } from 'react';
+import "@/app/styles/safety.css"
+import { Button, Col, Row } from 'antd';
+import WorkList from './WorkList';
+import { ArrowLeftOutlined, ArrowRightOutlined, ShoppingOutlined } from '@ant-design/icons';
+import useWindowWidth from '@/hooks/useWindowResize';
+import ColoredText from './ColoredText';
+import Image from 'next/image';
+import { Check2, Check3, PersonRec, SafeRec } from '../../../assets/image';
+import { useRouter } from 'next/navigation';
+
+export const ListOptions = ({ title, description, icon, active, onClick }: { title: string; description: string; icon: ReactNode; active: boolean; onClick: () => void }) => (
+    <div className='flex flex-col items-start gap-2 cursor-pointer' onClick={onClick} style={{opacity: active ? 1 : 0.5}}>
+        <div className='flex items-center gap-3.5'>
+            <div className='h-[28px] w-[28px] rounded-[100px] !bg-[#FFF8F9] flex items-center justify-center'>
+                {icon}
+            </div>
+            <p className='ptitle'>{title}</p>
+        </div>
+        <p className='para'>{description}</p>
+    </div>
+);
+
+const images = [
+    SafeRec,
+    PersonRec,
+    Check2,
+    Check3
+]
+const SafeGuarantee = () => {
+    const [ showWorker, setShowWorker ] = useState(false);
+    const [fontSize, setFontSize] = useState<number>(72);
+    const [ selected, setSelected ] = useState(1);
+    const router = useRouter();
+    const width = useWindowWidth();
+
+    useEffect(() => {
+        const size = width <= 1042 ? 24 : 32;
+        setFontSize(size);
+    }, []);
+    
+  return (
+    <div className='howowrks dashtop dashbottom'>
+        <p className='header'>Your Safety is <ColoredText title='Guaranteed' size={fontSize} /></p>
+        <p className='p2'>Every step of our process is designed with safety and trust in mind. From comprehensive background checks to secure payments, we've got you covered.</p>
+
+       <Row className='!mt-6 md:!mt-[58px] !px-2 md:!px-[100px]' gutter={[15, 15]}>
+            <Col lg={12} sm={24} xs={24} className='!flex !flex-col !gap-12'>
+                <ListOptions 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="12" height="14" viewBox="0 0 12 14" fill="none">
+                        <path d="M11.3332 4.95992C11.3263 4.89867 11.3129 4.83833 11.2932 4.77992V4.71992C11.2619 4.65095 11.219 4.58783 11.1665 4.53325L7.1665 0.533252C7.11193 0.480733 7.0488 0.437897 6.97984 0.406585C6.95995 0.403568 6.93972 0.403568 6.91984 0.406585C6.85197 0.368067 6.77724 0.343157 6.69984 0.333252H2.6665C2.13607 0.333252 1.62736 0.543966 1.25229 0.919038C0.877218 1.29411 0.666504 1.80282 0.666504 2.33325V11.6666C0.666504 12.197 0.877218 12.7057 1.25229 13.0808C1.62736 13.4559 2.13607 13.6666 2.6665 13.6666H9.33317C9.8636 13.6666 10.3723 13.4559 10.7474 13.0808C11.1225 12.7057 11.3332 12.197 11.3332 11.6666V4.95992ZM7.33317 2.60659L9.05984 4.33325H7.99984C7.82303 4.33325 7.65346 4.26301 7.52843 4.13799C7.40341 4.01297 7.33317 3.8434 7.33317 3.66659V2.60659ZM9.99984 11.6666C9.99984 11.8434 9.9296 12.013 9.80457 12.138C9.67955 12.263 9.50998 12.3333 9.33317 12.3333H2.6665C2.48969 12.3333 2.32012 12.263 2.1951 12.138C2.07008 12.013 1.99984 11.8434 1.99984 11.6666V2.33325C1.99984 2.15644 2.07008 1.98687 2.1951 1.86185C2.32012 1.73682 2.48969 1.66659 2.6665 1.66659H5.99984V3.66659C5.99984 4.19702 6.21055 4.70573 6.58562 5.0808C6.9607 5.45587 7.4694 5.66659 7.99984 5.66659H9.99984V11.6666ZM7.5265 7.19325L5.33317 9.39325L4.47317 8.52659C4.34763 8.40105 4.17737 8.33052 3.99984 8.33052C3.8223 8.33052 3.65204 8.40105 3.5265 8.52659C3.40097 8.65212 3.33044 8.82238 3.33044 8.99992C3.33044 9.17745 3.40097 9.34772 3.5265 9.47325L4.85984 10.8066C4.92181 10.8691 4.99555 10.9187 5.07679 10.9525C5.15803 10.9864 5.24516 11.0038 5.33317 11.0038C5.42118 11.0038 5.50832 10.9864 5.58955 10.9525C5.67079 10.9187 5.74453 10.8691 5.8065 10.8066L8.47317 8.13992C8.59871 8.01438 8.66923 7.84412 8.66923 7.66659C8.66923 7.48905 8.59871 7.31879 8.47317 7.19325C8.34763 7.06772 8.17737 6.99719 7.99984 6.99719C7.8223 6.99719 7.65204 7.06772 7.5265 7.19325Z" fill="#670316"/>
+                        </svg>}
+                    title='Background Checked'
+                    description='All workers undergo comprehensive screening'
+                    active={selected===1}
+                    onClick={() => setSelected(1)}
+                />
+
+                <ListOptions 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M10 6.66663L7.33334 9.3333L6 7.99997M8.83067 2.30597L9.64467 2.9993C9.85 3.17397 10.1047 3.2793 10.3727 3.3013L11.4393 3.38663C11.7425 3.41084 12.0272 3.54222 12.2423 3.75722C12.4574 3.97222 12.589 4.2568 12.6133 4.55997L12.698 5.62663C12.72 5.8953 12.826 6.15063 13.0007 6.3553L13.694 7.16863C13.8916 7.4003 14.0001 7.69481 14.0001 7.9993C14.0001 8.30379 13.8916 8.5983 13.694 8.82997L13.0007 9.64397C12.826 9.8493 12.72 10.104 12.6987 10.3726L12.6133 11.4393C12.5891 11.7425 12.4578 12.0271 12.2428 12.2423C12.0278 12.4574 11.7432 12.5889 11.44 12.6133L10.3733 12.6986C10.1048 12.7199 9.8498 12.8253 9.64467 13L8.83067 13.6933C8.59901 13.8909 8.30449 13.9994 8 13.9994C7.69552 13.9994 7.401 13.8909 7.16934 13.6933L6.356 13C6.1507 12.8252 5.89545 12.7198 5.62667 12.6986L4.56 12.6133C4.25673 12.5889 3.97207 12.4573 3.75705 12.242C3.54204 12.0267 3.41073 11.7419 3.38667 11.4386L3.30134 10.3726C3.27975 10.1042 3.17407 9.8495 2.99934 9.64463L2.306 8.82997C2.10876 8.5984 2.00043 8.30415 2.00043 7.99997C2.00043 7.69578 2.10876 7.40153 2.306 7.16997L2.99934 6.3553C3.17467 6.14997 3.27934 5.8953 3.30067 5.62663L3.386 4.56063C3.41028 4.25714 3.54194 3.97223 3.75735 3.75706C3.97276 3.5419 4.25781 3.41056 4.56134 3.38663L5.62667 3.30197C5.89529 3.28051 6.15029 3.17483 6.35534 2.99997L7.16934 2.30663C7.401 2.10903 7.69552 2.00049 8 2.00049C8.30449 2.00049 8.59901 2.10837 8.83067 2.30597Z" stroke="#670316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>}
+                    title='Quality Assurance'
+                    description='Ongoing monitoring and quality checks to ensure excellent service standards'
+                    active={selected===2}
+                    onClick={() => setSelected(2)}
+                />
+
+                <ListOptions 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M10.8 10.4C10.6939 10.4 10.5921 10.4421 10.5171 10.5171C10.4421 10.5921 10.4 10.6939 10.4 10.8C10.4 10.906 10.4421 11.0078 10.5171 11.0828C10.5921 11.1578 10.6939 11.2 10.8 11.2H12.4C12.5061 11.2 12.6078 11.1578 12.6828 11.0828C12.7578 11.0078 12.8 10.906 12.8 10.8C12.8 10.6939 12.7578 10.5921 12.6828 10.5171C12.6078 10.4421 12.5061 10.4 12.4 10.4H10.8ZM1.59998 5.39995C1.59998 4.81647 1.83176 4.2569 2.24434 3.84432C2.65692 3.43174 3.2165 3.19995 3.79998 3.19995H12.2C12.7835 3.19995 13.343 3.43174 13.7556 3.84432C14.1682 4.2569 14.4 4.81647 14.4 5.39995V10.6C14.4 11.1834 14.1682 11.743 13.7556 12.1556C13.343 12.5682 12.7835 12.8 12.2 12.8H3.79998C3.2165 12.8 2.65692 12.5682 2.24434 12.1556C1.83176 11.743 1.59998 11.1834 1.59998 10.6V5.39995ZM3.79998 3.99995C3.42867 3.99995 3.07258 4.14745 2.81003 4.41C2.54748 4.67255 2.39998 5.02865 2.39998 5.39995V6.39995H13.6V5.39995C13.6 5.02865 13.4525 4.67255 13.1899 4.41C12.9274 4.14745 12.5713 3.99995 12.2 3.99995H3.79998ZM13.6 7.19995H2.39998V10.6C2.39998 11.3728 3.02718 12 3.79998 12H12.2C12.5713 12 12.9274 11.8525 13.1899 11.5899C13.4525 11.3274 13.6 10.9713 13.6 10.6V7.19995Z" fill="#670316"/>
+                    </svg>}
+                    title='Secure Escrow Payments'
+                    description='Escrow system protects your payments'
+                    active={selected===3}
+                    onClick={() => setSelected(3)}
+                />
+
+                <ListOptions 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M10.8 10.4C10.6939 10.4 10.5921 10.4421 10.5171 10.5171C10.4421 10.5921 10.4 10.6939 10.4 10.8C10.4 10.906 10.4421 11.0078 10.5171 11.0828C10.5921 11.1578 10.6939 11.2 10.8 11.2H12.4C12.5061 11.2 12.6078 11.1578 12.6828 11.0828C12.7578 11.0078 12.8 10.906 12.8 10.8C12.8 10.6939 12.7578 10.5921 12.6828 10.5171C12.6078 10.4421 12.5061 10.4 12.4 10.4H10.8ZM1.59998 5.39995C1.59998 4.81647 1.83176 4.2569 2.24434 3.84432C2.65692 3.43174 3.2165 3.19995 3.79998 3.19995H12.2C12.7835 3.19995 13.343 3.43174 13.7556 3.84432C14.1682 4.2569 14.4 4.81647 14.4 5.39995V10.6C14.4 11.1834 14.1682 11.743 13.7556 12.1556C13.343 12.5682 12.7835 12.8 12.2 12.8H3.79998C3.2165 12.8 2.65692 12.5682 2.24434 12.1556C1.83176 11.743 1.59998 11.1834 1.59998 10.6V5.39995ZM3.79998 3.99995C3.42867 3.99995 3.07258 4.14745 2.81003 4.41C2.54748 4.67255 2.39998 5.02865 2.39998 5.39995V6.39995H13.6V5.39995C13.6 5.02865 13.4525 4.67255 13.1899 4.41C12.9274 4.14745 12.5713 3.99995 12.2 3.99995H3.79998ZM13.6 7.19995H2.39998V10.6C2.39998 11.3728 3.02718 12 3.79998 12H12.2C12.5713 12 12.9274 11.8525 13.1899 11.5899C13.4525 11.3274 13.6 10.9713 13.6 10.6V7.19995Z" fill="#670316"/>
+                    </svg>}
+                    title='24/7 Support'
+                    description='Our customer support and emergency assistance is here for you'
+                    active={selected===4}
+                    onClick={() => setSelected(4)}
+                />
+
+
+            </Col>
+            
+            <Col lg={12} sm={24} xs={24} className='mt-6'>
+                <Image src={images[selected-1]} alt='side image' className='!object-cover' />
+            </Col>
+       </Row>
+       <div className='flex items-center justify-center mt-12 md:!mb-[60px]'>
+        <Button type='primary' className='!w-[220px] !h-[58px]'  onClick={() => router.push("/trust-and-safety")}>See More</Button>
+       </div>
+    </div>
+  )
+}
+
+export default SafeGuarantee

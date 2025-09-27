@@ -1,3 +1,4 @@
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { CareWorker, Cleaning, Company, Cooking, Snowplowing, Supporting } from "../../assets/image/services"
 import { Care1, Care2, Care3, CareWork, Clean1, Clean2, Clean3, Cook1, Cook2, Cook3, Cook4, HouseClean, PCook, Snow1, Snow2, Snow3, Snow4, Snowplow, Support1, Support2, Worker1, Worker2 } from "../../assets/image/services/subservice"
 
@@ -41,10 +42,10 @@ export interface serviceType {
     description: string;
     services: string[];
     services2: string[];
-    image: any;
-    images: any[];
+    image: string | StaticImport;
+    images: string[] | StaticImport[];
     more: {
-        image: any;
+        image: string | StaticImport;
         name: string;
         description: string;
         service: string[];

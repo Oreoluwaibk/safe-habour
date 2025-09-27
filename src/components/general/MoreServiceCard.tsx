@@ -3,12 +3,13 @@ import React from 'react'
 import { Smile, Star } from '../../../assets/icons';
 import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 
 interface props {
     title: string;
     description: string;
     items: string[];
-    image: any;
+    image:  string | StaticImport;
     link: string;
 }
 

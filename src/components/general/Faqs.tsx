@@ -1,13 +1,18 @@
 "use client"
-import { CaretRightOutlined, MinusCircleOutlined, PlusCircleOutlined, RightOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Collapse, CollapseProps } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { faqQuestions } from '@/extras/questions';
 
+interface FaqQuestion {
+  key: string;
+  question: string;
+  answer: string;
+}
 
 const FaqComponent = () => {
     const item: CollapseProps["items"] = [
-        ...faqQuestions.map((question: any, i) => {
+        ...faqQuestions.map((question: FaqQuestion, i) => {
             return {
                 key: question.key,
                 label: question.question,

@@ -1,9 +1,10 @@
 import { Col, Row } from 'antd'
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import React from 'react'
 
 interface props {
-    image: any;
+    image: string | StaticImport;
     title: string;
     description: string;
     reverse?: boolean;

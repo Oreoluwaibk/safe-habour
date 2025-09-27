@@ -19,11 +19,11 @@ interface props {
 
 const images = [SafeRec, Check2, Check3, Check4, Check5]
 const icons = [
-    <FileProtectOutlined className='!text-[#670316]' />, 
-    <FileProtectOutlined className='!text-[#670316]' />, 
-    <PhoneOutlined className='!text-[#670316]' />, 
-    <CheckCircleOutlined className='!text-[#670316]' />, 
-    <LockOutlined className='!text-[#670316]' />
+    <FileProtectOutlined className='!text-[#670316]' key={1} />, 
+    <FileProtectOutlined className='!text-[#670316]' key={2} />, 
+    <PhoneOutlined className='!text-[#670316]' key={3} />, 
+    <CheckCircleOutlined className='!text-[#670316]' key={4} />, 
+    <LockOutlined className='!text-[#670316]' key={5} />
 ]
 const title = [
     "Comprehensive Background Checks",

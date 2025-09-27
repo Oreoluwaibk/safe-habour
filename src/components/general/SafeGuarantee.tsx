@@ -2,8 +2,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import "@/app/styles/safety.css"
 import { Button, Col, Row } from 'antd';
-import WorkList from './WorkList';
-import { ArrowLeftOutlined, ArrowRightOutlined, ShoppingOutlined } from '@ant-design/icons';
 import useWindowWidth from '@/hooks/useWindowResize';
 import ColoredText from './ColoredText';
 import Image from 'next/image';
@@ -29,7 +27,6 @@ const images = [
     Check3
 ]
 const SafeGuarantee = () => {
-    const [ showWorker, setShowWorker ] = useState(false);
     const [fontSize, setFontSize] = useState<number>(72);
     const [ selected, setSelected ] = useState(1);
     const router = useRouter();
@@ -38,7 +35,7 @@ const SafeGuarantee = () => {
     useEffect(() => {
         const size = width <= 1042 ? 24 : 32;
         setFontSize(size);
-    }, []);
+    }, [width]);
     
   return (
     <div className='howowrks dashtop dashbottom'>
@@ -46,7 +43,7 @@ const SafeGuarantee = () => {
         <p className='p2'>Every step of our process is designed with safety and trust in mind. From comprehensive background checks to secure payments, we've got you covered.</p>
 
        <Row className='!mt-6 md:!mt-[58px] !px-2 md:!px-[100px]' gutter={[15, 15]}>
-            <Col lg={12} sm={24} xs={24} className='!flex !flex-col !gap-12'>
+            <Col lg={12} sm={24} xs={24} className="!flex !flex-col !gap-12">
                 <ListOptions 
                     icon={<svg xmlns="http://www.w3.org/2000/svg" width="12" height="14" viewBox="0 0 12 14" fill="none">
                         <path d="M11.3332 4.95992C11.3263 4.89867 11.3129 4.83833 11.2932 4.77992V4.71992C11.2619 4.65095 11.219 4.58783 11.1665 4.53325L7.1665 0.533252C7.11193 0.480733 7.0488 0.437897 6.97984 0.406585C6.95995 0.403568 6.93972 0.403568 6.91984 0.406585C6.85197 0.368067 6.77724 0.343157 6.69984 0.333252H2.6665C2.13607 0.333252 1.62736 0.543966 1.25229 0.919038C0.877218 1.29411 0.666504 1.80282 0.666504 2.33325V11.6666C0.666504 12.197 0.877218 12.7057 1.25229 13.0808C1.62736 13.4559 2.13607 13.6666 2.6665 13.6666H9.33317C9.8636 13.6666 10.3723 13.4559 10.7474 13.0808C11.1225 12.7057 11.3332 12.197 11.3332 11.6666V4.95992ZM7.33317 2.60659L9.05984 4.33325H7.99984C7.82303 4.33325 7.65346 4.26301 7.52843 4.13799C7.40341 4.01297 7.33317 3.8434 7.33317 3.66659V2.60659ZM9.99984 11.6666C9.99984 11.8434 9.9296 12.013 9.80457 12.138C9.67955 12.263 9.50998 12.3333 9.33317 12.3333H2.6665C2.48969 12.3333 2.32012 12.263 2.1951 12.138C2.07008 12.013 1.99984 11.8434 1.99984 11.6666V2.33325C1.99984 2.15644 2.07008 1.98687 2.1951 1.86185C2.32012 1.73682 2.48969 1.66659 2.6665 1.66659H5.99984V3.66659C5.99984 4.19702 6.21055 4.70573 6.58562 5.0808C6.9607 5.45587 7.4694 5.66659 7.99984 5.66659H9.99984V11.6666ZM7.5265 7.19325L5.33317 9.39325L4.47317 8.52659C4.34763 8.40105 4.17737 8.33052 3.99984 8.33052C3.8223 8.33052 3.65204 8.40105 3.5265 8.52659C3.40097 8.65212 3.33044 8.82238 3.33044 8.99992C3.33044 9.17745 3.40097 9.34772 3.5265 9.47325L4.85984 10.8066C4.92181 10.8691 4.99555 10.9187 5.07679 10.9525C5.15803 10.9864 5.24516 11.0038 5.33317 11.0038C5.42118 11.0038 5.50832 10.9864 5.58955 10.9525C5.67079 10.9187 5.74453 10.8691 5.8065 10.8066L8.47317 8.13992C8.59871 8.01438 8.66923 7.84412 8.66923 7.66659C8.66923 7.48905 8.59871 7.31879 8.47317 7.19325C8.34763 7.06772 8.17737 6.99719 7.99984 6.99719C7.8223 6.99719 7.65204 7.06772 7.5265 7.19325Z" fill="#670316"/>

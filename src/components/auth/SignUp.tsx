@@ -21,26 +21,26 @@ const SignUp = ({ type }: { type: string | null }) => {
         </div>
 
         <Form form={form} layout="vertical">
-            {type === "organisation" && <FormItem label="Organisation Name" rules={[{required: true}]}>
+            {type === "organisation" && <FormItem label="Organisation Name" name="organisation_name" rules={[{required: true, message: "NAme is required"}]}>
                 <Input placeholder="Enter organisation name" type="text" />
             </FormItem>}
             <Row className="" gutter={[15, 0]}>
             <Col lg={12} sm={24} xs={24}>
-               <FormItem label="First name" rules={[{required: true}]}>
+               <FormItem label="First name" name="firstName" rules={[{required: true}]}>
                 <Input placeholder="First name" />
               </FormItem>
             </Col>
 
             <Col lg={12} sm={24} xs={24}>
-              <FormItem label="Last name" rules={[{required: true}]}>
+              <FormItem label="Last name" name="lastName" rules={[{required: true}]}>
                 <Input placeholder="Last name" />
               </FormItem>
             </Col>
           </Row>
-            <FormItem label={type === "organisation" ? "Company Email" : "Email"} rules={[{required: true}]}>
+            <FormItem name="email" label={type === "organisation" ? "Company Email" : "Email"} rules={[{required: true}]}>
                 <Input placeholder="Enter your email" type="text" />
             </FormItem>
-            <FormItem label="Password" rules={[{required: true}]}>
+            <FormItem label="Password" name="password" rules={[{required: true}]}>
                 <Input.Password placeholder="Password" type="password" />
             </FormItem>
 
@@ -53,10 +53,10 @@ const SignUp = ({ type }: { type: string | null }) => {
                 <Link href="/auth/forgot-password">Forgot Password</Link>
             </div>   */}
 
-            <FormItem label="">
+            <FormItem label="" name="btn">
                 <Button className="button_form" type="primary" onClick={() => router.push("/auth/verify-email?verify=true")}>Create account</Button>
             </FormItem>
-            <FormItem label="">
+            <FormItem label="" name="">
                 <Socialbtn 
                     title='Sign up with Google'
                     icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -74,7 +74,7 @@ const SignUp = ({ type }: { type: string | null }) => {
                     </svg>}
                 />
             </FormItem>
-            <FormItem label="">
+            <FormItem label="" name="">
                 <Socialbtn 
                     title='Sign up with LinkedIn'
                     icon={<LinkedinFilled className="!text-2xl !text-[#0077B5]" />}

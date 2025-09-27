@@ -3,9 +3,10 @@ import React from 'react'
 import "@/app/styles/blog.css";
 import { ArrowUpOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 
 interface props {
-    image: any;
+    image: string | StaticImport;
     title: string;
     description: string;
     category: string;

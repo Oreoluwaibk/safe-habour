@@ -1,9 +1,10 @@
 import { GlobalOutlined, LinkedinFilled, TwitterOutlined } from '@ant-design/icons';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image'
 import React from 'react'
 
 interface props {
-  image: any;
+  image: string | StaticImport;
   name: string;
   position: string;
   description: string;

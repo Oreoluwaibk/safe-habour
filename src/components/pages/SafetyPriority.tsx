@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Pline2 } from '../../../assets/image';
 import { Radio } from 'antd';
 import SafetyCheck from '../general/SafetyCheck';
-import "@/app/styles/profcare.css";
+import "@/styles/profcare.css";
 
 const SafetyPriority = () => {
     const [fontSize, setFontSize] = useState<number>(72);

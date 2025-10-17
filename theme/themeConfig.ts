@@ -62,6 +62,12 @@ export const theme: ThemeConfig = {
       fontWeightStrong: 700,
       colorText: "#373737",
     },
-       
+    Pagination: {
+      colorBgTextActive: "#f9f5ff",
+      colorPrimary: "#670316",
+      colorTextDisabled: "rgba(0, 0, 0, 0.25)",
+      // : "#f9f5ff"
+      // colorText: "#670316"
+    }
   }
 };

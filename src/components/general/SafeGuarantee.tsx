@@ -1,6 +1,6 @@
 "use client"
 import React, { ReactNode, useEffect, useState } from 'react';
-import "@/app/styles/safety.css"
+import "@/styles/safety.css"
 import { Button, Col, Row } from 'antd';
 import useWindowWidth from '@/hooks/useWindowResize';
 import ColoredText from './ColoredText';

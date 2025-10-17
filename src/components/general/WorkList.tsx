@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import "@/app/styles/howworks.css"
+import "@/styles/howworks.css"
 
 interface props {
   icon: ReactNode;

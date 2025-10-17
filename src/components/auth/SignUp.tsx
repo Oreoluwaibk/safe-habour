@@ -1,47 +1,234 @@
 "use client"
-import React from 'react';
-import "@/app/styles/auth.css";
-import { Button, Col, Form, Input, Row } from 'antd';
-import "@/app/styles/form.css";
+import React, { useEffect, useState } from 'react';
+import "@/styles/auth.css";
+import { App, Button, Col, Form, Input, Row } from 'antd';
+import "@/styles/form.css";
 import Link from 'next/link';
 import Socialbtn from '../general/Socialbtn';
 import { LinkedinFilled } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
+import { registerClient, registerWorker } from '@/redux/action/auth';
+import { createErrorMessage } from '../../../utils/errorInstance';
+import { registerPayload } from '../../../utils/interface';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import PhoneInput from "react-phone-input-2";
 
 const FormItem = Form.Item;
 
 const SignUp = ({ type }: { type: string | null }) => {
     const [form] = Form.useForm();
     const router = useRouter();
+    const { modal } = App.useApp();
+    const { location, getLocation } = useGeolocation();
+
+    const [ loading, setLoading ] = useState(false);
+
+    useEffect(() => {
+        const getLocal = async () => 
+        await getLocation();
+
+        getLocal();
+    }, []);
+
+    console.log("tyoe", type);
+    
+
+    const handleRegister = () => {
+        if(type === "") handleRegisterClient();
+        if(type === "worker") handleRegisterWorker()
+    }
+
+    const handleRegisterClient = () => {
+        const { validateFields } = form;
+        validateFields()
+        .then(value => {
+            const { 
+                email, 
+                password, 
+                firstName, 
+                lastName,
+                confirmPassword,
+                phoneNumber, 
+            } = value;
+            
+            const payload: registerPayload = {
+                email,
+                password,
+                firstName,
+                lastName,
+                confirmPassword,
+                phoneNumber,
+                clientType: type === "organisation" ? 1 : 2,
+                latitude: location.latitude,
+                longitude: location.longitude,
+            }
+            setLoading(true)
+            registerClient(payload)
+            .then(res => {
+                if(res.status === 200 || res.status === 201) {
+                    setLoading(false)
+                    localStorage.setItem("emailToVerify", JSON.stringify(email));
+                    router.push("/auth/confirm-email?verify=true");
+                }
+            })
+            .catch(err => {
+                modal.error({
+                    title: "Error",
+                    content: err?.response
+                        ? createErrorMessage(err.response.data)
+                        : err.message,
+                    onOk: () => setLoading(false),
+                });
+            })
+        })
+        // localStorage.setItem("emailToVerify", JSON.stringify("test@enail.com"));
+        // router.push("/auth/verify-email?verify=true");
+    }
+    /*
+     "errors": {
+        "City": [
+            "The City field is required."
+        ],
+        "Address": [
+            "The Address field is required."
+        ],
+        "Country": [
+            "The Country field is required."
+        ],
+        "HourlyRate": [
+            "Hourly rate must be between 0.01 and 10,000.00"
+        ],
+        "PostalCode": [
+            "The PostalCode field is required."
+        ]
+    },
+    */ 
+
+    const handleRegisterWorker = () => {
+        const { validateFields } = form;
+        validateFields()
+        .then(value => {
+            const { 
+                email, 
+                password, 
+                firstName, 
+                lastName,
+                confirmPassword,
+                phoneNumber, 
+            } = value;
+            
+            const payload: registerPayload = {
+                email,
+                password,
+                firstName,
+                lastName,
+                confirmPassword,
+                phoneNumber,
+                latitude: location.latitude,
+                longitude: location.longitude,
+            }
+            setLoading(true)
+            registerWorker(payload)
+            .then(res => {
+                if(res.status === 200 || res.status === 201) {
+                    setLoading(false);
+                    localStorage.setItem("emailToVerify", JSON.stringify(email));
+                    router.push("/auth/confirm-email?verify=true");
+                }
+            })
+            .catch(err => {
+                modal.error({
+                    title: "Error",
+                    content: err?.response
+                        ? createErrorMessage(err.response.data)
+                        : err.message,
+                    onOk: () => setLoading(false),
+                });
+            })
+        })
+    }
+
   return (
     <div className='login-div auth-div'>
         <div>
             <p className='auth-header'>Sign up</p>
-            <p className='auth-description'>Create an account to find a worker</p>
+            <p className='auth-description'>{type === "worker" ? "Sign up as a Worker" :"Create an account to find a worker"}</p>
         </div>
 
         <Form form={form} layout="vertical">
-            {type === "organisation" && <FormItem label="Organisation Name" name="organisation_name" rules={[{required: true, message: "NAme is required"}]}>
+            {type === "organisation" && <FormItem label="Organisation Name" name="organisation_name" rules={[{required: true, message: "Name is required"}]}>
                 <Input placeholder="Enter organisation name" type="text" />
             </FormItem>}
             <Row className="" gutter={[15, 0]}>
             <Col lg={12} sm={24} xs={24}>
                <FormItem label="First name" name="firstName" rules={[{required: true}]}>
-                <Input placeholder="First name" />
+                <Input placeholder="First name" style={{height: 48}} />
               </FormItem>
             </Col>
 
             <Col lg={12} sm={24} xs={24}>
               <FormItem label="Last name" name="lastName" rules={[{required: true}]}>
-                <Input placeholder="Last name" />
+                <Input placeholder="Last name" style={{height: 48}} />
               </FormItem>
             </Col>
           </Row>
             <FormItem name="email" label={type === "organisation" ? "Company Email" : "Email"} rules={[{required: true}]}>
-                <Input placeholder="Enter your email" type="text" />
+                <Input placeholder="Enter your email" style={{height: 48}} type="text" />
             </FormItem>
-            <FormItem label="Password" name="password" rules={[{required: true}]}>
-                <Input.Password placeholder="Password" type="password" />
+
+            <FormItem label="Referral Code" name="referral_code" >
+                <Input placeholder="Enter your referral code" style={{height: 48}} type="text" />
+            </FormItem>
+
+             <FormItem 
+                label="Phone Number" 
+                className="font-semibold" 
+                name="phoneNumber"
+                rules={[
+                    {required:true}
+                ]}
+            >
+                <PhoneInput 
+                    placeholder='09039476798'
+                    country="ca"
+                    inputStyle={{width: "100%", height: 48,}}
+                />
+            </FormItem>
+
+            <FormItem 
+                label="Password" 
+                name="password" 
+                rules={[
+                    { required: true, message: "Please enter your new password!" },
+                    { min: 8, message: "Password must be at least 8 characters long!" },
+                    {
+                        pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]+$/,
+                        message: "Password must contain letters and numbers.",
+                    },
+                ]}
+                hasFeedback
+            >
+                <Input.Password placeholder="Password" style={{height: 48}} type="password" />
+            </FormItem>
+
+            <FormItem 
+                label="Confirm password"
+                name="confirmPassword"
+                rules={[
+                    { required: true, message: "Please confirm your password!" },
+                    ({ getFieldValue }) => ({
+                        validator(_, value) {
+                        if (!value || getFieldValue("password") === value) {
+                            return Promise.resolve();
+                        }
+                        return Promise.reject(
+                            new Error("Passwords do not match!")
+                        );
+                        },
+                    }),
+                ]}
+            >
+                <Input.Password placeholder="Password" style={{height: 48}} type="password" />
             </FormItem>
 
             {/* <div className='flex items-center justify-between'>
@@ -54,7 +241,7 @@ const SignUp = ({ type }: { type: string | null }) => {
             </div>   */}
 
             <FormItem label="" name="btn">
-                <Button className="button_form" type="primary" onClick={() => router.push("/auth/verify-email?verify=true")}>Create account</Button>
+                <Button loading={loading} className="button_form" type="primary" onClick={() => handleRegister()}>Create account</Button>
             </FormItem>
             <FormItem label="" name="">
                 <Socialbtn 

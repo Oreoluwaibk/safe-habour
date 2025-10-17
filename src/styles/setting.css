@@ -1,0 +1,5 @@
+input, textarea, .ant-input-password {
+    background-color: #f6f6f6 !important;
+    border: none !important;
+    height: 50px;
+}

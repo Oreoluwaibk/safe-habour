@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import CustomAuth from '@/components/auth/CustomAuth';
 import AuthContainer from '@/components/dashboard/AuthContainer';
 import { KeyOutlined, MailOutlined } from '@ant-design/icons';
@@ -10,13 +10,15 @@ const ForgotPasswordClient = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('email-sent');
-
+  const [ email, setEmail ] = useState("")
   return (
     <>
       {!type && (
         <CustomAuth
           type='forgot'
           title='Forgot password?'
+          email={email}
+          setEmail={setEmail}
           description='No worries, we’ll send you reset instructions.'
           icon={<KeyOutlined rotate={180} className='!text-[#670316] !text-[24px]' />}
           btnTitle='Reset password'
@@ -27,7 +29,9 @@ const ForgotPasswordClient = () => {
         <CustomAuth
           type='check your email'
           title='Check your email'
-          description='We sent a password reset link to adekdebby67@gmail.com'
+          email={email}
+          setEmail={setEmail}
+          description={`We sent a password reset link to ${email}`}
           icon={<MailOutlined className='!text-[#670316] !text-[24px]' />}
           btnTitle='Open email app'
           onClick={() => router.push("/auth/reset-password")}

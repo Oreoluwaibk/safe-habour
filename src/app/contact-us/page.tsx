@@ -3,7 +3,7 @@ import Container from "@/components/dashboard/Container";
 import { Button, Checkbox, Col, Form, Input, InputNumber, Row } from "antd";
 import Image from "next/image";
 import { Contact } from "../../../assets/image";
-import "@/app/styles/form.css"
+import "@/styles/form.css"
 import Link from "next/link";
 
 

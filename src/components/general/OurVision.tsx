@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import "@/app/styles/howworks.css"
+import "@/styles/howworks.css"
 import { Col, Row } from 'antd';
 import WorkList from './WorkList';
 import { ShoppingOutlined } from '@ant-design/icons';

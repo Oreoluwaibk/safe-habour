@@ -72,6 +72,7 @@ export { default as Team3 } from "./team3.svg";
 export { default as Team4 } from "./team4.svg";
 
 export { default as Contact } from "./contact.svg";
+export { default as Post } from "./post.svg";
 
 
 

@@ -2,7 +2,7 @@
 import SignUp from '@/components/auth/SignUp'
 import React, { Suspense } from "react";
 import AuthContainer from '@/components/dashboard/AuthContainer';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 const ResetPasswordClient = () => {
   const searchParams = useSearchParams();

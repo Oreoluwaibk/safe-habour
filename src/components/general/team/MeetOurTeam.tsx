@@ -1,7 +1,7 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import TeamCard from './TeamCard';
-import "@/app/styles/team.css";
+import "@/styles/team.css";
 import { Team1, Team2, Team3, Team4 } from '../../../../assets/image';
 
 const MeetOurTeam = () => {

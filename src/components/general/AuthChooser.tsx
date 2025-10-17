@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import "@/app/styles/auth.css";
+import "@/styles/auth.css";
 import { Radio } from 'antd';
 
 

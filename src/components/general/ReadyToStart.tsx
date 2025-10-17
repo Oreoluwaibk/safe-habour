@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import "@/app/styles/ready.css"
+import "@/styles/ready.css"
 import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
 

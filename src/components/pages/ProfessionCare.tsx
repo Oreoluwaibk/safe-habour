@@ -5,7 +5,7 @@ import { PLine } from '../../../assets/icons';
 import ColoredText from '../general/ColoredText';
 import useWindowWidth from '@/hooks/useWindowResize';
 import ServicesTabs from '../general/ServicesTabs';
-import "@/app/styles/profcare.css";
+import "@/styles/profcare.css";
 
 const ProfessionCare = () => {
   const [fontSize, setFontSize] = useState<number>(72);

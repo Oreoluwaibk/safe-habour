@@ -5,8 +5,9 @@ import Image from 'next/image';
 import { LinkedinFilled, MenuOutlined, TwitterOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaceBook, Logo, LogoWhite } from '../../../assets/logo';
+import { FaceBook, Logo } from '../../../assets/logo';
 import Sidemenu from './Sidemenu';
+import { MaskedLogo } from '../../../assets/icons';
 
 
 const { Content, Header, Footer } = Layout;
@@ -14,6 +15,8 @@ const { Content, Header, Footer } = Layout;
 type Props = {
     children: ReactNode;
     active: string;
+    hide?: boolean;
+    center?: boolean
 }
 
 export const NavItem = ({ href, label, active, mobile }: { href: string, label: string; active: boolean; mobile?: boolean}) => {
@@ -26,7 +29,9 @@ export const NavItem = ({ href, label, active, mobile }: { href: string, label: 
 
 const Container = ({
     children,
-    active
+    active,
+    hide,
+    center
 }:Props) => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -46,7 +51,7 @@ const Container = ({
                         </Link>
                        
 
-                        <div className="bg-white md:flex items-center gap-8 hidden">
+                        {!hide && <div className="bg-white md:flex items-center gap-8 hidden">
                             <NavItem href="/" label="Home" active={active === 'Home'} /> 
                             <NavItem href="/about" label="About Us" active={active === 'About Us'} /> 
                             <NavItem href="/services" label="Services" active={active === 'Services'} /> 
@@ -54,26 +59,26 @@ const Container = ({
                             <NavItem href="/trust-and-safety" label="Trust & Safety" active={active === 'Trust & Safety'} /> 
                             <NavItem href="/faqs" label="FAQs" active={active === 'FAQs'} /> 
                             <NavItem href="/blogs" label="Blogs" active={active === 'Blogs'} /> 
-                        </div>
+                        </div>}
                     </div>
                     
 
-                    <div className='hidden md:flex items-center gap-4'>
+                    {!hide && <div className='hidden md:flex items-center gap-4'>
                         <Button type="text" className='!text-[#667085] !h-[44px] w-[94px] !text-base' onClick={() => router.push("/auth/login")}>Login</Button>
                         <Button type='primary' className='!h-[44px] w-[94px] !rounded-[8px]' onClick={() => router.push("/auth/choose-auth")}>Sign Up</Button>
-                    </div>
+                    </div>}
 
                     {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
 
                 </Header>
-                <Layout className='!bg-white' >
+                <Layout className={`!bg-white ${center && "!flex !flex-col items-center justify-center"}`} >
                     {children}
                 </Layout>
                 <Footer className="!bg-[#250007] !text-white px-4 md:px-20">
                     <Row gutter={[4, 8]} className="md:!py-16 md:!px-8">
                         <Col lg={15} sm={24} xs={24} className="flex flex-col gap-4 mb-10 md:mb-0">
                             <Link href="/" className='!mb-6'>
-                                <Image src={LogoWhite} className="" alt="footer logo" />
+                                <Image src={MaskedLogo} className="" alt="footer logo" />
                             </Link>
                             <p className='md:!w-1/2 !mt-6'>Connecting Canadian families with trusted, vetted care professionals for peace of mind and quality service.</p>
                         </Col>

@@ -1,44 +1,110 @@
 "use client"
-import React from 'react';
-import "@/app/styles/auth.css";
-import { Button, Checkbox, Form, Input } from 'antd';
-import "@/app/styles/form.css";
+import React, { useEffect, useState } from 'react';
+import "@/styles/auth.css";
+import { Button, Checkbox, Form, Input, App } from 'antd';
+import "@/styles/form.css";
 import Link from 'next/link';
 import Socialbtn from '../general/Socialbtn';
 import { LinkedinFilled } from '@ant-design/icons';
+import { login, loginAction } from '@/redux/action/auth';
+import { createErrorMessage } from '../../../utils/errorInstance';
+import { useAppDispatch } from '@/hook';
+import { useRouter } from 'next/navigation';
 
 const FormItem = Form.Item;
-
 const Login = () => {
-    const [form] = Form.useForm();
+    const [ form ] = Form.useForm();
+    const [ loading, setLoading ] = useState(false);
+    const [ rememberMe, setRememberMe ] = useState(false);
+    const { modal } = App.useApp();
+    const dispatch = useAppDispatch();
+    const router = useRouter();
+
+    useEffect(() => {
+        const savedCredentials = localStorage.getItem("safehabour_credentials");
+        if (savedCredentials) {
+            const { email, password } = JSON.parse(savedCredentials);
+            form.setFieldsValue({ email, password });
+            setRememberMe(true);
+        }
+    }, [form]);
+
+    const handleLogin = () => {
+        const { validateFields } = form;
+
+        validateFields()
+        .then((value) => {
+        const { email, password } = value;
+        const payload = { email, password, rememberMe };
+
+        setLoading(true);
+        login(payload)
+        .then(async (res) => {
+            if (res.status === 200) {
+                setLoading(false);
+                modal.success({
+                    title: res.data.message,
+                    content: "",
+                    onOk: async () => {
+                        if (rememberMe)  localStorage.setItem("safehabour_credentials", JSON.stringify({ email, password }));
+                        else  localStorage.removeItem("safehabour_credentials");
+
+                        const result = await dispatch(loginAction(res.data.data));
+                        console.log("result", result);
+                        const role = res.data.data?.roles?.[0];
+                        
+                        if (role === "ClientUser") router.push("/dashboard/client");
+                        else if (role === "ServiceWorker") {
+                            if(res.data.data.user?.isServiceWorkerOnboarded) router.push("/dashboard/worker");
+                            else router.push("/dashboard/worker/intro");
+                        };
+                    },
+                });    
+            }
+        })
+        .catch((err) => {
+            modal.error({
+                title: "Error",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                    onOk: () => setLoading(false),
+                });
+            });
+        })
+        .catch(() => setLoading(false));
+    };
+    
   return (
     <div className='login-div auth-div'>
         <div>
             <p className='auth-header'>Log in</p>
-        <p className='auth-description'>Welcome back! Please enter your details.</p>
+            <p className='auth-description'>Welcome back! Please enter your details.</p>
         </div>
 
-        <Form form={form} layout="vertical">
-            <FormItem label="Email">
-                <Input placeholder="Enter your email" type="text" />
+        <Form form={form} layout="vertical" onFinish={handleLogin}>
+            <FormItem label="Email" name="email" rules={[{required: true}]}>
+                <Input placeholder="Enter your email"   style={{height: 48}} type="text" />
             </FormItem>
-            <FormItem label="Password">
-                <Input.Password placeholder="Password" type="password" />
+            <FormItem label="Password" name="password" rules={[{required: true}]}>
+                <Input.Password placeholder="Password" style={{height: 48}} type="password" />
             </FormItem>
 
             <div className='flex items-center justify-between'>
-                <FormItem label="" className="flex items-center gap-1">
-                    <Checkbox title="You agree to our friendly privacy policy." className="!mr-4"  />
-                    <span className="agree">Remember me</span>
+                <FormItem label="" name="rememberMe" className="flex items-center gap-1">
+                    <>
+                        <Checkbox defaultChecked={rememberMe} checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} title="You agree to our friendly privacy policy." className="!mr-4"  />
+                        <span className="agree">Remember me</span>
+                    </>
                 </FormItem>
 
                 <Link href="/auth/forgot-password">Forgot Password</Link>
             </div>  
 
             <FormItem label="">
-                <Button className="button_form" type="primary">Sign in</Button>
+                <Button className="button_form" type="primary" loading={loading} htmlType="submit">Sign in</Button>
             </FormItem>
-            <FormItem label="">
+            <div>
                 <Socialbtn 
                     title='Sign up with Google'
                     icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -55,8 +121,9 @@ const Login = () => {
                     </defs>
                     </svg>}
                 />
-            </FormItem>
-            <FormItem label="">
+            </div>
+            <div className='mt-4'>
+
                 <Socialbtn 
                     title='Sign up with LinkedIn'
                     icon={<LinkedinFilled className="!text-2xl !text-[#0077B5]" />}
@@ -65,7 +132,7 @@ const Login = () => {
                     <p>Don’t have an account?</p>
                     <Link href="/auth/choose-auth">Sign up</Link>
                 </div>
-            </FormItem>
+            </div>
 
            
         </Form>

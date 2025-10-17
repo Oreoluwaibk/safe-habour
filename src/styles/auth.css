@@ -1,0 +1,124 @@
+a {
+    color: var(--Primary-second, #820116);
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 142.857% */
+}
+a:hover, a:active {
+    color: var(--Primary-second, #820116);
+}
+.icon-div {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
+    background-color: #FFF4F7;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.auth-header {
+    color: var(--Gray-900, #101828);
+    font-family: "Open Sans";
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 44px; /* 122.222% */
+    letter-spacing: -0.72px;
+    margin-bottom: 12px;
+}
+
+.auth-description {
+    color: var(--Gray-500, #667085);
+    font-family: "Open Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+}
+.auth-div {
+    border-radius: 12px;
+    background: hsl(0, 0%, 100%);
+    display: flex;
+    padding: 24px 48px;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.login-div {
+    margin: 64px 0 145px;
+    width: 614px;
+}
+
+.chooser-div {
+    margin: 127px 0 120px;
+    width: 1082px;
+    padding: 40px 48px;
+}
+
+/* input {
+    height: 35px !important;
+} */
+
+/* input.form-control {
+    height: 52px !important;
+}
+
+input[type="text"] {
+    height: 52px !important;
+} */
+
+.auth-chooser {
+    width: 453px;
+    height: 153px;
+    border-radius: 12px;
+    background: #FFF;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 32px 30px;
+    cursor: pointer;
+}
+
+.auth-chooser-selected {
+    border: 2px solid #670316;
+}
+.auth-radio {
+    position: absolute;
+    top: 18px;
+    right: 32px;
+}
+.auth-choose-p {
+    color: #1E1E1E;
+    font-family: "Open Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+@media (max-width:768px) {
+    .login-div, .chooser-div {
+        margin: 10px 0;
+        width: 100%;
+    }
+    .auth-header {
+        font-size: 24px;
+    }
+    .auth-description {
+        font-size: 16px;
+    }
+    .auth-chooser {
+        width: 100%;
+    }
+    .auth-choose-p  {
+        font-size: 16px;
+    }
+    .auth-div {
+        padding: 20px;
+    }
+}

@@ -1,5 +1,5 @@
 import Container from "@/components/dashboard/Container";
-import "@/app/styles/safety.css"
+import "@/styles/safety.css"
 
 export default function Home() {
   return (

@@ -1,7 +1,7 @@
 "use client"
-import "@/app/styles/auth.css";
+import "@/styles/auth.css";
 import { Button, Col, Row } from 'antd';
-import "@/app/styles/form.css";
+import "@/styles/form.css";
 import AuthChooser from "../general/AuthChooser";
 import { ArrowLeftOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -60,7 +60,7 @@ const ChooseAuth = () => {
         </Row>}
 
         <div className="flex flex-col items-center gap-6 mt-2">
-            {phase === 1&& <Button className="md:!h-[58px] md:!w-[220px] !w-[150px]" type="primary" onClick={() =>selected === 1 ? setPhase(2) : router.push("/auth/sign-up")}>Sign Up</Button> }
+            {phase === 1&& <Button className="md:!h-[58px] md:!w-[220px] !w-[150px]" type="primary" onClick={() =>selected === 1 ? setPhase(2) : router.push("/auth/sign-up?type=worker")}>Sign Up</Button> }
             {phase === 2&& 
                 <Button 
                     className="md:!h-[58px] md:!w-[220px] !w-[150px]" 

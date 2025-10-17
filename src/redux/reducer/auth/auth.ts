@@ -55,7 +55,7 @@ export const signinSlice = createSlice({
 
         // ✅ Normalize token
         const token =
-          payload?.token?.token || payload?.token || null;
+          payload?.token;
 
         state.token = token;
         state.user = payload?.user || null;

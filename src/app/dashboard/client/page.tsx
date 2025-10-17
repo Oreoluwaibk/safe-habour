@@ -20,7 +20,7 @@ const Page = () => {
   return (
     <ClientContainer active='Dashboard'>
       <div >
-        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user.lastName}!</h1>
+        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.lastName}!</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
         {closeInfo && <CompleteInfo 

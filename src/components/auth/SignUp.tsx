@@ -19,16 +19,16 @@ const SignUp = ({ type }: { type: string | null }) => {
     const [form] = Form.useForm();
     const router = useRouter();
     const { modal } = App.useApp();
+    const [ loading, setLoading ] = useState(false);
     const { location, getLocation } = useGeolocation();
 
-    const [ loading, setLoading ] = useState(false);
-
     useEffect(() => {
-        const getLocal = async () => 
-        await getLocation();
+        const getLocal = async () => {
+            await getLocation();
+        };
 
         getLocal();
-    }, []);
+    }, [getLocation]);
 
     console.log("tyoe", type);
     

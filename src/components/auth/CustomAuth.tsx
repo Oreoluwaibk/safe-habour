@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import "@/styles/auth.css";
 import "@/styles/form.css";
 import { App, Button, Form, Input } from 'antd';
@@ -41,12 +41,36 @@ const CustomAuth = ({
     const hasRun = useRef(false);
     const isEmail = type === "otp" || type === "check your email";
 
+    const handleConfirmMail = useCallback(() => {
+        if (!email || !token) return;
+
+        const payload = { userId: email, token };
+        setLoading(true);
+
+        verifyOtp(payload)
+        .then(async (res) => {
+            if (res.status === 200) {
+            setLoading(false);
+            // you could show a success modal or redirect here if needed
+            }
+        })
+        .catch((err) => {
+            modal.error({
+            title: "Error",
+            content: err?.response
+                ? createErrorMessage(err.response.data)
+                : err.message,
+            onOk: () => setLoading(false),
+            });
+        });
+    }, [email, token, modal]);
+
     useEffect(() => {
         if (type === "email-verify" && email && token && !hasRun.current) {
             handleConfirmMail();
             hasRun.current = true;
         }
-    }, [type, email, token]);
+    }, [type, email, token, handleConfirmMail]);
 
     const handleClick = () => {
         if(type === "forgot") handleForgotPassword();
@@ -146,25 +170,25 @@ const CustomAuth = ({
         .catch(() => setLoading(false));
     };
 
-    const handleConfirmMail = () => {
-        const payload = { userId: email!, token: token! };
-        setLoading(true);
-        verifyOtp(payload)
-        .then(async (res) => {
-            if (res.status === 200) {
-                setLoading(false);
-            }
-        })
-        .catch((err) => {
-            modal.error({
-                title: "Error",
-                content: err?.response
-                    ? createErrorMessage(err.response.data)
-                    : err.message,
-                    onOk: () => setLoading(false),
-                });
-            });
-    }
+    // const handleConfirmMail = () => {
+    //     const payload = { userId: email!, token: token! };
+    //     setLoading(true);
+    //     verifyOtp(payload)
+    //     .then(async (res) => {
+    //         if (res.status === 200) {
+    //             setLoading(false);
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         modal.error({
+    //             title: "Error",
+    //             content: err?.response
+    //                 ? createErrorMessage(err.response.data)
+    //                 : err.message,
+    //                 onOk: () => setLoading(false),
+    //             });
+    //         });
+    // }
 
     const handleResendIdToken = () => {
         setResendLoading(true);

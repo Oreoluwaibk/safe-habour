@@ -34,8 +34,8 @@ const SignUp = ({ type }: { type: string | null }) => {
     
 
     const handleRegister = () => {
-        if(type === "") handleRegisterClient();
         if(type === "worker") handleRegisterWorker()
+        else handleRegisterClient();
     }
 
     const handleRegisterClient = () => {
@@ -66,9 +66,15 @@ const SignUp = ({ type }: { type: string | null }) => {
             registerClient(payload)
             .then(res => {
                 if(res.status === 200 || res.status === 201) {
-                    setLoading(false)
-                    localStorage.setItem("emailToVerify", JSON.stringify(email));
-                    router.push("/auth/confirm-email?verify=true");
+                    setLoading(false);
+                    modal.success({
+                        title: res.data.message,
+                        content: "",
+                        onOk: async () => {
+                            localStorage.setItem("emailToVerify", JSON.stringify(email));
+                            router.push("/auth/confirm-email?verify=true");
+                        },
+                    });  
                 }
             })
             .catch(err => {
@@ -132,8 +138,14 @@ const SignUp = ({ type }: { type: string | null }) => {
             .then(res => {
                 if(res.status === 200 || res.status === 201) {
                     setLoading(false);
-                    localStorage.setItem("emailToVerify", JSON.stringify(email));
-                    router.push("/auth/confirm-email?verify=true");
+                    modal.success({
+                        title: res.data.message,
+                        content: "",
+                        onOk: async () => {
+                            localStorage.setItem("emailToVerify", JSON.stringify(email));
+                            router.push("/auth/confirm-email?verify=true");
+                        },
+                    }); 
                 }
             })
             .catch(err => {
@@ -156,9 +168,9 @@ const SignUp = ({ type }: { type: string | null }) => {
         </div>
 
         <Form form={form} layout="vertical">
-            {type === "organisation" && <FormItem label="Organisation Name" name="organisation_name" rules={[{required: true, message: "Name is required"}]}>
+            {/* {type === "organisation" && <FormItem label="Organisation Name" name="organisation_name" rules={[{required: true, message: "Name is required"}]}>
                 <Input placeholder="Enter organisation name" type="text" />
-            </FormItem>}
+            </FormItem>} */}
             <Row className="" gutter={[15, 0]}>
             <Col lg={12} sm={24} xs={24}>
                <FormItem label="First name" name="firstName" rules={[{required: true}]}>

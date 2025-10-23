@@ -2,15 +2,16 @@ import { CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import React, { ReactNode } from 'react'
 
 interface props {
-    title: string;
-    description: string;
-    nav: string | ReactNode;
-    onCancel: () => void;
+  title: string;
+  description: string;
+  nav: string | ReactNode;
+  onCancel: () => void;
+  icon?: ReactNode
 }
-const CompleteInfo = ({ title, description, nav, onCancel}: props) => {
+const CompleteInfo = ({ title, description, nav, onCancel, icon=<InfoCircleOutlined className='mt-1' />}: props) => {
   return (
     <div className='incomplete relative'>
-        <InfoCircleOutlined className='mt-1' />
+        {icon}
         <div className='flex flex-col gap-1'>
             <p className='font-semibold'>{title}</p>
             <p className='incomplete-des'>{description}</p>

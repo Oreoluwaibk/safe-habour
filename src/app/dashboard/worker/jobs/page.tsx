@@ -4,12 +4,13 @@ import CardTitle from '@/components/general/CardTitle'
 import Status from '@/components/general/Status'
 import AvailableContainer from '@/components/wallet/AvailableContainer'
 import FilterCard from '@/components/wallet/cards/FilterCard'
+import JobApplication from '@/components/wallet/cards/JobApplication'
 import JobHistoryCard from '@/components/wallet/cards/JobHistoryCard'
 import { Card, Col, Row, Segmented } from 'antd'
 import React, { useState } from 'react'
 
 const Page = () => {
-  const [ isHistory, setIsHistory ] = useState(false);
+  const [ active, setActive ] = useState("My Applications");
   return (
     <WorkerContainer active='Jobs'>
       <div>
@@ -19,13 +20,14 @@ const Page = () => {
 
       <div  className='mb-6'>
         <Segmented 
-          options={["Overview", "Job History"]}
-          defaultValue='Overview'
-          onChange={(value) => value === "Overview" ? setIsHistory(false) : setIsHistory(true)}
+          options={["Browse Jobs", "Job History", "My Applications"]}
+          defaultValue={active}
+          onChange={(value) => setActive(value)}
+          value={active}
         />
       </div>
 
-      {!isHistory && <Row gutter={[15, 15]} className='pb-6'>
+      {active === "Browse Jobs" && <Row gutter={[15, 15]} className='pb-6'>
         <Col lg={10} sm={24} xs={24}>
           <FilterCard />
         </Col>
@@ -35,7 +37,7 @@ const Page = () => {
         </Col>
       </Row>}
 
-      {isHistory &&
+      {active === "Job History" &&
         <Card
         title={<div className='flex items-center gap-4'>
           <CardTitle title='Job History' />
@@ -49,6 +51,25 @@ const Page = () => {
         </Row>
         </Card>
       }
+
+      {active === "My Applications" && (
+        <Card
+          title={<CardTitle title='My Job Applications' status={<Status title='3 Opportunities' size={12} bg='#F4F4F4' color='#343434' />} />}
+          classNames={{
+            header: "",
+          }}
+        >
+          <Row gutter={[15, 15]}>
+            <Col lg={24} sm={24} xs={24}>
+              <JobApplication accepted />
+            </Col>
+
+            <Col lg={24} sm={24} xs={24}>
+              <JobApplication />
+            </Col>
+          </Row>
+        </Card>
+      )}
     </WorkerContainer>
   )
 }

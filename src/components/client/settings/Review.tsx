@@ -2,10 +2,13 @@ import { Card, Col, Row } from 'antd'
 import React from 'react'
 import RateCard from '../cards/RateCard'
 
-const Review = () => {
+interface props {
+    worker?: boolean;
+}
+const Review = ({ worker }: props) => {
   return (
     <Card 
-        title="Worker's Rating & Review" 
+        title={worker ? "Client Rating & Review" :"Worker's Rating & Review"} 
         variant="borderless"
         styles={{body: {padding: "0 20px"}}}
     >

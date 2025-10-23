@@ -4,6 +4,9 @@ import ProfileInfo from '@/components/wallet/profile/ProfileInfo'
 import { Col, Row, Segmented } from 'antd'
 import React, { useState } from 'react'
 import "@/styles/setting.css";
+import ServicesInfo from '@/components/wallet/profile/Services'
+import Verification from '@/components/wallet/profile/Verification'
+import Review from '@/components/client/settings/Review'
 
 const Page = () => {
     const [ active, setActive ] = useState("Profile Info");
@@ -24,10 +27,19 @@ const Page = () => {
         />
       </div>
 
-      <Row>
-        <Col lg={24} sm={24} xs={24}>
+      <Row className='min-h-[90vh]'>
+        {active === "Profile Info" && <Col lg={24} sm={24} xs={24} className='md:!px-[100px]'>
           <ProfileInfo />
-        </Col>
+        </Col>}
+        {active === "Services & Rate" && <Col lg={24} sm={24} xs={24}>
+          <ServicesInfo />
+        </Col>}
+        {active === "Verification" && <Col lg={24} sm={24} xs={24}  className='md:!px-[200px]'>
+          <Verification />
+        </Col>}
+        {active === "Review" && <Col lg={24} sm={24} xs={24} className='md:!px-[100px]'>
+          <Review worker />
+        </Col>}
       </Row>
     </WorkerContainer>
   )

@@ -75,7 +75,7 @@ const Page = () => {
                         <p className='text-lg text-[#646464] font-medium'>${job?.budget}</p>
                     </div>
                     <div className='flex items-center gap-4'>
-                        <Status size={12} title={handleDisplayServices(job?.serviceCategory!, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
+                        <Status size={12} title={job && handleDisplayServices(job?.serviceCategory!, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
                     </div>
                 </div>
             }

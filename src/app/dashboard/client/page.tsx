@@ -43,7 +43,7 @@ const Page = () => {
       .catch((err) => {
         console.log("error", err);
       });
-  }, [router, user?.lastName]);
+  }, [router, user?.lastName, message]);
 
   useEffect(() => {
     handleGetClientJobs();

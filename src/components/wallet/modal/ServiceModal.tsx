@@ -1,5 +1,5 @@
 import RoundBtn from '@/components/general/RoundBtn';
-import { Button, Form, Input, InputNumber, Modal } from 'antd';
+import { Form, Input, InputNumber, Modal } from 'antd';
 import React from 'react'
 
 interface props {

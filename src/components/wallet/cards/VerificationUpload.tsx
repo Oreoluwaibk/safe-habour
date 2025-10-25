@@ -10,7 +10,6 @@ import { RcFile } from 'antd/es/upload';
 import { toFormData } from 'axios';
 import React, { ReactNode, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../utils/errorInstance';
-import dayjs from 'dayjs';
 import { useAppSelector } from '@/hook';
 
 interface props {
@@ -53,27 +52,27 @@ const VerificationUpload = ({
         }
 
         const formData = toFormData(payload) as FormData;
-        // setLoading(true);
-        // verifyDocuments(formData)
-        // .then(res => {
-        //     if(res.status === 200 || res.status === 201){
-        //         setLoading(false);
-        //         message.success(res.data.message)
-        //         if (setValue) setValue(file)
-        //     }
-        // })
-        // .catch((err) => {
-        //     modal.error({
-        //         title: "Error",
-        //         content: err?.response
-        //             ? createErrorMessage(err.response.data)
-        //             : err.message,
-        //         onOk: () => setLoading(false),
-        //     });
-        // });
+        setLoading(true);
+        verifyDocuments(formData)
+        .then(res => {
+            if(res.status === 200 || res.status === 201){
+                setLoading(false);
+                message.success(res.data.message)
+                if (setValue) setValue(file)
+            }
+        })
+        .catch((err) => {
+            modal.error({
+                title: "Error",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false),
+            });
+        });
     }
 
-    const handleBeforeUpload = async (file: RcFile, fileList: RcFile[]) => {
+    const handleBeforeUpload = async (file: RcFile) => {
         if (file.size > maxFileSize) return message.warning("Cannot upload file more than 10mb");
 
         // const bas = await getBase64(file);

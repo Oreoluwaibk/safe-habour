@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { categoryType } from '../../utils/interface';
-import { allLanguages, savedCategory } from '../../utils/savedInfo';
+import { savedCategory } from '../../utils/savedInfo';
 import { getServiceCategories } from '@/redux/action/extra';
 
 interface categoryState {

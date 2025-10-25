@@ -15,15 +15,11 @@ const FormItem = Form.Item;
 const ApplyJob = ({ open, onCancel, job }: props) => {
     const { modal } = App.useApp();
     const [form] = Form.useForm();
-    const [ message, setMessage ] = useState("");
     const [ loading, setLoading ] = useState(false);
 
     const handleApplyForJob = () => {
         form.validateFields()
         .then(values => {
-            // setLoading(true);
-            console.log("values", values);
-            
             const payload = {
                 jobId: job.id!,
                 ...values

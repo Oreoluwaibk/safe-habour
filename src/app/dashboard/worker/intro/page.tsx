@@ -1,13 +1,12 @@
 "use client"
 import Container from '@/components/dashboard/Container'
 import Steps from '@/components/general/Steps'
-import { ArrowLeftOutlined, ArrowRightOutlined, UploadOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { Icon } from '@iconify/react'
-import { App, Button, Card, Col, Form, Input, InputNumber, Row, Select, Upload } from 'antd'
+import { App, Button, Card, Col, Form, Input, InputNumber, Row, Select } from 'antd'
 import React, { useEffect, useState } from 'react';
 import PhoneInput from "react-phone-input-2";
-import { allLanguages } from '../../../../../utils/savedInfo'
-import { categoryType, IUser, languageType, WorkerProfile } from '../../../../../utils/interface'
+import { categoryType, languageType, WorkerProfile } from '../../../../../utils/interface'
 import { useLanguage } from '@/hooks/useLAnguage'
 import { useAppSelector } from '@/hook';
 import { useServiceCategory } from '@/hooks/useServiceCategory'
@@ -75,7 +74,7 @@ const Page = () => {
             email: user.email,
             phoneNumber: user.phoneNumber
         })
-    }, [user]);
+    }, [user, form]);
 
     useEffect(() => {
         const storedProfile = localStorage.getItem("safe-habour-worker-profile");
@@ -89,7 +88,7 @@ const Page = () => {
             setHourlyRate(profile.hourlyRate);
             setSelectedLang(profile.languages);
         }
-    }, [])
+    }, [form])
 
     const renderStep = (step: number) => {
     switch (step) {

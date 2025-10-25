@@ -1,8 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { IUser, languageType } from '../../utils/interface';
-import { allLanguages } from '../../utils/savedInfo';
-import { getLanguages } from '@/redux/action/extra';
+import { IUser } from '../../utils/interface';
 import { verifyMe } from '@/redux/action/auth';
 
 interface AuthenticationState {

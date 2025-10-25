@@ -27,7 +27,7 @@ const Page = () => {
         router.push("/dashboard/worker/intro");
       }, 2000);
     }
-  }, [authentication]);
+  }, [authentication, message, router]);
 
   return (
     <WorkerContainer active='Dashboard'>

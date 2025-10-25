@@ -1,7 +1,7 @@
 "use client"
 import BookingSystem from '@/components/client/BookingSystem'
 import JobApplication from '@/components/client/cards/JobApplication'
-import JobApplicationCard from '@/components/client/cards/JobApplication'
+// import JobApplicationCard from '@/components/client/cards/JobApplication'
 import WorkerComponent from '@/components/client/WorkerComponent'
 import ClientContainer from '@/components/dashboard/ClientContainer'
 import { Col, Row, Segmented } from 'antd'

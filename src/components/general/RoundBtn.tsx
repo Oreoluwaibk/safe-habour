@@ -2,16 +2,17 @@ import { Button } from 'antd';
 import React, { ReactNode } from 'react'
 
 interface props {
-    icon?: ReactNode;
-    title: string;
-    onClick: () => void;
-    primary?: boolean;
-    width?: number;
-    height?: number;
+  icon?: ReactNode;
+  title: string;
+  onClick: () => void;
+  primary?: boolean;
+  width?: number;
+  height?: number;
+  loading?: boolean;
 }
-const RoundBtn = ({ icon, title, onClick, primary, width = 144, height = 44 }: props) => {
+const RoundBtn = ({ icon, title, onClick, primary, width = 144, height = 44, loading }: props) => {
   return (
-    <Button onClick={onClick} type={primary ? "primary" : 'default'} className={`!h-[${height}px] min-w-[${width}px] !rounded-[200px]`} style={{width: width ? width : undefined, height: height?height:undefined}} icon={icon}>
+    <Button onClick={onClick} loading={loading} type={primary ? "primary" : 'default'} className={`!h-[${height}px] min-w-[${width}px] !rounded-[200px]`} style={{width: width ? width : undefined, height: height?height:undefined}} icon={icon}>
         {title}
     </Button>
   )

@@ -50,7 +50,6 @@ const Login = () => {
                         else  localStorage.removeItem("safehabour_credentials");
 
                         const result = await dispatch(loginAction(res.data.data));
-                        console.log("result", result);
                         const role = res.data.data?.roles?.[0];
                         
                         if (role === "ClientUser") router.push("/dashboard/client");

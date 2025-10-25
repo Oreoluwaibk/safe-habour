@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react'
 interface props {
   title: string;
   description: string;
-  nav: string | ReactNode;
+  nav?: string | ReactNode;
   onCancel: () => void;
   icon?: ReactNode
 }

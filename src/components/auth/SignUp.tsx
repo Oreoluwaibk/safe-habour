@@ -30,9 +30,6 @@ const SignUp = ({ type }: { type: string | null }) => {
         getLocal();
     }, [getLocation]);
 
-    console.log("tyoe", type);
-    
-
     const handleRegister = () => {
         if(type === "worker") handleRegisterWorker()
         else handleRegisterClient();

@@ -2,6 +2,7 @@ export interface signinReducer {
     user: any,
     isAuthenticated: boolean,
     token: any,
+    tokenExpiry: any;
     loading: boolean,
     success: boolean,
     error: any,
@@ -67,6 +68,66 @@ export interface userProfile {
   ClientType?: number
 }
 
+export interface IUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  dateOfBirth: string | null;
+  gender: string | null;
+  bio: string | null;
+  profilePicturePath: string | null;
+  streetAddress: string | null;
+  city: string | null;
+  country: string | null;
+  postalCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  isProfileComplete: boolean;
+  isVerified: boolean;
+  emailConfirmed: boolean;
+  isActive: boolean;
+  roles: string[];
+  isStripeConnectEnabled: boolean;
+  hasIdentificationDocument: boolean;
+  hasLocationDocument: boolean;
+  isTwoFactorAuthenticationEnabled: boolean;
+  isServiceWorkerOnboarded: boolean | null;
+  notificationSettings: any[]; // or define a NotificationSetting type if structure known
+}
+
+export interface Service {
+  name: string;
+  description: string;
+  category: string;
+  isActive: boolean;
+}
+
+export interface Language {
+  name: string;
+  code: string;
+  longCode: string;
+  isNative?: boolean;
+}
+
+export interface WorkerProfile {
+  bio: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  services: {
+    serviceCategoryIds: number[];
+  }[];
+  languages: Language[] | string[];
+  hourlyRate: number;
+  latitude: number;
+  longitude: number;
+  step?: number;
+}
+
 export interface serviceWorkerProfile {
   UserId: string;
   FirstName?: string;
@@ -93,12 +154,14 @@ export interface notificationSettings {
 }
 
 export interface jobs {
+  id?: string;
   serviceCategory: number;
   jobTitle: string;
   jobDescription: string;
   dateNeeded: string;
   timePreference: number;
   isReocurringJob: boolean;
+  reoccurringDays?: number[];
   location: string;
   budget: number;
 }
@@ -177,3 +240,15 @@ export interface bulkApprove {
   approveOnlyCompleteProfiles: boolean;
   reason: string;
 }
+
+export interface languageType {
+  name: string;
+  code: string;
+  longCode: string;  
+}
+
+export interface categoryType {
+    id: number;
+    name: string;
+    description: string;
+  }

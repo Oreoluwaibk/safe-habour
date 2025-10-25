@@ -1,24 +1,42 @@
 export const createErrorMessage = (data: any) => {
-    console.log("data", data);
-    
-    if(data){
-        return data.error || data.message || data.detail
-    }
-    let str = '';
+  console.log("data", data);
 
-    if (Array.isArray(data)) {
-        return data.toString()
-    } else if (typeof data === 'object' && data !== null) {
-        // Check if the key exists in the object
-        for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-                str += `${key}: ${data[key]},`;
-            }
-        }
-        return str.slice(0, -2); 
-    } else {
-        console.log('Invalid data type. Must be an array or an object.');
-        return "Unable to complete request, something went wrong";
-    }
-}
+  if (!data) return "Unable to complete request, something went wrong";
 
+  // ✅ Common top-level message formats
+  if (data.error) return data.error;
+  if (data.message) return data.message;
+  if (data.detail) return data.detail;
+  if (data.title) return data.title;
+
+  // ✅ Handle ASP.NET style validation error object
+  if (data.errors && typeof data.errors === "object") {
+    const messages: string[] = [];
+
+    for (const key in data.errors) {
+      if (Array.isArray(data.errors[key])) {
+        messages.push(`${key}: ${data.errors[key].join(", ")}`);
+      } else {
+        messages.push(`${key}: ${data.errors[key]}`);
+      }
+    }
+
+    if (messages.length > 0) {
+      return messages.join(" | ");
+    }
+  }
+
+  // ✅ Handle array or generic object
+  if (Array.isArray(data)) {
+    return data.join(", ");
+  }
+
+  if (typeof data === "object" && data !== null) {
+    const parts = Object.entries(data)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(", ");
+    return parts || "Unknown error occurred";
+  }
+
+  return "Unable to complete request, something went wrong";
+};

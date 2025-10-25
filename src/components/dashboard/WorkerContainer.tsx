@@ -4,12 +4,14 @@ import { BellFilled, MenuOutlined, SearchOutlined, UserOutlined } from '@ant-des
 import { Avatar, Layout } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { Logo } from '../../../assets/logo';
 import Image from 'next/image';
 import NotificationCard from "../general/NotificationCard";
 import { CheckedCircle, MaskedLogo } from "../../../assets/icons";
 import WorkerSideMenu from "./WorkerSideMenu";
+import { useAppSelector } from "@/hook";
+import { logoutUser } from "@/redux/action/auth";
 
 const { Content, Header } = Layout;
 
@@ -31,7 +33,24 @@ const WorkerContainer = ({
 }:Props) => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [ showNotification, setShowNotification ] = useState(false)
+    const [ showNotification, setShowNotification ] = useState(false);
+    const { isAuthenticated } = useAppSelector(state => state.auth);
+
+    useEffect(() => {
+        if(!isAuthenticated) handleLogut();
+    }, [isAuthenticated]);
+
+    const handleLogut = () => {
+        logoutUser()
+        .then(res => {
+            if(res.status === 200)  router.push("/auth/login");
+        })
+        .catch(err => {
+            router.push("/auth/login");
+            console.log("error loggin out", err);
+        })
+    }
+
   return (
      <Layout >
         <Layout>

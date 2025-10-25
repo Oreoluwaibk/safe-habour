@@ -5,18 +5,50 @@ import { ArrowRightOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react';
 import "@/styles/client.css"
 import Link from 'next/link';
-import { Col, Row } from 'antd';
+import { Col, Row, App } from 'antd';
 import InfoCards from '@/components/client/cards/InfoCards';
 import WorkerComponent from '@/components/client/WorkerComponent';
 import { useAppSelector } from '@/hook';
+import { getClientJobs } from '@/redux/action/jobs';
+import { useRouter } from 'next/navigation';
+import { useAuthentication } from '@/hooks/useAuthentication';
 
 const Page = () => {
-  const [ closeInfo, setCloseInfo ] = useState(true);
+  const router = useRouter();
+  const [ closeInfo, setCloseInfo ] = useState(false);
   const { user } = useAppSelector(state => state.auth);
+  const { message } = App.useApp();
+  const { authentication } = useAuthentication()
 
   useEffect(() => {
     if(user) setCloseInfo(!user.isProfileComplete)
-  }, [user])
+  }, [user]);
+
+  useEffect(() => {
+    if(authentication) setCloseInfo(!authentication.isProfileComplete)
+  }, [authentication])
+
+  useEffect(() => {
+    handleGetClientJobs();
+  }, [])
+
+  const handleGetClientJobs = () => {
+    getClientJobs()
+    .then(res => {
+      if(res.status === 200) {
+        if(res.data.data && res.data.data?.totalItems === 0) {
+          message.info(`Welcome ${user?.lastName}, kindly create a job to continue!`);
+          setTimeout(() => {
+            router.push("/dashboard/client/intro");
+          }, 2000);
+        }
+      }
+    })
+    .catch(err => {
+      console.log("error", err);
+    })
+  }
+
   return (
     <ClientContainer active='Dashboard'>
       <div >

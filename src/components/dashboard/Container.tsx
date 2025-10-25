@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Button, Col, Layout, Row } from 'antd';
 import Image from 'next/image';
 import { LinkedinFilled, MenuOutlined, TwitterOutlined } from '@ant-design/icons';
@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { FaceBook, Logo } from '../../../assets/logo';
 import Sidemenu from './Sidemenu';
 import { MaskedLogo } from '../../../assets/icons';
+import { useAppSelector } from '@/hook';
+import { logoutUser } from '@/redux/action/auth';
 
 
 const { Content, Header, Footer } = Layout;
@@ -35,6 +37,22 @@ const Container = ({
 }:Props) => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
+    const { isAuthenticated } = useAppSelector(state => state.auth);
+
+    useEffect(() => {
+        if(!isAuthenticated) handleLogut();
+    }, [isAuthenticated]);
+
+    const handleLogut = () => {
+        logoutUser()
+        .then(res => {
+            if(res.status === 200)  router.push("/auth/login");
+        })
+        .catch(err => {
+            router.push("/auth/login");
+            console.log("error loggin out", err);
+        })
+    }
     
   return (
     <Layout >

@@ -1,30 +1,86 @@
 import axiosInstance from "../../../utils/axiosConfig";
 import { acceptInvite, hireWorker, jobs, jopApply, rejectInvite } from "../../../utils/interface";
 
-export const getJobs = async () => {
+interface IParams {
+  pageNumber: number; 
+  pageSize: number;
+  search?: string;
+  CreatedFrom?: string;
+  CreatedTo?: string;
+  PreferredStartDate?: string;
+  PreferredEndDate?: string;
+  Status?: number | undefined
+}
+export const getClientJobs = async (
+  pageNumber: number = 1,
+  pageSize: number = 10,
+  search?: string,
+  CreatedFrom?: string,
+  CreatedTo?: string,
+  PreferredStartDate?: string,
+  PreferredEndDate?: string,
+) => {
+    const params: { 
+      pageNumber: number; 
+      pageSize: number;
+      search?: string;
+      CreatedFrom?: string;
+      CreatedTo?: string;
+      PreferredStartDate?: string;
+      PreferredEndDate?: string;
+      Status?: number | undefined
+    } = {
+      pageNumber,
+      pageSize,
+    };
+
+    if (search) params.search = search;
+    if (CreatedFrom) params.CreatedFrom = CreatedFrom;
+    if (CreatedTo) params.CreatedTo = CreatedTo;
+    if (PreferredStartDate) params.PreferredStartDate = PreferredStartDate;
+    if (PreferredEndDate) params.PreferredEndDate = PreferredEndDate;
     const url = `/Job/client/jobs`;
-    const response = await axiosInstance.get(url);
+    const response = await axiosInstance.get(url, { params });
 
     return Promise.resolve(response);
 }
 
-export const getAllJobs = async () => {
+export const getAllJobs = async (
+  pageNumber: number = 1,
+  pageSize: number = 10,
+  search?: string,
+  CreatedFrom?: string,
+  CreatedTo?: string,
+  PreferredStartDate?: string,
+  PreferredEndDate?: string,
+) => {
+    const params: IParams = {
+      pageNumber,
+      pageSize,
+    };
+
+    if (search) params.search = search;
+    if (CreatedFrom) params.CreatedFrom = CreatedFrom;
+    if (CreatedTo) params.CreatedTo = CreatedTo;
+    if (PreferredStartDate) params.PreferredStartDate = PreferredStartDate;
+    if (PreferredEndDate) params.PreferredEndDate = PreferredEndDate;
+    
     const url = `/Job/all`;
-    const response = await axiosInstance.get(url);
+    const response = await axiosInstance.get(url, { params });
 
     return Promise.resolve(response);
 }
 
 export const getAJob = async (id: string) => {
     const url = `/Jobs/${id}`;
-    const response = await axiosInstance.get(url);
+    const response = await axiosInstance.get(url, { baseURL: "https://safeharbour.azurewebsites.net" });
 
     return Promise.resolve(response);
 }
 
 export const postAJob = async (data: jobs) => {
-    const url = `/Job`;
-    const response = await axiosInstance.post(url, data);
+    const url = `/job`;
+    const response = await axiosInstance.post(url, data, { baseURL: "https://safeharbour.azurewebsites.net" });
 
     return Promise.resolve(response);
 }

@@ -1,80 +1,168 @@
 "use client"
 import Container from '@/components/dashboard/Container'
-import { Col, Row, Form, Select, Input, DatePicker, Button, Radio, InputNumber } from 'antd'
+import { Col, Row, Form, Select, Input, DatePicker, Button, InputNumber, Checkbox, App } from 'antd'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { Post } from '../../../../../assets/image'
-
+import { categoryType, jobs } from '../../../../../utils/interface'
+import { useServiceCategory } from '@/hooks/useServiceCategory'
+import Status from '@/components/general/Status'
+import { dayOfWeek } from '../../../../../utils/savedInfo'
+import { postAJob } from '@/redux/action/jobs'
+import { createErrorMessage } from '../../../../../utils/errorInstance'
+import { useRouter } from 'next/navigation'
+import dayjs from "dayjs";
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 const Page = () => {
-  const [form] = Form.useForm();
-  const [ steps, setSteps ] = useState<number>(1);
+    const router = useRouter();
+    const { modal, message } = App.useApp();
+    const [form] = Form.useForm();
+    const [ steps, setSteps ] = useState<number>(1);
+    const [ jobDetails, setJobDetails ] = useState<jobs>();
+    const { categories, loading: serviceLoading } = useServiceCategory();
+    const [ selected, setSelected ] = useState<number[]>([]);
+    const [ isRecurring, setIsRecurring ] = useState(false);
+    const [ loading, setLoading ] = useState(false);
 
-  const renderStep = (step: number) => {
+    const renderStep = (step: number) => {
         switch (step) {
-            case 1:
-                return <>
-                    <FormItem label="Service Category" name="category" rules={[{required: true}]}>
-                        <Select placeholder="Select a sevice category">
+        case 1:
+        return <>
+            <FormItem label="Service Category" name="serviceCategoryId" rules={[{required: true}]}>
+                <Select placeholder="Select a sevice category" loading={serviceLoading}>
+                    {categories.map((category: categoryType, i: number) => <Option value={category.id} key={i}>{category.name}</Option>)}
+                </Select>
+            </FormItem>
+            <FormItem label="Job Title" name="jobTitle" rules={[{required: true}]}>
+                <Input placeholder='e.g., Weekly house cleaning needed' /> 
+            </FormItem>
 
-                        </Select>
-                    </FormItem>
-                    <FormItem label="Job Title" name="title" rules={[{required: true}]}>
-                        <Input placeholder='e.g., Weekly house cleaning needed' /> 
-                    </FormItem>
+            <FormItem label="Description" name="jobDescription" rules={[{required: true}]}>
+                <Input.TextArea draggable={false} rows={5} placeholder='Describe what you need help with any specific requirements, and what to expect..' /> 
+            </FormItem>
 
-                    <FormItem label="Description" name="description" rules={[{required: true}]}>
-                        <Input.TextArea rows={5} placeholder='Describe what you need help with any specific requirements, and what to expect..' /> 
-                    </FormItem>
+            <FormItem label="Date Needed" name="dateNeeded" rules={[{ required: true, message: "Please select a date" }]}>
+                <DatePicker style={{width: "100%",}} placeholder="Select Date" />
+            </FormItem>
 
-                     <FormItem label="Date Needed" name="date" rules={[{required: true}]}>
-                        <DatePicker style={{width: "100%",}} placeholder="Select Date" />
-                    </FormItem>
-                    <FormItem label="Time Preference" name="time" rules={[{required: true}]}>
-                        <Select placeholder="Select TIme">
+            <FormItem label="Time Preference" name="timePreference" rules={[{required: true}]}>
+                <Select placeholder="Select TIme">
+                    <Option value={1}>Morning (8AM - 12PM)</Option>
+                    <Option value={2}>Afternoon (12PM - 5PM)</Option>
+                    <Option value={3}>Evening (5PM - 9PM)</Option>
+                    <Option value={4}>Overnight (9PM - 8AM)</Option>
+                </Select>
+            </FormItem>
 
-                        </Select>
-                    </FormItem>
+            <FormItem className='flex justify-end'>
+                <Button onClick={() => handleProcess(steps)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Next</Button>
+            </FormItem>
+        </>
+        case 2: 
+        return <>
+            <FormItem label="Budget (CAD)" name="budget" rules={[{required: true}]}>
+                <InputNumber placeholder='$120' style={{width: "100%"}} /> 
+            </FormItem>
 
-                     <FormItem className='flex justify-end'>
-                        <Button onClick={() => setSteps(2)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Next</Button>
-                    </FormItem>
-                </>
-            break;
-            case 2: 
-            return <>
-                   
+            <FormItem label="Location" name="location" rules={[{required: true}]}>
+                <Input placeholder='Your verified address will be used by default' style={{width: "100%"}} /> 
+            </FormItem>
 
-                    <FormItem label="Budget (CAD)" name="budget" rules={[{required: true}]}>
-                        <InputNumber placeholder='$120' style={{width: "100%"}} /> 
-                    </FormItem>
+            <FormItem label="" name="isReocurringJob" rules={[{required: false}]}>
+                <Checkbox checked={isRecurring} onChange={(e) => setIsRecurring(e.target.checked)}>This is a recurring job</Checkbox>
+            </FormItem>
 
-                    <FormItem label="Location" name="location" rules={[{required: true}]}>
-                        <Input placeholder='Your verified address will be used by default' style={{width: "100%"}} /> 
-                    </FormItem>
+            {isRecurring && <div className='flex items-center gap-2 mt-[-25px] mb-6'>
+                {dayOfWeek
+                .map((days: {id: number, title: string}, i: number) => 
+                    <Status 
+                    key={i} 
+                    color={selected.includes(i) ? "#fff" : "#670316"} 
+                    bg={selected.includes(i) ? "#670316" : "#fff"} 
+                    title={days.title} 
+                    onClick={() => handleSelectDays(i)}  
+                />
+                )}
+            </div>}
 
-                    <FormItem label="" name="recurring" rules={[{required: false}]}>
-                        <Radio>This is a recurring job</Radio>
-                    </FormItem>
-
-                     <div style={{width: "100%"}} className='flex justify-between !w-full'>
-                        <Button onClick={() => setSteps(1)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Previous</Button>
-                        <Button type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Post Job</Button>
-                    </div>
-                </>
-            default:<></>
-                break;
+            <div style={{width: "100%"}} className='flex justify-between !w-full'>
+                <Button onClick={() => handlePrevious(steps)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Previous</Button>
+                <Button loading={loading} type="primary" onClick={() => handleProcess(steps)} className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Post Job</Button>
+            </div>
+        </>
+        default:<></>
+        break;
         }
-  }
+    }
+
+    const handlePrevious = (step: number) => {
+        if(step === 1) return;
+        setSteps(step-1);
+    }
+
+    const handleNext = (step: number) => {
+        if(step === 5) return;
+        setSteps(step+1);
+    }
+
+    const handleSelectDays = (id: number) => {
+        if(selected.includes(id)) return setSelected((prev) => [...prev.filter(day => day!= id)])
+        else setSelected((prev) => [...prev, id]);
+    }
+
+    const handlePostJob = (details: jobs) => {
+        const payload: jobs = {
+            ...details!,
+            dateNeeded: jobDetails?.dateNeeded
+            ? dayjs(jobDetails.dateNeeded).toISOString()
+            : "",
+            isReocurringJob: isRecurring,
+        }
+        if(isRecurring) payload.reoccurringDays = selected;
+        if(isRecurring && selected.length === 0) return message.info("Select days for recurring job!")
+
+        setLoading(true);
+        postAJob(payload!)
+        .then(res => {
+            if(res.status === 200 || res.status === 201) {
+                setLoading(false);
+                modal.success({
+                    title: res.data.message,
+                    onOk: () => router.push("/dashboard/client")
+                })
+            }
+        })
+        .catch(err => {
+            modal.error({
+            title: "Unable to create job!",
+            content: err?.response
+                ? createErrorMessage(err.response.data)
+                : err.message,
+                onOk: () => setLoading(false),
+            });
+        });
+    }
+
+    const handleProcess = (step: number) => {
+        const { validateFields } = form;
+        validateFields()
+        .then(values  => {
+            setJobDetails((prev => {return {...prev, ...values}}))
+            if(step === 2) return handlePostJob({...jobDetails, ...values});
+            handleNext(step);
+        })
+        .catch(err => console.log("Validation Error", err))
+    }
   return (
     <Container active='s' hide>
     <Row gutter={[40, 15]} className='!m-0 md:!px-[100px] !my-[40px]'>
-      <Col lg={12} sm={12} xs={24}>
+      <Col lg={12} sm={0} xs={0}>
       <Image src={Post} alt='image' className='object-cover h-full w-full' />
       </Col>
 
-      <Col lg={12} sm={12} xs={24} className='!flex !flex-col justify-center gap-6'>
+      <Col lg={12} sm={24} xs={24} className='!flex !flex-col justify-center gap-6'>
         <div>
           <h1 className='t-pri !font-semibold text-[32px]'>Post A Job</h1>
           <p className='t-pri mb-6'>Post a job to see a list of top-matched workers</p>

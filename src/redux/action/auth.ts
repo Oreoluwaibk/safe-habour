@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { loginData, notificationSettings, registerPayload, User } from "../../../utils/interface";
+import { loginData, notificationSettings, registerPayload, User, WorkerProfile } from "../../../utils/interface";
 import axiosInstance from "../../../utils/axiosConfig";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -10,7 +10,7 @@ export const login = async (data:loginData) => {
     return Promise.resolve(response);
 }
 
-export const logout = async () => {
+export const logoutUser = async () => {
     const response = await axiosInstance.post(`${baseUrl}/Authentication/logout`, {});
     return Promise.resolve(response);
 }
@@ -35,6 +35,7 @@ export const loginAction = createAsyncThunk(
       token: token,
       user,
       type: roles?.[0],
+      tokenExpiry
     };
   }
 );
@@ -69,8 +70,31 @@ export const resetPassword = async(data: {newPassword: string, token: string, em
     return Promise.resolve(response);
 }
 
-export const verifyMe = async() => {
-    const response = await axios.get(`${baseUrl}/Authentication/me`);
+export const refreshToken = async(data: {token: string }) => {
+    const url = `/Authentication/refresh`;
+    const response = await axiosInstance.post(url, data);
+
+    return Promise.resolve(response);
+}
+
+export const verifyMe = async () => {
+    const url = `/Authentication/me`;
+    const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
+export const onBoardServiceWorker = async (data: WorkerProfile) => {
+    const url = `/Authentication/onboard-service-worker`;
+    const response = await axiosInstance.post(url, data);
+
+    return Promise.resolve(response);
+}
+
+export const verifyDocuments = async (data: FormData) => {
+    const url = `/Authentication/verify-documents`;
+    const response = await axiosInstance.post(url, data, { headers: { "Content-Type": "multipart/form-data"}});
+
     return Promise.resolve(response);
 }
 

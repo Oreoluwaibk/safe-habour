@@ -1,7 +1,7 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import WorkerContainer from '@/components/dashboard/WorkerContainer';
-import { Col, Row } from 'antd';
+import { App, Col, Row } from 'antd';
 import InfoWalletCards from '@/components/wallet/cards/InfoWalletCards';
 import { Icon } from '@iconify/react';
 import "@/styles/workers.css"
@@ -9,10 +9,26 @@ import AvailableContainer from '@/components/wallet/AvailableContainer';
 import UpcomingContainer from '@/components/wallet/UpcomingContainer';
 import CompleteInfo from '@/components/general/CompleteInfo';
 import { useAppSelector } from '@/hook';
+import { useAuthentication } from '@/hooks/useAuthentication';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
+  const router = useRouter();
   const [ closeInfo, setCloseInfo ] = useState(true);
+  const { message } = App.useApp();
   const { user } = useAppSelector(state => state.auth);
+  const { authentication } = useAuthentication();
+
+  useEffect(() => {
+    if(authentication) setCloseInfo(!authentication.isVerified);
+    if(authentication && !authentication?.isServiceWorkerOnboarded) {
+      message.info("Please complete your profile to access all features.")
+      setTimeout(() => {
+        router.push("/dashboard/worker/intro");
+      }, 2000);
+    }
+  }, [authentication]);
+
   return (
     <WorkerContainer active='Dashboard'>
       <div >

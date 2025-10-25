@@ -3,9 +3,20 @@ import Container from '@/components/dashboard/Container'
 import Steps from '@/components/general/Steps'
 import { ArrowLeftOutlined, ArrowRightOutlined, UploadOutlined } from '@ant-design/icons'
 import { Icon } from '@iconify/react'
-import { Button, Card, Col, Form, Input, InputNumber, Row, Select, Upload } from 'antd'
-import React, { useState } from 'react';
+import { App, Button, Card, Col, Form, Input, InputNumber, Row, Select, Upload } from 'antd'
+import React, { useEffect, useState } from 'react';
 import PhoneInput from "react-phone-input-2";
+import { allLanguages } from '../../../../../utils/savedInfo'
+import { categoryType, IUser, languageType, WorkerProfile } from '../../../../../utils/interface'
+import { useLanguage } from '@/hooks/useLAnguage'
+import { useAppSelector } from '@/hook';
+import { useServiceCategory } from '@/hooks/useServiceCategory'
+import VerificationUpload from '@/components/wallet/cards/VerificationUpload'
+import { RcFile } from 'antd/es/upload'
+import { useGeolocation } from '@/hooks/useGeolocation'
+import { onBoardServiceWorker } from '@/redux/action/auth'
+import { createErrorMessage } from '../../../../../utils/errorInstance'
+import { useRouter } from 'next/navigation'
 
 const title = [
     "Personal Information", 
@@ -30,9 +41,55 @@ const icons = [
     "famicons:pricetags"
 ]
 const FormItem = Form.Item;
+const Option = Select.Option;
 const Page = () => {
+    const router = useRouter();
+    const { user } = useAppSelector(state => state.auth);
     const [form] = Form.useForm();
+    const { modal } = App.useApp()
     const [ steps, setSteps ] = useState(1);
+    const { languages, loading: languageLoading } = useLanguage();
+    const { location: geoLocate, getLocation } = useGeolocation();
+    const { categories, loading: serviceLoading } = useServiceCategory();
+    const [ services, setServices ] = useState<number[]>([]);
+    const [ policeReport, setPoliceReport ] = useState<RcFile | null>(null);
+    const [ sectorCheck, setSectorCheck ] = useState<string|any>("");
+    const [ location, setLocation ] = useState("");
+    const [ hourlyRate, setHourlyRate ] = useState<number | null>(0);
+    const [ loading, setLoading ] = useState(false);
+    const [ selectedLang, setSelectedLang ] = useState<string[]>([])
+ 
+    useEffect(() => {
+        const getLocal = async () => {
+            await getLocation();
+        };
+
+        getLocal();
+    }, [getLocation]);
+
+    useEffect(() => {
+        if(user) 
+        form.setFieldsValue({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            phoneNumber: user.phoneNumber
+        })
+    }, [user]);
+
+    useEffect(() => {
+        const storedProfile = localStorage.getItem("safe-habour-worker-profile");
+        let profile = null;
+        if(storedProfile) {
+            profile = JSON.parse(storedProfile);
+            setSteps(profile.step);
+            form.setFieldsValue({ ...profile });
+            setServices(profile.services);
+            setLocation(profile.address);
+            setHourlyRate(profile.hourlyRate);
+            setSelectedLang(profile.languages);
+        }
+    }, [])
 
     const renderStep = (step: number) => {
     switch (step) {
@@ -41,19 +98,19 @@ const Page = () => {
         <>
         <Col lg={12} sm={24} xs={24}>
             <FormItem label="First Name" name="firstName" rules={[{required: true}]}>
-                <Input placeholder='Enter your first name' style={{height:50,}}  />
+                <Input disabled placeholder='Enter your first name' style={{height:50,}}  />
             </FormItem>
         </Col>
 
         <Col lg={12} sm={24} xs={24}>
             <FormItem label="Last Name" name="lastName" rules={[{required: true}]}>
-                <Input placeholder='Enter your last name' style={{height:50,}}  />
+                <Input disabled placeholder='Enter your last name' style={{height:50,}}  />
             </FormItem>
         </Col>
 
         <Col lg={12} sm={24} xs={24}>
             <FormItem label="Email Address" name="email" rules={[{required: true}]}>
-                <Input placeholder='Enter your email' style={{height:50,}} />
+                <Input disabled placeholder='Enter your email' style={{height:50,}} />
             </FormItem>
         </Col>
 
@@ -63,7 +120,7 @@ const Page = () => {
                     placeholder='Enter your phone number'
                     country="ca"
                     inputStyle={{width: "100%", height:50, backgroundColor: "transparent"}}
-                    
+                    disabled
                 />
             </FormItem>
         </Col>
@@ -78,14 +135,20 @@ const Page = () => {
             </FormItem>
         </Col>
         <Col lg={24} sm={24} xs={24}>
-            <FormItem label="Location" name="location" rules={[{required: true}]}>
-                <Input placeholder='City, Province (e.g., Toronto, ON)' style={{height:50,}}  /> 
+            <FormItem label="Location" name="address" rules={[{required: true}]}>
+                <Input onChange={(e) => setLocation(e.target.value)} placeholder='City, Province (e.g., Toronto, ON)' style={{height:50,}}  /> 
             </FormItem>
         </Col>
-        <Col lg={24} sm={24} xs={24}>
-            <FormItem label="Location" name="recurring" rules={[{required: false}]}>
-                <Select placeholder="Choose any languages you are comfortable with"  style={{height:50,}}>
-
+        <Col lg={24} sm={24} xs={24}> 
+            <FormItem label="Languages" name="languages" rules={[{ required: true }]}>
+                <Select 
+                    loading={languageLoading} 
+                    placeholder="Choose any languages you are comfortable with"  
+                    style={{height:50}}
+                    mode='multiple'
+                    onChange={setSelectedLang}
+                >
+                    {languages.map((language: languageType, i: number) => <Option value={language.longCode} key={i}>{language.name}</Option>)}
                 </Select>
             </FormItem>
         </Col>
@@ -94,51 +157,42 @@ const Page = () => {
         return (
         <>
         <Col lg={24} sm={24} xs={24}>
-            <FormItem label="Services (Select all that apply)" name="recurring" rules={[{required: false}]}>
-                <Select placeholder="Select Services" style={{height:50,}}>
-
+            <FormItem label="Services (Select all that apply)" name="services" rules={[{ required: true }]}>
+                <Select onChange={setServices} loading={serviceLoading} placeholder="Select Services" style={{height:50,}} mode="multiple">
+                    {categories.map((category: categoryType, i: number) => <Option value={category.id} key={i}>{category.name}</Option>)}
                 </Select>
             </FormItem>
-            <p className='text-[#7B7B7B] text-xs !mt-[-15px]'>Selected: 0 services</p>
+            <p className='text-[#7B7B7B] text-xs !mt-[-15px]'>Selected: {services.length} service(s)</p>
         </Col>
         
         </>)
         case 4: 
         return (
-        <Col lg={24} sm={24} xs={24}>
-            <Card 
-                title={<div className='flex flex-col pt-5 text-[#343434]'>
-                <h1 className='t-pri flex gap-2 items-center !font-semibold text-base'><Icon icon="line-md:security" fontSize={14} className='mr-1' />Police Background Check</h1>
-                <p className='t-pri mb-6 font-normal text-sm'>Current police background check report</p>
-            </div>}
-             actions={[<div key={1} className='flex items-center justify-between px-6 py-4'>
-                <Upload className='w-full' style={{width: "100%"}}>
-                <Button type="default" className='md:!w-full !h-[48px]' style={{borderRadius: 50}} icon={<UploadOutlined />}>Upload Document</Button>
-                </Upload>
-            </div>]}
-            styles={{body: {padding: 0}}}
+        <Col lg={24} sm={24} xs={24} className='!flex flex-col !gap-4'>
+            <VerificationUpload 
+                title='Police Background Check'
+                description='Current police background check report'
+                noStatus
+                value={policeReport}
+                setValue={setPoliceReport}
+                type={1}
             />
 
-            <Card 
-                title={<div className='flex flex-col pt-5 text-[#343434]'>
-                <h1 className='t-pri flex gap-2 items-center !font-semibold text-base'><Icon icon="line-md:security" fontSize={14} className='mr-1' />Vulnerable Sector Check</h1>
-                <p className='t-pri mb-6 font-normal text-sm'>Child/Adult abuse screening report</p>
-            </div>}
-             actions={[<div key={1} className='flex items-center justify-between px-6 py-4'>
-                <Upload className='w-full' style={{width: "100%"}}>
-                <Button type="default" className='md:!w-full !h-[48px]' style={{borderRadius: 50}} icon={<UploadOutlined />}>Upload Document</Button>
-                </Upload>
-            </div>]}
-            styles={{body: {padding: 0}}}
-            className='!mt-4'
+            <VerificationUpload 
+                title='Vulnerable Sector Check'
+                description='Child/Adult abuse screening report'
+                noStatus
+                value={sectorCheck}
+                setValue={setSectorCheck}
+                type={2}
             />
         </Col>)
         case 5: 
         return (
         <>
         <Col lg={24} sm={24} xs={24}>
-            <FormItem label="Hourly Rate (CAD)" name="recurring" rules={[{required: false}]}>
-                <InputNumber placeholder='$ 25.00' style={{padding:"5px 10px", width: "100%"}} min={15.00} decimalSeparator='.'  /> 
+            <FormItem label="Hourly Rate (CAD)" name="hourlyRate" rules={[{ required: true }]}>
+                <InputNumber onChange={(value) => setHourlyRate(value)} placeholder='$ 25.00' style={{padding:"5px 10px", width: "100%"}} min={15.00} decimalSeparator='.'  /> 
             </FormItem>
             <p className='text-[#7B7B7B] text-xs !mt-[-15px]'>Minimum rate is $15.00/hour. You can adjust this later</p>
         </Col>
@@ -147,20 +201,24 @@ const Page = () => {
             <h1 className='text-[#101828] font-semibold text-2xl'>Profile Summary</h1>
 
             <div className='flex flex-col gap-4 text-lg'>
-                <p className='flex items-center gap-2 text-[#0e0e0e]'><Icon icon="iconamoon:profile" fontSize={18} fontWeight={300} /> Anjola Adekunle</p>
+                <p className='flex items-center gap-2 text-[#0e0e0e]'><Icon icon="iconamoon:profile" fontSize={18} fontWeight={300} /> {user?.firstName} {user?.lastName}</p>
 
-                <p className='flex items-center gap-2 text-[#0e0e0e]'><Icon icon="ic:outline-work" fontSize={18} /> Lagos, Nigeria</p>
+                <p className='flex items-center gap-2 text-[#0e0e0e]'><Icon icon="ic:outline-work" fontSize={18} /> {location}</p>
 
-                <p className='flex items-center gap-2 text-[#0e0e0e]'><Icon icon="famicons:pricetags-outline" fontSize={18} /> $/hr</p>
+                <p className='flex items-center gap-2 text-[#0e0e0e]'><Icon icon="famicons:pricetags-outline" fontSize={18} /> ${hourlyRate}/hr</p>
             </div>
 
             <div>
                 <h1 className='text-[#101828] font-semibold text-lg'>Services</h1>
 
-                <div className='flex items-center gap-2'>
-                    <div className='bg-[#FFF8F9] !min-w-[129px] rounded-[68px] flex items-center justify-center text-[#670316]'>
-                        <span>House Cleaning</span>
-                    </div>
+                <div className='flex items-center gap-2 flex-wrap'>
+                    {handleDisplayServices(services).map((service: string, i: number) => {
+                        return (
+                            <div key={i} className='bg-[#FFF8F9] !min-w-[129px] rounded-[68px] flex items-center justify-center text-[#670316]'>
+                                <span>{service}</span>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
          </Card>
@@ -169,7 +227,7 @@ const Page = () => {
         </>)
         default:<></>
             break;
-    }
+        }
     }
 
     const handlePrevious = (step: number) => {
@@ -177,9 +235,81 @@ const Page = () => {
         setSteps(step-1);
     }
 
-     const handleNext = (step: number) => {
+    const handleNext = (step: number) => {
         if(step === 5) return;
         setSteps(step+1);
+    }
+
+    const handleSubmit = (data: WorkerProfile) => {
+        const payload: WorkerProfile = {
+            ...data,
+            latitude: geoLocate.latitude!,
+            longitude: geoLocate.longitude!,
+            languages: handleDisplayLanguage(selectedLang),
+            services: [ { serviceCategoryIds: services } ]
+        }
+
+        delete payload.step
+
+        setLoading(true);
+        onBoardServiceWorker(payload)
+        .then(res => {
+            if(res.status === 200 || res.status === 201){
+                setLoading(false);
+                modal.success({
+                    title: res.data.message,
+                    onOk: () => router.push("/dashboard/worker")
+                })
+            }
+        })
+        .catch((err) => {
+            modal.error({
+                title: "Error",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false),
+            });
+        });
+
+    }
+
+    const handleCheck = (step: number) => {
+        const { validateFields } = form;
+        validateFields()
+        .then(values  => {
+            const storedProfile = localStorage.getItem("safe-habour-worker-profile");
+            let profile = null;
+            if(storedProfile) {
+                profile = JSON.parse(storedProfile);
+                localStorage.setItem("safe-habour-worker-profile", JSON.stringify({...profile, ...values, step: steps}))
+            }else localStorage.setItem("safe-habour-worker-profile", JSON.stringify({...values, step: steps}));
+
+            if(step === 5) handleSubmit({...profile, ...values});
+            else handleNext(step);
+        })
+        .catch(err => console.log("Validation Error", err))
+    }
+
+    const handleDisplayServices = (serviceIds: number[]): string[] => {
+        const selectedServices = categories
+        .filter(service => serviceIds.includes(service.id))
+        .map(service => service.name);
+
+        return selectedServices;
+    }
+    
+    const handleDisplayLanguage = (languageCode: string[]): {name: string; code: string; longCode: string;}[] => {
+        const selectedLanguages = languages
+        .filter(language => languageCode.includes(language.longCode))
+        .map(language => {
+            return { ...language }
+        });
+
+        console.log("selected", selectedLanguages);
+        
+
+        return selectedLanguages;
     }
   return (
     <Container active='s' hide center>
@@ -193,7 +323,7 @@ const Page = () => {
             }
             actions={[<div key={1} className='flex items-center justify-between px-6 py-4'>
                 <Button disabled={steps===1} onClick={() => handlePrevious(steps)} type="default" className='md:!w-[129px] !h-[48px] !text-[#670316]' style={{borderRadius: 50}}><ArrowLeftOutlined /> Previous</Button>
-                <Button disabled={steps===5} onClick={() => handleNext(steps)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Next <ArrowRightOutlined className='ml-1' /></Button>
+                <Button loading={loading} onClick={() => handleCheck(steps)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>{steps===5 ? "Submit" : "Next"} {steps !== 5 &&<ArrowRightOutlined className='ml-1' />}</Button>
             </div>]}
             className='md:!w-[712px] justify-self-center !my-6'
             styles={{ body: {display: "flex", flexDirection: "column", gap: 20}}}
@@ -213,7 +343,6 @@ const Page = () => {
                 <Row gutter={[15, 15]}>
                     {renderStep(steps)}
                 </Row>
-                
             </Form>
         </Card>
     </Container>

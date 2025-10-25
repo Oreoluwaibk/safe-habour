@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Button, Col, Layout, Row } from 'antd';
 import Image from 'next/image';
 import { LinkedinFilled, MenuOutlined, TwitterOutlined } from '@ant-design/icons';
@@ -39,20 +39,22 @@ const Container = ({
     const [open, setOpen] = useState(false);
     const { isAuthenticated } = useAppSelector(state => state.auth);
 
-    useEffect(() => {
-        if(!isAuthenticated) handleLogut();
-    }, [isAuthenticated]);
+    const handleLogout = useCallback(() => {
+    logoutUser()
+      .then((res) => {
+        if (res.status === 200) {
+          router.push("/auth/login");
+        }
+      })
+      .catch((err) => {
+        console.log("error logging out", err);
+        router.push("/auth/login");
+      });
+  }, [router]); // ✅ stable dependency
 
-    const handleLogut = () => {
-        logoutUser()
-        .then(res => {
-            if(res.status === 200)  router.push("/auth/login");
-        })
-        .catch(err => {
-            router.push("/auth/login");
-            console.log("error loggin out", err);
-        })
-    }
+  useEffect(() => {
+    if (!isAuthenticated) handleLogout();
+  }, [isAuthenticated, handleLogout]); 
     
   return (
     <Layout >

@@ -52,7 +52,7 @@ const Page = () => {
     const { categories, loading: serviceLoading } = useServiceCategory();
     const [ services, setServices ] = useState<number[]>([]);
     const [ policeReport, setPoliceReport ] = useState<RcFile | null>(null);
-    const [ sectorCheck, setSectorCheck ] = useState<string|any>("");
+    const [ sectorCheck, setSectorCheck ] = useState<RcFile | null>(null);
     const [ location, setLocation ] = useState("");
     const [ hourlyRate, setHourlyRate ] = useState<number | null>(0);
     const [ loading, setLoading ] = useState(false);

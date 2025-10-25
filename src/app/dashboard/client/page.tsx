@@ -2,7 +2,7 @@
 import ClientContainer from '@/components/dashboard/ClientContainer'
 import CompleteInfo from '@/components/general/CompleteInfo'
 import { ArrowRightOutlined } from '@ant-design/icons'
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import "@/styles/client.css"
 import Link from 'next/link';
 import { Col, Row, App } from 'antd';
@@ -28,26 +28,26 @@ const Page = () => {
     if(authentication) setCloseInfo(!authentication.isProfileComplete)
   }, [authentication])
 
+  const handleGetClientJobs = useCallback(() => {
+    getClientJobs()
+      .then((res) => {
+        if (res.status === 200) {
+          if (res.data.data && res.data.data?.totalItems === 0) {
+            message.info(`Welcome ${user?.lastName}, kindly create a job to continue!`);
+            setTimeout(() => {
+              router.push("/dashboard/client/intro");
+            }, 2000);
+          }
+        }
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  }, [router, user?.lastName]);
+
   useEffect(() => {
     handleGetClientJobs();
-  }, [])
-
-  const handleGetClientJobs = () => {
-    getClientJobs()
-    .then(res => {
-      if(res.status === 200) {
-        if(res.data.data && res.data.data?.totalItems === 0) {
-          message.info(`Welcome ${user?.lastName}, kindly create a job to continue!`);
-          setTimeout(() => {
-            router.push("/dashboard/client/intro");
-          }, 2000);
-        }
-      }
-    })
-    .catch(err => {
-      console.log("error", err);
-    })
-  }
+  }, [handleGetClientJobs]);
 
   return (
     <ClientContainer active='Dashboard'>

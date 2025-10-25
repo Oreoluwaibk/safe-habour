@@ -4,7 +4,7 @@ import { BellFilled, MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-des
 import { Button, Layout } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import ClientSidemenu from './ClientSideMenu';
 import { Logo } from '../../../assets/logo';
 import Image from 'next/image';
@@ -38,20 +38,22 @@ const ClientContainer = ({
     const [ showNotification, setShowNotification ] = useState(false);
     const { isAuthenticated } = useAppSelector(state => state.auth);
     
-    useEffect(() => {
-        if(!isAuthenticated) handleLogut();
-    }, [isAuthenticated]);
+    const handleLogout = useCallback(() => {
+    logoutUser()
+      .then((res) => {
+        if (res.status === 200) {
+          router.push("/auth/login");
+        }
+      })
+      .catch((err) => {
+        console.log("error logging out", err);
+        router.push("/auth/login");
+      });
+  }, [router]); // ✅ stable dependency
 
-    const handleLogut = () => {
-        logoutUser()
-        .then(res => {
-            if(res.status === 200)  router.push("/auth/login");
-        })
-        .catch(err => {
-            router.push("/auth/login");
-            console.log("error loggin out", err);
-        })
-    }
+  useEffect(() => {
+    if (!isAuthenticated) handleLogout();
+  }, [isAuthenticated, handleLogout]); 
     
   return (
      <Layout >

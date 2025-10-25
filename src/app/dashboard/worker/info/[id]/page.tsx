@@ -7,11 +7,11 @@ import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons'
 import { App, Button, Card, Col, Row, Skeleton } from 'antd'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { C1 } from '../../../../../../assets/image'
 import { Icon } from '@iconify/react'
 import { getAJob } from '@/redux/action/jobs'
-import { categoryType, jobs } from '../../../../../../utils/interface'
+import { jobs } from '../../../../../../utils/interface'
 import { createErrorMessage } from '../../../../../../utils/errorInstance'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
 import { handleDisplayServices } from '../../../../../../utils/converters'
@@ -28,16 +28,12 @@ const Page = () => {
     const { categories } = useServiceCategory();
     const [ openModal, setOpenModal ] = useState(false);
 
-    useEffect(() => {
-        if(id) handleGetJobs(id.toString());
-    }, [id])
-    
-    const handleGetJobs = (id: string) => {
-        setLoading(true);
-        getAJob(id)
-        .then(res => {
-          if(res.status === 200 || res.status === 201){
-            setLoading(false);
+    const handleGetJobs = useCallback(
+    (id: string) => {
+      setLoading(true);
+      getAJob(id)
+        .then((res) => {
+          if (res.status === 200 || res.status === 201) {
             setJob(res.data.data);
           }
         })
@@ -45,12 +41,19 @@ const Page = () => {
           modal.error({
             title: "Unable to get this job",
             content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
+              ? createErrorMessage(err.response.data)
+              : err.message,
             onOk: () => setLoading(false),
           });
-        });
-    }
+        })
+        .finally(() => setLoading(false));
+    },
+    [modal] // dependencies
+  );
+
+  useEffect(() => {
+    if (id) handleGetJobs(id.toString());
+  }, [id, handleGetJobs]);
     
   return (
     <WorkerContainer active='Dashboard'>

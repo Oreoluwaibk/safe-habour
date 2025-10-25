@@ -1,7 +1,7 @@
 "use client"
 import { Icon } from '@iconify/react'
 import { App, Button, Card, Col, Row, Select } from 'antd'
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import "@/styles/workers.css";
 import AvailableJobCard from './cards/AvailableJobCard';
 import { useRouter } from 'next/navigation';
@@ -19,29 +19,30 @@ const AvailableContainer = ({ isJobs }: props) => {
   const [ loading, setLoading ] = useState(false);
   const [ allJobs, setAllJobs ] = useState<jobs[]>([]);
 
-  useEffect(() => {
-    handleGetJobs();
-  }, [])
-
-  const handleGetJobs = () => {
+   const handleGetJobs = useCallback(() => {
     setLoading(true);
     getAllJobs()
-    .then(res => {
-      if(res.status === 200 || res.status === 201){
-        setLoading(false);
-        setAllJobs(res.data.data.list)
-      }
-    })
-    .catch((err) => {
-      modal.error({
-        title: "Error",
-        content: err?.response
+      .then((res) => {
+        if (res.status === 200 || res.status === 201) {
+          setAllJobs(res.data.data.list);
+        }
+      })
+      .catch((err) => {
+        modal.error({
+          title: "Error",
+          content: err?.response
             ? createErrorMessage(err.response.data)
             : err.message,
-        onOk: () => setLoading(false),
-      });
-    });
-  }
+          onOk: () => setLoading(false),
+        });
+      })
+      .finally(() => setLoading(false)); // ✅ ensures loading resets even if error
+  }, [modal]); 
+
+  useEffect(() => {
+    handleGetJobs();
+  }, [handleGetJobs]);
+
   return (
     <Card
     title={<div className='flex flex-col pt-5 text-[#343434]'>

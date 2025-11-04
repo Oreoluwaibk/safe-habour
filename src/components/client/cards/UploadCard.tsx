@@ -2,10 +2,10 @@ import { Card, Upload } from 'antd'
 import React, { ReactNode } from 'react'
 
 interface props {
-    title: string;
-    description: string;
-    icon: ReactNode;
-    isUploaded?: boolean
+  title: string;
+  description: string;
+  icon: ReactNode;
+  isUploaded?: boolean
 }
 const UploadCard = ({ title, description, icon, isUploaded }: props) => {
   return (

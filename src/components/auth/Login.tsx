@@ -8,8 +8,11 @@ import Socialbtn from '../general/Socialbtn';
 import { LinkedinFilled } from '@ant-design/icons';
 import { login, loginAction } from '@/redux/action/auth';
 import { createErrorMessage } from '../../../utils/errorInstance';
-import { useAppDispatch } from '@/hook';
+import { useAppDispatch, useAppSelector } from '@/hook';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { setLastRoute } from '@/redux/reducer/auth/auth';
+import TwoFaModal from '../general/modal/TwoFaModal';
 
 const FormItem = Form.Item;
 const Login = () => {
@@ -17,9 +20,11 @@ const Login = () => {
     const [ loading, setLoading ] = useState(false);
     const [ rememberMe, setRememberMe ] = useState(false);
     const { modal } = App.useApp();
+    const { lastRoute } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
     const router = useRouter();
-
+    const [ open2FAModal, setOpen2FAModal ] = useState(false);
+    const [ email, setEmail ] = useState("");
     useEffect(() => {
         const savedCredentials = localStorage.getItem("safehabour_credentials");
         if (savedCredentials) {
@@ -36,7 +41,7 @@ const Login = () => {
         .then((value) => {
         const { email, password } = value;
         const payload = { email, password, rememberMe };
-
+        
         setLoading(true);
         login(payload)
         .then(async (res) => {
@@ -50,17 +55,45 @@ const Login = () => {
                         else  localStorage.removeItem("safehabour_credentials");
 
                         const result = await dispatch(loginAction(res.data.data));
-                        console.log("result", result);
                         
                         const role = res.data.data?.roles?.[0];
-                        
-                        if (role === "ClientUser") router.push("/dashboard/client");
+                        if (lastRoute) {
+                            router.push(lastRoute);
+                            dispatch(setLastRoute(null)); // clear it
+                        } 
+                        else if (role === "ClientUser") router.push("/dashboard/client");
                         else if (role === "ServiceWorker") {
                             if(res.data.data.user?.isServiceWorkerOnboarded) router.push("/dashboard/worker");
                             else router.push("/dashboard/worker/intro");
                         };
                     },
                 });    
+            }
+            if(res.status === 202) {
+                setEmail(email);
+                modal.success({
+                    title: res.data.message,
+                    content: "",
+                    onOk: async () => {
+                        if (rememberMe)  localStorage.setItem("safehabour_credentials", JSON.stringify({ email, password }));
+                        else  localStorage.removeItem("safehabour_credentials");
+                        setOpen2FAModal(true);
+                        
+
+                        // const result = await dispatch(loginAction(res.data.data));
+                        
+                        // const role = res.data.data?.roles?.[0];
+                        // if (lastRoute) {
+                        //     router.push(lastRoute);
+                        //     dispatch(setLastRoute(null)); // clear it
+                        // } 
+                        // else if (role === "ClientUser") router.push("/dashboard/client");
+                        // else if (role === "ServiceWorker") {
+                        //     if(res.data.data.user?.isServiceWorkerOnboarded) router.push("/dashboard/worker");
+                        //     else router.push("/dashboard/worker/intro");
+                        // };
+                    },
+                }); 
             }
         })
         .catch((err) => {
@@ -137,6 +170,14 @@ const Login = () => {
 
            
         </Form>
+        {open2FAModal && <TwoFaModal 
+            open={open2FAModal} 
+            email={email} 
+            onCancel={() => {
+                setLoading(false);
+                setOpen2FAModal(false);
+            }} 
+        />}
     </div>
   )
 }

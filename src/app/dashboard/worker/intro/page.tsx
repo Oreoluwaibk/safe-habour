@@ -257,13 +257,16 @@ const Page = () => {
                 setLoading(false);
                 modal.success({
                     title: res.data.message,
-                    onOk: () => router.push("/dashboard/worker")
+                    onOk: () => {
+                        router.push("/dashboard/worker");
+                        localStorage.removeItem("safe-habour-worker-profile");
+                    }
                 })
             }
         })
         .catch((err) => {
             modal.error({
-                title: "Error",
+                title: "Unable to complete worker's onboarding",
                 content: err?.response
                     ? createErrorMessage(err.response.data)
                     : err.message,
@@ -304,10 +307,6 @@ const Page = () => {
         .map(language => {
             return { ...language }
         });
-
-        console.log("selected", selectedLanguages);
-        
-
         return selectedLanguages;
     }
   return (

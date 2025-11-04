@@ -11,7 +11,9 @@ export const login = async (data:loginData) => {
 }
 
 export const logoutUser = async () => {
-    const response = await axiosInstance.post(`${baseUrl}/Authentication/logout`, {});
+    const url = `/Authentication/logout`;
+    const response = await axiosInstance.post(url, {});
+
     return Promise.resolve(response);
 }
 
@@ -112,14 +114,14 @@ export const updateNotificationSetting = async (data: notificationSettings) => {
     return Promise.resolve(response);
 }
 
-export const updateTwoFASetting = async (data: { email: string; code: string }) => {
+export const updateTwoFASetting = async (data: { enableTwoFactor: boolean; userId: string }) => {
     const url = `/Authentication/two-factor-settings`;
     const response = await axiosInstance.put(url, data);
 
     return Promise.resolve(response);
 }
 
-export const verifyTwoFASetting = async (data: { enableTwoFactor: boolean; userId: string }) => {
+export const verifyTwoFASetting = async (data: { email: string; code: string,  }) => {
     const url = `/Authentication/verify-two-factor`;
     const response = await axiosInstance.post(url, data);
 
@@ -135,6 +137,13 @@ export const twoFASetting = async (data: { email: string; code: string }) => {
 
 export const twoFASettingVerify = async (data: { enableTwoFactor: boolean; userId: string }) => {
     const url = `/TwoFactor/settings`;
+    const response = await axiosInstance.post(url, data);
+
+    return Promise.resolve(response);
+}
+
+export const changePassword = async (data: { currentPassword: string; newPassword: string }) => {
+    const url = `/Authentication/change-password`;
     const response = await axiosInstance.post(url, data);
 
     return Promise.resolve(response);

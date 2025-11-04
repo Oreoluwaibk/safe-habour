@@ -7,9 +7,14 @@ import "@/styles/setting.css";
 import ServicesInfo from '@/components/wallet/profile/Services'
 import Verification from '@/components/wallet/profile/Verification'
 import Review from '@/components/client/settings/Review'
+import { useAuthentication } from '@/hooks/useAuthentication'
+import { useServiceCategory } from '@/hooks/useServiceCategory'
+import WorkerReview from '@/components/wallet/profile/WorkerReview'
 
 const Page = () => {
-    const [ active, setActive ] = useState("Profile Info");
+  const [ active, setActive ] = useState("Profile Info");
+  const { authentication, handleGetAuthentication, loading: authLoading } = useAuthentication();
+  const { categories, loading: serviceLoading } = useServiceCategory();
   return (
     <WorkerContainer active='Profile'>
       <div >
@@ -21,7 +26,7 @@ const Page = () => {
       <div  className='mb-6'>
         <Segmented 
           options={["Profile Info", "Services & Rate", "Verification", "Review"]}
-          defaultValue='Profile Info'
+          defaultValue={active}
           value={active}
           onChange={(value) => setActive(value)}
         />
@@ -29,16 +34,31 @@ const Page = () => {
 
       <Row className='min-h-[90vh]'>
         {active === "Profile Info" && <Col lg={24} sm={24} xs={24} className='md:!px-[100px]'>
-          <ProfileInfo />
+          <ProfileInfo  
+            authentication={authentication!} 
+            handleGetAuthentication={handleGetAuthentication} 
+            categories={categories}
+            authLoading={authLoading}
+          />
         </Col>}
         {active === "Services & Rate" && <Col lg={24} sm={24} xs={24}>
-          <ServicesInfo />
+          <ServicesInfo 
+            authentication={authentication!} 
+            handleGetAuthentication={handleGetAuthentication}
+            categories={categories}
+            serviceLoading={serviceLoading}
+            authLoading={authLoading}
+          />
         </Col>}
         {active === "Verification" && <Col lg={24} sm={24} xs={24}  className='md:!px-[200px]'>
-          <Verification />
+          <Verification 
+            authentication={authentication!} 
+            handleGetAuthentication={handleGetAuthentication}
+            authLoading={authLoading}
+          />
         </Col>}
         {active === "Review" && <Col lg={24} sm={24} xs={24} className='md:!px-[100px]'>
-          <Review worker />
+          <WorkerReview userId={authentication?.id! || ""}  />
         </Col>}
       </Row>
     </WorkerContainer>

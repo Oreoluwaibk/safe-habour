@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Location {
   latitude: number | null;
@@ -94,6 +94,10 @@ export const useGeolocation = (): GeolocationState => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getLocation();
+  }, [])
 
   return { location, loading, error, getLocation };
 };

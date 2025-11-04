@@ -122,8 +122,8 @@ const PostJob = ({ open, onCancel }: props) => {
     const handlePostJob = (details: jobs) => {
         const payload: jobs = {
             ...details!,
-            dateNeeded: jobDetails?.dateNeeded
-            ? dayjs(jobDetails.dateNeeded).toISOString()
+            dateNeeded: details?.dateNeeded
+            ? dayjs(details.dateNeeded).toISOString()
             : "",
             isReocurringJob: isRecurring,
         }

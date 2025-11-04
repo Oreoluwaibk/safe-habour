@@ -1,11 +1,12 @@
 import axios from "axios";
 import { store } from "@/store";
-import { selectedToken, selectedTokenExpiry } from "@/redux/reducer/auth/auth";
+import { selectedToken, selectedTokenExpiry, setLastRoute } from "@/redux/reducer/auth/auth";
 import { setToken, logoutUser } from "@/redux/reducer/auth/auth";
 import { refreshToken } from "@/redux/action/auth";
 // import { refreshToken } from "@/services/auth";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
+export const pictureUrl = process.env.NEXT_PUBLIC_PROFILE_URL;
 
 const axiosInstance = axios.create({
   baseURL,
@@ -40,6 +41,10 @@ const handleTokenRefresh = async (oldToken: string) => {
     return newToken;
   } catch (err) {
     processQueue(err, null);
+    if (typeof window !== "undefined") {
+      const currentUrl = window.location.pathname + window.location.search;
+      store.dispatch(setLastRoute(currentUrl));
+    }
     store.dispatch(logoutUser());
     throw err;
   } finally {
@@ -90,6 +95,10 @@ axiosInstance.interceptors.response.use(
       const token = selectedToken(state);
 
       if (!token) {
+        if (typeof window !== "undefined") {
+          const currentUrl = window.location.pathname + window.location.search;
+          store.dispatch(setLastRoute(currentUrl));
+        }
         store.dispatch(logoutUser());
         return Promise.reject(error);
       }

@@ -12,13 +12,55 @@ import { useAppSelector } from '@/hook';
 import { getClientJobs } from '@/redux/action/jobs';
 import { useRouter } from 'next/navigation';
 import { useAuthentication } from '@/hooks/useAuthentication';
+import { createErrorMessage } from '../../../../utils/errorInstance';
+import { getClientMetrics } from '@/redux/action/client';
+import { IClientDashboardMetrics } from '../../../../utils/interface';
 
 const Page = () => {
   const router = useRouter();
+  const { modal } = App.useApp();
   const [ closeInfo, setCloseInfo ] = useState(false);
   const { user } = useAppSelector(state => state.auth);
   const { message } = App.useApp();
-  const { authentication } = useAuthentication()
+  const { authentication } = useAuthentication();
+  const [ metrics, setMetrics ] = useState<IClientDashboardMetrics>({ 
+    "activeJobs": 0, 
+    "totalSpent": 0, 
+    "refundsIssued": 0, 
+    "pendingTransactions": 0, 
+    "totalTransactions": 0, 
+    "totalTransactionAmount": 0, 
+    "thisMonthTransactions": 0, 
+    "thisMonthAmount": 0, 
+    "lastMonthTransactions": 0, 
+    "lastMonthAmount": 0, 
+    "percentageChangeFromLastMonth": 0, 
+    "changeDescription": "No transactions yet", 
+    "totalCompletedJobs": 0, 
+    "averageJobCost": 0, 
+    "currentMonth": { 
+      "jobsCompleted": 0, 
+      "jobsPosted": 0, 
+      "transactionCount": 0, 
+      "totalSpent": 0, 
+      "averageJobCost": 0, 
+      "year": 2025, "month": 11, 
+      "monthName": "November 2025"
+     }, 
+     "previousMonth": { 
+      "jobsCompleted": 0, 
+      "jobsPosted": 11, 
+      "transactionCount": 0, 
+      "totalSpent": 0, 
+      "averageJobCost": 0,
+       "year": 2025, 
+       "month": 10, 
+       "monthName": 
+       "October 2025" 
+      }, 
+      "activeJobsList": [] 
+    });
+  const [ loading, setLoading ] = useState(false);
 
   useEffect(() => {
     if(user) setCloseInfo(!user.isProfileComplete)
@@ -45,6 +87,30 @@ const Page = () => {
       });
   }, [router, user?.lastName, message]);
 
+  const handleGetMetrics = useCallback(() => {
+    setLoading(true);
+    getClientMetrics()
+    .then(res => {
+      if(res.status === 200) {
+        setLoading(false);
+        setMetrics(res.data);
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to get metrics",
+        content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+      });
+    })
+  }, []);
+
+  useEffect(() => {
+    handleGetMetrics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     handleGetClientJobs();
   }, [handleGetClientJobs]);
@@ -67,25 +133,25 @@ const Page = () => {
         <Col lg={6} sm={12} xs={24}>
           <InfoCards 
             title='Active Bookings'
-            amount={4}
+            amount={metrics.activeJobs}
           />
         </Col>
         <Col lg={6} sm={12} xs={24}>
           <InfoCards 
             title='Total Spent'
-            amount="$1200 CAD"
+            amount={`$${metrics.totalSpent.toFixed(2)} CAD`}
           />
         </Col>
         <Col lg={6} sm={12} xs={24}>
           <InfoCards 
             title='Refund Issued'
-            amount="$300 CAD"
+            amount={`$${metrics.refundsIssued.toFixed(2)} CAD`}
           />
         </Col>
         <Col lg={6} sm={12} xs={24}>
           <InfoCards 
             title='Pending Transactions'
-            amount={2}
+            amount={metrics.pendingTransactions}
           />
         </Col>
       </Row>

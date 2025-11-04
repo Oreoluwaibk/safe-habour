@@ -1,6 +1,20 @@
 import axiosInstance from "../../../utils/axiosConfig";
 import { userProfile } from "../../../utils/interface";
 
+export interface IClientParams {
+  pageNumber: number; 
+  pageSize: number;
+  searchTerm?: string;
+  TimePeriod?: number;
+  status?: string;
+  minHourlyRate?: number | null;
+  maxHourlyRate?: number | null;
+  isAvailable?: boolean;
+  latitude?: number;
+  longitude?: number;
+  location?: string;
+}
+
 
 export const getClientProfile = async () => {
     const url = `/ClientUser/profile`;
@@ -33,6 +47,50 @@ export const getClientUsers = async (id: string) => {
 export const getClientUserCompletion = async () => {
     const url = `/ClientUser/profile/completion`;
     const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
+export const getClientMetrics = async () => {
+    const url = `/ClientUser/dashboard`;
+    const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
+export const getServiceWorkerByCategory = async (
+    data: { serviceNames: string[]},
+    pageNumber: number = 1,
+    pageSize: number = 8,
+    searchTerm?: string,
+    location?: string,
+    minHourlyRate?: number | null,
+    maxHourlyRate?: number | null,
+    latitude?: number,
+    longitude?: number,
+) => {
+    const params: IClientParams = {
+        pageNumber,
+        pageSize,
+        minHourlyRate,
+        maxHourlyRate,
+        latitude,
+        longitude,
+        searchTerm,
+        location
+    //   isAvailable,
+    };
+
+    if (minHourlyRate) params.minHourlyRate = minHourlyRate;
+    if (maxHourlyRate) params.maxHourlyRate = maxHourlyRate;
+    if (latitude) params.latitude = latitude;
+    if (longitude) params.longitude = longitude;
+    if(searchTerm) params.searchTerm = searchTerm;
+    if(location) params.location = location;
+    
+    // if(isAvailable) params.isAvailable = is
+    const url = `/ServiceWorker/search`;
+    const response = await axiosInstance.post(url, data, { params });
 
     return Promise.resolve(response);
 }

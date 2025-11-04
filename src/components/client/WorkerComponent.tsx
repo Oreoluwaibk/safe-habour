@@ -1,26 +1,173 @@
 "use client"
 import "@/styles/client.css"
-import { Checkbox, Col, Layout, Row, Tabs, TabsProps, Slider, Input, Pagination, PaginationProps } from 'antd';
-import React, { useEffect, useState } from 'react'
+import { Checkbox, Col, Layout, Row, Tabs, TabsProps, Slider, Pagination, PaginationProps, App, Skeleton, Radio, InputNumber } from 'antd';
+import React, { act, useCallback, useEffect, useState } from 'react'
 import Search from '../general/Search';
-import { ArrowLeftOutlined, ArrowRightOutlined, CloseOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import { FaCloudRain } from "react-icons/fa";
 import Image from "next/image";
 import { Filter } from "../../../assets/icons";
 import { GiCook } from "react-icons/gi";
 import { HealthWorker, PlantationWorker } from "healthicons-react";
 import WorkersCard from "./cards/WorkersCard";
+import { Icon } from "@iconify/react";
+import { useServiceCategory } from "@/hooks/useServiceCategory";
+import { categoryType, UserWorkerProfile } from "../../../utils/interface";
+import { getServiceWorkerByCategory, IClientParams } from "@/redux/action/client";
+import { createErrorMessage } from "../../../utils/errorInstance";
+import useDebounce from "@/hooks/useDebounce";
+import { useGeolocation } from "@/hooks/useGeolocation";
+import { min } from "moment";
 
 interface props {
     isDashboard?: boolean;
 }
 const { Content, Sider } = Layout;
 
+const icons = [
+    <Icon icon="healthicons:health-worker-24px" />,
+    <FaCloudRain />,
+    <GiCook />,
+    <Icon icon="streamline-sharp:cleaning-room-woman-solid" />,
+    <Icon icon="healthicons:plantation-worker" />,
+    <Icon icon="healthicons:health-worker-24px" />,
+]
 const WorkerComponent = ({ isDashboard }: props) => {
+    const { modal } = App.useApp();
     const [ showSearch, setShowSearch ] = useState(false);
     const [ collasped, setCollapsed ] = useState(true);
-    const [ active, setActive ] = useState("1");
+    const [ loading, setLoading ] = useState(false)
+    const [ active, setActive ] = useState("Careworker");
+    const { categories, loading: serviceLoading } = useServiceCategory();
+    const { location } = useGeolocation();
+    const [filters, setFilters] = useState<IClientParams>({
+        pageNumber: 1,
+        pageSize: 8,
+        searchTerm: "",
+        location: "",
+        minHourlyRate: 0,
+        maxHourlyRate: 0,
+        latitude: 0,
+        longitude: 0
+    });
+    const [ selectedCategory, setSelectedCategory ] = useState<string[]>(["Careworker"])
+    const [ workers, setWorkers ] = useState<UserWorkerProfile[]>([]);
+    const [ total, setTotal ] = useState(0);
+    const [ nearMe, setNearMe ] = useState(false);
 
+    const debouncedMin = useDebounce(filters.minHourlyRate!, 500);
+    const debouncedMax = useDebounce(filters.maxHourlyRate!, 500);
+    const debouncedSearch = useDebounce(filters?.searchTerm as string, 500);
+    const debouncedLocation = useDebounce(filters?.location as string, 500);
+
+
+    useEffect(() => {
+        if(location) setFilters(prev => ({
+            ...prev,
+            latitude: location.latitude as number,
+            longitude: location.longitude as number
+        }))
+    }, [location]);
+    
+    // useEffect(() => {
+    //     if (debouncedSearch) handleSearch(debouncedSearch)
+    //     // else handleGetInitial();
+    // }, [debouncedSearch]);
+
+    const handleGetWorker = useCallback((
+        category?: string | string[],
+        pageNumber: number = 1, 
+        pageSize: number = 8,
+        search?: string
+    ) => {
+        const payload = {
+            serviceNames: category ? (Array.isArray(category) ? category : [category]) : selectedCategory
+        }
+
+        const latitude = nearMe ? filters.latitude : undefined;
+        const longitude = nearMe ? filters.longitude : undefined; 
+        const location = filters.location || undefined;
+        const searchItem =  search ? search : filters.searchTerm ? filters.searchTerm : undefined;
+        const minHour = filters.minHourlyRate || undefined;
+        const maxHour = filters.maxHourlyRate || undefined;
+        
+        setLoading(true);
+        getServiceWorkerByCategory(
+            payload,
+            pageNumber,
+            pageSize,
+            searchItem,
+            location,
+            minHour,
+            maxHour,
+            latitude,
+            longitude
+        )
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                setWorkers(res.data.items)
+                setTotal(res.data.totalCount);
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to get workers by category",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, [selectedCategory, filters, nearMe]);
+
+    useEffect(() => {
+        handleGetWorker();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    console.log("filter", filters);
+    
+
+    
+    useEffect(() => {
+        if (debouncedSearch) {
+            handleGetWorker(undefined, 1, 8, debouncedSearch.toString())
+            setFilters(prev => ({...prev, searchTerm: debouncedSearch.toString()}))
+        }
+    }, [debouncedSearch]);
+
+    useEffect(() => {
+        if (debouncedLocation) {
+            handleGetWorker()
+            setFilters(prev => ({...prev, location: debouncedLocation.toString()}))
+        }
+    }, [debouncedLocation]);
+
+    useEffect(() => {
+        if (debouncedMin && debouncedMax) {
+            handleGetWorker()
+            setFilters(prev => ({
+                ...prev, 
+                maxHourlyRate: Number(debouncedMax),
+                minHourlyRate: Number(debouncedMin)
+            }))
+        }
+    }, [debouncedMax, debouncedMin]);
+
+    const handleCategoryChange = (category: string) => {
+        handleGetWorker(category);
+        setActive(category);
+        setFilters(prev => ({
+            ...prev,
+            pageNumber: 1,
+            pageSize: 8,
+            location: "",
+            minHourlyRate: 0,
+            maxHourlyRate: 0
+        }))
+    }
+    
     useEffect(() => {
         if(isDashboard) setShowSearch(true);
         else setShowSearch(false);
@@ -29,57 +176,16 @@ const WorkerComponent = ({ isDashboard }: props) => {
     useEffect(() => {
         if(collasped && isDashboard) setShowSearch(true)
         else if(!collasped && isDashboard) setShowSearch(false)
-    }, [collasped, isDashboard])
+    }, [collasped, isDashboard]);
+
     const tabItems: TabsProps["items"] = [
-        {
-            key: "1",
+        ...categories.map((category: categoryType) => ({
+            key: category.name,
             label: <div className="worker-tab-item">
-                <HealthWorker />
-                <p>Care Worker</p>
-            </div>
-        },
-        {
-            key: "2",
-            label: <div className="worker-tab-item">
-                <FaCloudRain />
-                <p>Snow Plowing</p>
-            </div>
-        },
-        {
-            key: "3",
-            label: <div className="worker-tab-item">
-                <GiCook />
-                <p>Personal Cook</p>
-            </div>
-        },
-        {
-            key: "4",
-            label: <div className="worker-tab-item">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Cleaning-Room-Woman--Streamline-Sharp" height="24" width="24">
-                <desc>
-                    Cleaning Room Woman Streamline Icon: https://streamlinehq.com
-                </desc>
-                <g id="cleaning-room-woman">
-                    <path id="Union" fill={active === "4" ? "#670316" :"#000000"} fillRule="evenodd" d="M6.5 1C4.98122 1 3.75 2.23122 3.75 3.75S4.98122 6.5 6.5 6.5s2.75 -1.23122 2.75 -2.75S8.01878 1 6.5 1ZM4 19.0001v4h5v-4h2.5L10 9.50009S9 8 6.5 8 3 9.50009 3 9.50009L1.5 19.0001H4Zm16.6688 -3.6882c-0.3094 -0.1669 -0.7045 -0.337 -1.1688 -0.4457V1.5h-2v13.3664c-0.464 0.1086 -0.8589 0.2787 -1.1682 0.4455 -0.2576 0.139 -0.4615 0.2787 -0.6037 0.3861 -0.0714 0.0539 -0.1278 0.1001 -0.1685 0.1348 -0.0203 0.0173 -0.0367 0.0318 -0.0491 0.0429l-0.0155 0.0141 -0.0055 0.0051 -0.0022 0.0021 -0.0009 0.0009c-0.0002 0.0002 -0.0009 0.0008 0.5139 0.5462l-0.5148 -0.5454 -0.1796 0.1695 -1.2029 6.6817h8.7941l-1.2024 -6.6817 -0.1796 -0.1695 -0.0008 -0.0008 -0.001 -0.0009 -0.0021 -0.0021 -0.0055 -0.0051 -0.0156 -0.0141c-0.0124 -0.0111 -0.0288 -0.0256 -0.0491 -0.0429 -0.0406 -0.0347 -0.0971 -0.0809 -0.1684 -0.1348 -0.1423 -0.1074 -0.3462 -0.2471 -0.6038 -0.3861Z" clipRule="evenodd" strokeWidth="1"></path>
-                </g>
-                </svg>
-                <p>House Chores & Cleaning</p>
-            </div>
-        },
-        {
-            key: "5",
-            label: <div className="worker-tab-item">
-                <PlantationWorker />
-                <p>Support Workers</p>
-            </div>
-        },
-        {
-            key: "6",
-            label: <div className="worker-tab-item">
-                <HealthWorker />
-                <p>Companion Workers</p>
-            </div>
-        }
+                {icons[category.id-1]}
+                <p>{category.name}</p>
+            </div>,
+        })),
     ];
 
     const itemRender: PaginationProps["itemRender"] = (_, type, originalElement) => {
@@ -88,11 +194,56 @@ const WorkerComponent = ({ isDashboard }: props) => {
         return originalElement
     }
 
+    const handlePagination = (page: number, size: number) =>  {
+        handleGetWorker(undefined, page, size)
+        setFilters((prev) => ({
+            ...prev,
+            pageNumber: page,
+            pageSize: size
+        }));
+    }
+
+    const handleFilterChange = (category: string[]) => {
+        handleGetWorker(category);
+        setSelectedCategory(category);
+        setFilters(prev => ({
+            ...prev,
+            pageNumber: 1,
+            pageSize: 8,
+            location: ""
+        }))
+    }
+
+    const handleNearMeChange = (value: boolean) => {
+        setNearMe(value);
+        handleGetWorker();
+    }
+
+    const handleResetFilter = () => {
+        setFilters(prev => ({
+            ...prev,
+            pageNumber: 1,
+            pageSize: 8,
+            location: "",
+            minHourlyRate: 0,
+            maxHourlyRate: 0
+        }));
+        setNearMe(false);
+    }
+
   return (
-    <div className='w-full'>
+    <Skeleton loading={false} className='w-full'>
         <Row className='w-full'>
             {showSearch && <Col lg={24} sm={24} xs={24}>
-                <Search isClient />
+                <Search 
+                    isClient  
+                    search={filters.searchTerm || ""}
+                    location={filters.location || ""}
+                    onChangeSearch={(e) => setFilters(prev => ({...prev, searchTerm: e.target.value}))}
+                    onChangeLocation={(e) => setFilters(prev => ({...prev, location: e.target.value}))}
+                    loading={loading}
+                    onSearchClick={() => handleGetWorker(undefined, 1, 8, debouncedSearch.toString())}
+                />
             </Col>}
 
             <Col lg={24} sm={24} xs={24}>
@@ -110,52 +261,40 @@ const WorkerComponent = ({ isDashboard }: props) => {
 
                         <div className="flex items-center justify-between mb-4">
                             <p className="t-pri font-medium text-lg">Filter by</p>
-                            <CloseOutlined onClick={() => setCollapsed(true)} />
+                            <CloseOutlined onClick={() => {
+                                setCollapsed(true);
+                                handleResetFilter();
+                            }} />
                         </div>
                         <div className="filter-container">
                             <p className="t-pri text-base">Service Type</p>
 
-                            <Checkbox.Group className="flex flex-col gap-2" onChange={(value) => console.log(value)}>
-                                <Checkbox value={1}>
-                                    Care Workers
-                                </Checkbox>
-                                <Checkbox>
-                                    Babysitters & Childcare
-                                </Checkbox>
-                                <Checkbox>
-                                    House Chores & Cleaning
-                                </Checkbox>
-                                <Checkbox>
-                                    Personal Cook
-                                </Checkbox>
-                                <Checkbox>
-                                    Support Workers
-                                </Checkbox>
-                                <Checkbox>
-                                    Companion Workers
-                                </Checkbox>
+                            <Checkbox.Group className="flex flex-col gap-2" value={selectedCategory} onChange={handleFilterChange}>
+                                {categories.map((category: categoryType, i: number)=> (
+                                    <Checkbox value={category.name} key={i}>
+                                        {category.name}
+                                    </Checkbox>
+                                ))}
                             </Checkbox.Group>
                         </div>
 
                         <div className="filter-container">
                             <p className="t-pri text-base">Location</p>
-
-                            <Checkbox.Group className="flex flex-col gap-2" onChange={(value) => console.log(value)}>
-                                <Checkbox value={1}>
+                            <Radio.Group >
+                                <Radio value="totronto" checked={false}>
                                     Toronto
-                                </Checkbox>
-                                <Checkbox>
-                                    Manitoba
-                                </Checkbox>
-                               
-                            </Checkbox.Group>
+                                </Radio>
+                                <Radio onChange={() => handleNearMeChange(!nearMe)}>
+                                    Around Me
+                                </Radio>
+                            </Radio.Group>
                         </div>
 
                         <div className="filter-container">
                             <p className="t-pri text-base">Price</p>
 
                             <div className="flex items-center w-full gap-1">
-                                <span>0</span>
+                                <span>${filters.minHourlyRate}</span>
                                 <Slider 
                                     min={0}
                                     max={1000}
@@ -163,52 +302,77 @@ const WorkerComponent = ({ isDashboard }: props) => {
                                     styles={{
                                         track: {backgroundColor: "#670318", height: 6},
                                         handle: {color: "#670318", backgroundColor: "#670318", },
-                                        rail: {backgroundColor: "#ffecef", height: 6}
+                                        rail: {backgroundColor: "#ffecef", height: 6},
                                     }}
                                     range
-                                    
+                                    onChangeComplete={(value) => {
+                                        console.log("value", value)
+                                        setFilters(prev => ({
+                                            ...prev, 
+                                            minHourlyRate: value[0],
+                                            maxHourlyRate: value[0] > value[1] ? value[0] : value[1]
+                                        }))
+                                    }}
+                                    // value={[Number(filters.minHourlyRate), Number(filters.maxHourlyRate)]}
                                 />
-                                <span>$999</span>
+                                <span>${filters.maxHourlyRate}</span>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <Input placeholder="Min" className="bg-white h-[42px] !w-[81px] rounded-[12px]" />-
-                                <Input placeholder="Max" className="bg-white h-[42px] !w-[81px] rounded-[12px]" />
+                                <InputNumber 
+                                    value={Number(filters.minHourlyRate)} 
+                                    min={0} 
+                                    onChange={(value) => setFilters(prev => ({...prev, minHourlyRate: Number(value)}))} placeholder="Min" 
+                                    className="bg-white h-[42px] !w-[81px] rounded-[12px]" 
+                                />-
+                                <InputNumber 
+                                    value={Number(filters.maxHourlyRate)} 
+                                    min={Number(filters.minHourlyRate) || 0} 
+                                    onChange={(value) => setFilters(prev => ({...prev, maxHourlyRate: Number(value)}))}  
+                                    placeholder="Max" 
+                                    className="bg-white h-[42px] !w-[81px] rounded-[12px]" 
+                                />
                             </div>
                         </div>                      
 
-                        <div className="filter-container">
+                        {/* <div className="filter-container">
                             <p className="t-pri text-base">Availability</p>
 
                             <Checkbox.Group className="flex flex-col gap-2" onChange={(value) => console.log(value)}>
                                 <Checkbox value={1}>
-                                    Days Available
-                                </Checkbox>
-                                <Checkbox>
-                                    Weekly
-                                </Checkbox>
-                                <Checkbox>
-                                    Monthly
+                                    Available
                                 </Checkbox>
                             </Checkbox.Group>
-                        </div>
+                        </div> */}
                     </Sider>
                     <Content className=" bg-white">
                         {collasped && <div className="flex items-center w-full bg-white gap-4">
-                            {<Image src={Filter} alt="filter" className="cursor-pointer" onClick={() => setCollapsed(false)} />}
+                            {serviceLoading ? <LoadingOutlined spin /> : <Image src={Filter} alt="filter" className="cursor-pointer" onClick={() => setCollapsed(false)} />}
                             <Tabs 
                                 activeKey={active}
                                 items={tabItems}
-                                onChange={(active) => setActive(active)}
+                                onChange={handleCategoryChange}
                                 className="w-full"
+                                defaultActiveKey="Careworker"
+                                
                             />
                         </div>}
                         
-                        <Row gutter={[15,15]}>
-                            <Col lg={collasped ? 6 : 8} sm={12} xs={24}>
-                                <WorkersCard />
-                            </Col>
-                        </Row>
+                        <Skeleton loading={loading} className='h-full w-full'>
+                            <Row gutter={[15,15]} className="min-h-2/5">
+                                {workers.map((worker:UserWorkerProfile,i:number) => (
+                                    <Col lg={collasped ? 6 : 8} sm={12} xs={24} key={i}>
+                                        <WorkersCard worker={worker} />
+                                    </Col>
+                                ))}
+
+                                {workers.length === 0 && (
+                                    <Col lg={24} sm={24} xs={24} className="min-h-2/5 !flex items-center justify-center">
+                                        <p className="text-center text-[#121212]">You have no worker in this category!</p>
+                                    </Col>
+                                )}
+                            </Row>
+                        </Skeleton>
 
                         <Row gutter={[15,15]} className="mt-4">
                             <Col lg={24} sm={24} xs={24}>
@@ -217,18 +381,20 @@ const WorkerComponent = ({ isDashboard }: props) => {
                                     // style={{width: "100%", alignItems: "center", justifyContent:"center"}}
                                     showSizeChanger={false}
                                     itemRender={itemRender}
-                                    total={400}
+                                    total={total}
+                                    current={filters.pageNumber}
+                                    pageSize={filters.pageSize}
                                     align="center"
                                     className="border-t border-t-[#eaecf0] !pt-4"
+                                    onChange={handlePagination}
                                 />
                             </Col>
                         </Row>
                     </Content>
                 </Layout>
             </Col>
-
         </Row> 
-    </div>
+    </Skeleton>
   )
 }
 

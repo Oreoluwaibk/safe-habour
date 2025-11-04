@@ -19,6 +19,7 @@ const initialState: signinReducer = {
   success: false,
   error: null,
   loginType: storedType ? JSON.parse(storedType) : null,
+  lastRoute: null
 };
 
 export const signinSlice = createSlice({
@@ -35,6 +36,9 @@ export const signinSlice = createSlice({
         localStorage.setItem("safehabour_token", action.payload.token);
         localStorage.setItem("safehabour_token_expiry", String(action.payload.tokenExpiry));
       }
+    },
+     setLastRoute: (state, action) => {
+      state.lastRoute = action.payload;
     },
 
     // ✅ logout user
@@ -98,7 +102,7 @@ export const signinSlice = createSlice({
   },
 });
 
-export const { setToken, logoutUser } = signinSlice.actions;
+export const { setToken, logoutUser, setLastRoute  } = signinSlice.actions;
 
 export default signinSlice.reducer;
 
@@ -107,3 +111,4 @@ export const authState = (state: RootState) => state.auth;
 export const selectedToken = (state: RootState) => state?.auth.token;
 export const selectedUser = (state: RootState) => state.auth.user;
 export const selectedTokenExpiry = (state: RootState) => state.auth.tokenExpiry;
+export const selectedLastRoute = (state: RootState) => state.auth.lastRoute;

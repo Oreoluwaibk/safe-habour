@@ -1,10 +1,12 @@
-input[type="text"], input.ant-input-number-input,.ant-select-selector {
+/* input[type="text"], input.ant-input-number-input,.ant-select-selector {
     height: 52px !important;
-}
+} */
+
 .input-h input {
-  height: 28px !important;
-  border-radius: 10px !important;
+    height: 28px !important;
+    border-radius: 10px !important;
 }
+
 .rate-calculator {
     background-color: #f6f6f6;
     border: 1px solid #dedede;
@@ -18,7 +20,7 @@ input[type="text"], input.ant-input-number-input,.ant-select-selector {
 }
 
 .ant-segmented-item-label {
-  display: flex;
-  align-items: center;
-  gap: 2px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }

@@ -34,13 +34,13 @@ export const savedCategory = [
 ]
 
 export const dayOfWeek = [
-    {id: 0, title: "Mon"},
-    {id: 1, title: "Tue"},
-    {id: 2, title: "Wed"},
-    {id: 3, title: "Thur"},
-    {id: 4, title: "Fri"},
-    {id: 5, title: "Sat"},
-    {id: 6, title: "Sun"},
+    {id: 6, title: "Sun", name: "Sunday"},
+    {id: 0, title: "Mon", name: "Monday"},
+    {id: 1, title: "Tue", name: "Tuesday"},
+    {id: 2, title: "Wed", name: "Wednesday"},
+    {id: 3, title: "Thur", name: "Thurday"},
+    {id: 4, title: "Fri", name: "Friday"},
+    {id: 5, title: "Sat", name: "Saturday"},
 ]
 
 export const savedPreferredTime = [
@@ -49,3 +49,25 @@ export const savedPreferredTime = [
     {id:3, title: "Evening (5PM - 9PM)"},
     {id:4, title: "Overnight (9PM - 8AM)"}
 ]
+
+export const savedTimeZone = [
+    "Eastern Time (Toronto)",
+    "Mountain Time (Calgary)",
+    "Pacific Time (Vancouver)",
+    "Central Time (Winnipeg)",
+]
+
+export const savedCurrency = [
+    {short: "CAD", name: "Canadian Dollar (CAD)"},
+    {short: "USD", name: "US Dollar (USD)"}
+]
+
+export const jobStatus = [
+    {id:1, title: "Open"},
+    {id:2, title: "InProgress"},
+    {id:3, title: "Completed"},
+    {id:4, title: "Cancelled"},
+    {id:5, title: "Disputed"},
+    {id:6, title: "ServiceWorkerCompleted"},
+]
+

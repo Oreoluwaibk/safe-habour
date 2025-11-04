@@ -8,6 +8,7 @@ export interface signinReducer {
     error: any,
     authentication?: {}
     loginType?: string | null
+    lastRoute: null | string
 } 
 
 export interface loginData {
@@ -95,9 +96,19 @@ export interface IUser {
   hasLocationDocument: boolean;
   isTwoFactorAuthenticationEnabled: boolean;
   isServiceWorkerOnboarded: boolean | null;
-  notificationSettings: any[]; // or define a NotificationSetting type if structure known
-}
+  hourlyRate: number;
+  notificationSettings: INotificationSetting[];
 
+  services: IServiceDetail[];
+  languages: ILanguage[];
+}
+export interface INotificationSetting {
+  id?: string;
+  notificationType?: number;
+  notificationTypeName?: string;
+  emailNotificationEnabled?: boolean;
+  inAppNotificationEnabled?: boolean;
+}
 export interface Service {
   name: string;
   description: string;
@@ -110,6 +121,7 @@ export interface Language {
   code: string;
   longCode: string;
   isNative?: boolean;
+  proficiencyLevel?: string;
 }
 
 export interface WorkerProfile {
@@ -164,6 +176,13 @@ export interface jobs {
   reoccurringDays?: number[];
   location: string;
   budget: number;
+  client?: {
+    name: string;
+    imageUrl: string;
+    createdAt: string;
+    isVerified: boolean;
+  }
+  createdAt?: string;
 }
 
 export interface jopApply {
@@ -179,10 +198,32 @@ export interface hireWorker {
   proposedRate: number;
 }
 
+export enum HireType {
+  OneTime = 0,
+  Recurring = 1,
+}
+
+export interface IJobHireRequest {
+  serviceWorkerId: string;
+  serviceCategoryId?: number;
+  budget?: number;
+  hireType: HireType;
+  preferredStartDate: string;
+  timePreference: number;
+  reoccurringDays?: number[];
+  proposedRate: number;
+  paymentMethodId?: string;
+}
+
 export interface acceptInvite {
   applicationId: string;
   message: string;
   negotiatedRate: number;
+}
+
+export interface completeJob {
+  jobId: string;
+  completionNotes: string;
 }
 
 export interface rejectInvite {
@@ -192,11 +233,13 @@ export interface rejectInvite {
 }
 
 export interface schedule {
-  dayOfWeek?: number;
-  startTime?: string;
-  endTime?: string;
-  isAvailable?: boolean;
+  dayOfWeek: number | null | string;
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
   notes?: string;
+  id?: string | null;
+  scheduleDate: string;
 }
 
 export interface approveUser {
@@ -252,3 +295,270 @@ export interface categoryType {
     name: string;
     description: string;
   }
+// types/job.ts
+
+export interface JobDetails {
+  id: string;
+  serviceCategoryId: number;
+  createdAt: string;
+  client?: {
+    name: string;
+    imageUrl: string;
+    createdAt: string;
+    isVerified: boolean;
+  }|null;
+  dateNeeded: string;
+  jobTitle: string;
+  isReocurringJob: boolean;
+  timePreference: number;
+  location: string;
+  reoccurringDays: string[];
+  budget: number;
+  jobDescription: string;
+  clientId: string;
+  status: number;
+  isHireDirectly: boolean;
+}
+
+export interface IJobApplication {
+  id: string;
+  jobId: string;
+  message: string;
+  proposedRate: number;
+  status: number;
+  createdAt: string;
+  acceptedAt: string | null;
+  rejectedAt: string | null;
+  rejectionReason: string | null;
+  jobDetails: JobDetails;
+}
+
+
+export interface EarningsSummary {
+  totalGrossEarnings: number;
+  totalPlatformFees: number;
+  totalEarnings: number;
+  clearedBalance: number;
+  pendingInEscrow: number;
+  thisMonthEarnings: number;
+  lastMonthEarnings: number;
+  percentageChangeFromLastMonth: number;
+  changeDescription: string;
+  totalCompletedJobs: number;
+  responseRate: number;
+  responseRateDescription: string;
+  totalFeesPaid: number;
+  currentMonth: MonthlyEarnings;
+  previousMonth: MonthlyEarnings;
+}
+
+export interface MonthlyEarnings {
+  jobsCompleted: number;
+  grossEarnings: number;
+  platformFees: number;
+  netEarnings: number;
+  totalEarnings: number;
+  feesPaid: number;
+  year: number;
+  month: number;
+  monthName: string;
+}
+
+export interface review {
+  jobId: string;
+  rating: number;
+  comment: string;
+  isPublic: boolean;
+}
+
+
+export interface PaymentTransaction {
+  id: string;
+  jobId?: string;                     // optional (not in payouts)
+  clientId?: string;                  // optional (not in payouts)
+  serviceWorkerId: string;
+  serviceWorkerName?: string;
+  amount: number;
+  currency?: string;                  // new from payout
+  status: number;
+  statusDescription: string;
+  stripePaymentIntentId?: string;     // optional (not in payouts)
+  stripeChargeId?: string;            // optional (not in payouts)
+  stripePayoutId?: string;            // new from payout
+  payoutType?: string;                // new from payout
+  balanceTransactionId?: string;      // new from payout
+  bankAccountId?: string;             // new from payout
+  bankAccountLast4?: string;          // new from payout
+  jobTitle?: string;
+  serviceTypeName?: string;
+  clientName?: string;
+  createdAt: string;
+  authorizedAt?: string;              // only in transactions
+  capturedAt?: string;                // only in transactions
+  transferredAt?: string;             // only in transactions
+  refundedAt?: string;                // only in transactions
+  paidAt?: string;                    // only in payouts
+  arrivalDate?: string;               // only in payouts
+  canceledAt?: string;                // only in payouts
+  failedAt?: string;                  // only in payouts
+  refundAmount?: number;              // only in transactions
+  failureCode?: string;               // only in payouts
+  failureMessage?: string;            // only in payouts
+  notes?: string;
+}
+export interface MessageUserDto {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  profilePicturePath?: string | null;
+  isVerified: boolean;
+  lastMessage: string;
+  sentAt: string; 
+}
+export interface MessageDto {
+  id: string;
+  applicationId: string;
+  senderId: string;
+  receiverId: string;
+  sender?: MessageUserDto | null;
+  receiver?: MessageUserDto | null;
+  content: string;
+  sentAt: string;       // ISO date string (was DateTime in C#)
+  isRead: boolean;
+  readAt?: string | null;  // nullable DateTime
+}
+
+export interface UserWorkerProfile {
+  id: number;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  gender: string | null;
+  bio: string;
+  profilePicturePath: string | null;
+  streetAddress: string;
+  city: string | null;
+  country: string | null;
+  postalCode: string | null;
+  latitude: number;
+  longitude: number;
+
+  // Updated to match new structure
+  services: IServiceDetail[];
+
+  // Languages remain the same
+  languages: ILanguage[];
+
+  hourlyRate: number | null;
+  timeZone?: string | null;
+  currency?: string | null;
+  isOnboarded?: boolean;
+
+  // Preserve previous optional fields (for compatibility)
+  distanceKm?: number | null;
+  averageRating?: number | null;
+  reviewCount?: number;
+  isAvailable?: boolean;
+  isVerified?: boolean;
+  joinedDate?: string;
+  lastActiveDate?: string;
+}
+
+export interface IServiceDetail {
+  serviceCategoryId: number;
+  hourlyRate: number | null;
+  yearsOfExperience: number | null;
+  id?: string;
+}
+
+export interface ILanguage {
+  name: string;
+  code: string;
+  proficiencyLevel: string | null;
+  isNative: boolean | null;
+}
+
+
+export interface IClientDashboardMetrics {
+  activeJobs: number;
+  totalSpent: number;
+  refundsIssued: number;
+  pendingTransactions: number;
+  totalTransactions: number;
+  totalTransactionAmount: number;
+  thisMonthTransactions: number;
+  thisMonthAmount: number;
+  lastMonthTransactions: number;
+  lastMonthAmount: number;
+  percentageChangeFromLastMonth: number;
+  changeDescription: string;
+  totalCompletedJobs: number;
+  averageJobCost: number;
+  currentMonth: IClientDashboardMonthMetrics;
+  previousMonth: IClientDashboardMonthMetrics;
+  activeJobsList: any[]; // Replace `any` with a job type if available
+}
+export interface IClientDashboardMonthMetrics {
+  jobsCompleted: number;
+  jobsPosted: number;
+  transactionCount: number;
+  totalSpent: number;
+  averageJobCost: number;
+  year: number;
+  month: number;
+  monthName: string;
+}
+
+// Enum to represent notification types
+export enum NotificationType {
+  // ===== CLIENT USER NOTIFICATIONS =====
+  BookingUpdates = 1,
+  Messages = 2,
+  PaymentUpdates = 3,
+  PromotionsAndMarketing = 4,
+  PlatformUpdates = 5,
+  System = 6,
+
+  // ===== SERVICE WORKER NOTIFICATIONS =====
+  JobMatches = 7,
+  PaymentAlerts = 8,
+  MarketingEmail = 9,
+  EmailNotification = 10,
+}
+
+// Represents a single user notification preference record
+export interface IUserNotificationPreference {
+  id: string;
+  notificationType: NotificationType;
+  notificationTypeName:
+    | keyof typeof NotificationType
+    | string; // Example: "MarketingEmail"
+  emailNotificationEnabled: boolean;
+  inAppNotificationEnabled: boolean;
+}
+
+// Example: list of user notification preferences
+export type IUserNotificationPreferences = IUserNotificationPreference[];
+
+export const notificationDescriptions: Record<keyof typeof NotificationType, string> = {
+  // ===== CLIENT USER NOTIFICATIONS =====
+  BookingUpdates: "Changes to your bookings",
+  Messages: "Receive emails when you get new messages from workers",
+  PaymentUpdates: "Get notified about payment processing and receipts",
+  PromotionsAndMarketing: "Tips, updates, and promotions",
+  PlatformUpdates: "Get notified when there are updates on the platform",
+  System: "General system notifications like account or policy changes",
+
+  // ===== SERVICE WORKER NOTIFICATIONS =====
+  JobMatches: "New jobs matching your skills",
+  PaymentAlerts: "Earnings and payout notifications",
+  MarketingEmail: "Tips, updates, and promotions",
+  EmailNotification: "Receive notifications via email",
+};
+
+
+

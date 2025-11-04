@@ -1,10 +1,44 @@
 import { Button, Card, Checkbox, Input, InputNumber, Select, Slider } from 'antd'
-import React from 'react'
+import React, { useEffect } from 'react'
 import "@/styles/client.css"
 import CardTitle from '@/components/general/CardTitle'
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons'
+import useDebounce from '@/hooks/useDebounce'
 
-const FilterCard = () => {
+interface props  {
+    filter: {
+        pageNumber: number;
+        pageSize: number;
+        search: string;
+        serviceTypeIds: number[];
+        maxPrice: number | undefined;
+        minPrice: number | undefined;
+        availability: boolean | undefined;
+        rating: number | undefined;
+    };
+    setFilter: React.Dispatch<React.SetStateAction<{
+        pageNumber: number;
+        pageSize: number;
+        search: string;
+        serviceTypeIds: number[];
+        maxPrice: number | undefined;
+        minPrice: number | undefined;
+        availability: boolean | undefined;
+        rating: number | undefined;
+    }>>
+}
+const FilterCard = ({ filter, setFilter }: props) => {
+    const debouncedSearch = useDebounce(filter?.search, 500);
+
+    useEffect(() => {
+        if (debouncedSearch) handleSearch(debouncedSearch)
+        // else handleGetInitial();
+    }, [debouncedSearch]);
+
+    const handleSearch = (value: string) => {
+        // if(!value) return;
+        setFilter(prev => {return {...prev, search: value}});
+    }
   return (
     <Card
         title={
@@ -34,7 +68,7 @@ const FilterCard = () => {
     <div className="filter-container">
         <p className="t-pri text-base">Search Jobs</p>
 
-        <Input placeholder='Search for jobs' prefix={<SearchOutlined />} />
+        <Input value={filter?.search} onChange={(e) => handleSearch(e.target.value)} placeholder='Search for jobs' prefix={<SearchOutlined />} />
     </div>
 
     <div className="filter-container">

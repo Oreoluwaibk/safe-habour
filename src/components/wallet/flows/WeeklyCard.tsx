@@ -5,12 +5,15 @@ import { Icon } from '@iconify/react';
 import { Card } from 'antd'
 import React, { useState } from 'react'
 import EditSchdedule from '../modal/EditSchdedule';
+import { GroupedSchedule } from '../../../../utils/converters';
 
 interface props {
     available?: boolean;
     title: string;
+    days: GroupedSchedule;
+    refresh: () => void;
 }
-const WeeklyCard = ({ available, title }: props) => {
+const WeeklyCard = ({ available, title, days, refresh }: props) => {
     const [ openEdit, setOpenEdit ] = useState(false);
   return (
     <>
@@ -21,13 +24,15 @@ const WeeklyCard = ({ available, title }: props) => {
         />}
         extra={
             <div className='flex gap-4 items-center'>
-               <p className='text-[#1E1E1E]'>8 AM - 12 PM</p>
+                {days.startTime.map((time: string,i:number) => (
+                    <p className='text-[#1E1E1E]'>{time} - {days.endTime[i]}</p>
+                ))}
                <RoundBtn title='Edit' onClick={() => setOpenEdit(true)} width={86} height={40} icon={<Icon icon="flowbite:edit-outline" />} />
             </div>
         }
         classNames={{ body: "!h-[0px] !p-0", header: "!py-4" }}
     />
-    {openEdit && <EditSchdedule open={openEdit} onCancel={() => setOpenEdit(false)} />}
+    {openEdit && <EditSchdedule refresh={refresh} open={openEdit} onCancel={() => setOpenEdit(false)} days={days} />}
     </>
   )
 }

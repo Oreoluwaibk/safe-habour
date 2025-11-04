@@ -19,7 +19,7 @@ const Page = () => {
           onChange={(value) => setIsActive(value)}
         />
       </div>
-      <Row className='h-[90vh] mt-4' gutter={[15, 15]}>
+      <Row className='min-h-[90vh] mt-4' gutter={[15, 15]}>
         {active === "Workers" && <Col lg={24} sm={24} xs={24}>
           <WorkerComponent />
         </Col>}
@@ -27,7 +27,7 @@ const Page = () => {
           <BookingSystem />
         </Col>}
 
-         {active === "Job Applications" && <Col lg={24} sm={24} xs={24} className='mt-0'>
+         {active === "Job Applications" && <Col lg={24} sm={24} xs={24} className='mt-0 min-h-[90vh]'>
           <JobApplication />
         </Col>}
       </Row>

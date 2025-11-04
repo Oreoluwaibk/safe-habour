@@ -5,16 +5,23 @@ import { Icon } from '@iconify/react';
 import { Card } from 'antd'
 import React, { useState } from 'react'
 import ServiceModal from '../modal/ServiceModal';
+import { categoryType, IServiceDetail } from '../../../../utils/interface';
 
 interface props {
     title: string;
     description: string;
     rate: string;
+    service: IServiceDetail;
+    categories: categoryType[];
+    refresh: () => void;
 }
 const ServiceInfoCard = ({
     title,
     description, 
-    rate
+    rate,
+    service,
+    categories,
+    refresh
 }: props) => {
     const [ openAddModal, setOpenAddModal ] = useState(false);
   return (
@@ -31,7 +38,15 @@ const ServiceInfoCard = ({
         className='p-0'
         classNames={{ body: "!h-0 !p-0"}}
     />
-     {openAddModal && <ServiceModal isEdit open={openAddModal} onCancel={() => setOpenAddModal(false)} />}
+    {openAddModal && 
+        <ServiceModal 
+            isEdit 
+            open={openAddModal} 
+            onCancel={() => setOpenAddModal(false)}
+            categories={categories}
+            selected={service} 
+            refresh={refresh}
+        />}
     </>
   )
 }

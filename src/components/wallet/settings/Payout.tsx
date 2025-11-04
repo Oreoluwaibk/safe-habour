@@ -3,15 +3,95 @@ import CardTitle from '@/components/general/CardTitle'
 import RoundBtn from '@/components/general/RoundBtn';
 import { PlusOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react'
-import { Button, Card, Form, Select } from 'antd'
-import React, { useState } from 'react'
+import { App, Button, Card, Form, Select } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
+import { createErrorMessage } from '../../../../utils/errorInstance';
+import { createStripeAccount, getWorkerBankInfo, onBoardWorkerOnStripe } from '@/redux/action/transaction';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Payout = () => {
     const [form] = Form.useForm();
-     const [ openAdd, setOpenAdd ] = useState(false);
-    
+    const { modal } = App.useApp();
+    const [ loading, setLoading ] = useState(false);
+    const [ openAdd, setOpenAdd ] = useState(false);
+    const [ bankInfo, setBankInfo ] = useState<any|null>(null);
+
+    const handleGetBankInfo= useCallback(() => {
+        setLoading(true);
+        getWorkerBankInfo()
+        .then(res => {
+            if(res.status === 200) {
+            setLoading(false);
+                console.log(res.data);
+                setBankInfo(res.data.data);
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to get bank info",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, []);
+
+    const handleCreateStripeAccount = useCallback(() => {
+        setLoading(true);
+        createStripeAccount()
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                console.log(res.data);
+                window.open(res.data.data.url, "_blank");
+                // setBankInfo(res.data.data);
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to create stripe account",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, []);
+
+    const handleOnboardStripeAccount = useCallback(() => {
+        setLoading(true);
+        onBoardWorkerOnStripe()
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                console.log(res.data);
+                window.open(res.data.data.url, "_blank");
+                // setBankInfo(res.data.data);
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to onboard stripe account",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, []);
+
+    useEffect(() => {
+        handleGetBankInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleSelection = () => {
+        if(bankInfo) handleOnboardStripeAccount();
+        else handleCreateStripeAccount();
+    }
+
   return (
     
     <Card 
@@ -21,7 +101,7 @@ const Payout = () => {
         classNames={{ header: "linear" }}
          actions={[
         <div key={1} className='flex items-center justify-between px-6 py-4 !w-full'>
-            <Button type="primary" className='!w-full !h-[48px]' style={{borderRadius: 50}} >Update Payout</Button>
+            <Button onClick={handleSelection} loading={loading} type="primary"  className='!w-full !h-[48px]' style={{borderRadius: 50}} >{bankInfo ? "Update Payout" : "Add Payout"}</Button>
         </div>]}
     >
         <Card className='!mt-4'>
@@ -37,7 +117,7 @@ const Payout = () => {
                     classNames={{body: "!p-0 !h-0"}}
                     className='!bg-[#FFF4F6] !border-[#FFD6DE]'
                 />
-                <Button onClick={() => setOpenAdd(true)} type="default" className='!w-full !h-[48px]' style={{borderRadius: 50}} icon={<PlusOutlined />} >Add Payment Method</Button>
+                <Button onClick={() => setOpenAdd(true)} type="default" className='!w-full !h-[48px]' style={{borderRadius: 50}} icon={<PlusOutlined />} >{"Add Payment Method"}</Button>
             </div>
 
             <Form form={form} layout="vertical">

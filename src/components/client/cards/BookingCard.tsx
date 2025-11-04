@@ -6,7 +6,10 @@ import { ClockCircleOutlined, EnvironmentFilled, StarFilled } from '@ant-design/
 import { Button, Col, Row } from 'antd'
 import { useRouter } from 'next/navigation'
 
-const BookingCard = () => {
+interface props {
+  worker?: any;
+}
+const BookingCard = ({ worker }: props) => {
     const router = useRouter();
   return (
     <Row className='booking-card' gutter={[15, 15]}>

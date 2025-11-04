@@ -8,6 +8,20 @@ export const saveSchedule = async (data: schedule) => {
     return Promise.resolve(response);
 }
 
+export const saveBulkSchedule = async (data: schedule[]) => {
+    const url = `/Schedules/bulk`;
+    const response = await axiosInstance.post(url, data);
+
+    return Promise.resolve(response);
+}
+
+export const updateBulkSchedule = async (data: schedule[]) => {
+    const url = `/Schedules/bulk`;
+    const response = await axiosInstance.put(url, data);
+
+    return Promise.resolve(response);
+}
+
 export const updateSchedule = async (id: string, data: schedule) => {
     const url = `/Schedules/${id}`;
     const response = await axiosInstance.put(url, data);

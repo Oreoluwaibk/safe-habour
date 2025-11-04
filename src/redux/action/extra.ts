@@ -14,3 +14,18 @@ export const getServiceCategories = async () => {
 
     return Promise.resolve(response);
 }
+
+export const getNotificationSettings = async () => {
+    const url = `/Authentication/notification-settings`;
+    const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
+export const updateNotificationSetting = async (data: any) => {
+    const url = `/Authentication/notification-settings`;
+    const response = await axiosInstance.put(url, data);
+
+    return Promise.resolve(response);
+}
+

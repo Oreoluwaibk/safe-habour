@@ -6,11 +6,17 @@ import AvailableContainer from '@/components/wallet/AvailableContainer'
 import FilterCard from '@/components/wallet/cards/FilterCard'
 import JobApplication from '@/components/wallet/cards/JobApplication'
 import JobHistoryCard from '@/components/wallet/cards/JobHistoryCard'
-import { Card, Col, Row, Segmented } from 'antd'
-import React, { useState } from 'react'
+import { App, Card, Col, Row, Segmented } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
+import { createErrorMessage } from '../../../../../utils/errorInstance'
+import { IJobApplication } from '../../../../../utils/interface'
+import { getWorkersApplications } from '@/redux/action/jobs'
+import WorkerJobHistory from '@/components/wallet/jobs/WorkerJobHistory'
+import WorkerJobApplication from '@/components/wallet/jobs/WorkerJobApplication'
 
 const Page = () => {
-  const [ active, setActive ] = useState("My Applications");
+  const [ active, setActive ] = useState("Browse Jobs");
+  
   return (
     <WorkerContainer active='Jobs'>
       <div>
@@ -27,49 +33,20 @@ const Page = () => {
         />
       </div>
 
-      {active === "Browse Jobs" && <Row gutter={[15, 15]} className='pb-6'>
-        <Col lg={10} sm={24} xs={24}>
-          <FilterCard />
-        </Col>
-
-        <Col lg={14} sm={24} xs={24}>
+      <Row gutter={[15, 15]} className='pb-6'>
+        {active === "Browse Jobs" &&  <Col lg={24} sm={24} xs={24} className=' h-[58vh] overflow-y-auto'>
           <AvailableContainer isJobs />
-        </Col>
-      </Row>}
+        </Col>}
 
-      {active === "Job History" &&
-        <Card
-        title={<div className='flex items-center gap-4'>
-          <CardTitle title='Job History' />
-          <Status title='3 Completed' bg='#f4f4f4' color='#373737' />
-        </div>}
-        >
-        <Row gutter={[15, 15]} className='pb-6'>
-          <Col lg={24} sm={24} xs={24}>
-            <JobHistoryCard />
-          </Col>
-        </Row>
-        </Card>
-      }
+        {active === "Job History" && <Col lg={24} sm={24} xs={24} className=' h-[58vh] overflow-y-auto'>
+           <WorkerJobHistory />
+        </Col>}
 
-      {active === "My Applications" && (
-        <Card
-          title={<CardTitle title='My Job Applications' status={<Status title='3 Opportunities' size={12} bg='#F4F4F4' color='#343434' />} />}
-          classNames={{
-            header: "",
-          }}
-        >
-          <Row gutter={[15, 15]}>
-            <Col lg={24} sm={24} xs={24}>
-              <JobApplication accepted />
-            </Col>
+         {active === "My Applications" && <Col lg={24} sm={24} xs={24} className=' h-[58vh] overflow-y-auto'>
+           <WorkerJobApplication />
+        </Col>}
+      </Row>
 
-            <Col lg={24} sm={24} xs={24}>
-              <JobApplication />
-            </Col>
-          </Row>
-        </Card>
-      )}
     </WorkerContainer>
   )
 }

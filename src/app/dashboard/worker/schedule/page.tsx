@@ -7,7 +7,7 @@ import { Col, Row, Segmented } from 'antd';
 import React, { useState } from 'react'
 
 const Page = () => {
-    const [ active, setActive ] = useState("Weekly Template");
+    const [ active, setActive ] = useState("Calendar");
   return (
     <WorkerContainer active='Schedule'>
       <div >

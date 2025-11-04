@@ -79,9 +79,9 @@ const Page = () => {
               )}
               styles={{body: {display: "flex", flexDirection: "column", gap: 10}}}
             >
+              {/* <TransactionCard isTransaction={isHistory} />
               <TransactionCard isTransaction={isHistory} />
-              <TransactionCard isTransaction={isHistory} />
-              <TransactionCard isTransaction={isHistory} />
+              <TransactionCard isTransaction={isHistory} /> */}
 
             </Card>
           </Col>

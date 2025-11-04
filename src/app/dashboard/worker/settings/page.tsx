@@ -9,7 +9,7 @@ import { Col, Row, Segmented } from 'antd';
 import React, { useState } from 'react'
 
 const Page = () => {
-    const [ active, setActive ] = useState("Payout Settings");
+    const [ active, setActive ] = useState("Notification Settings");
   return (
     <WorkerContainer active='Settings'>
       <div >
@@ -21,7 +21,7 @@ const Page = () => {
       <div  className='mb-6'>
         <Segmented 
           options={["Notification Settings", "Security & Privacy", "Payout Settings", "Account"]}
-          defaultValue='Notification Settings'
+          defaultValue={active}
           value={active}
           onChange={(value) => setActive(value)}
         />

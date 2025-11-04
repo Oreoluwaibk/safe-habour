@@ -2,15 +2,18 @@
 import { useEffect, useState } from 'react';
 import { IUser } from '../../utils/interface';
 import { verifyMe } from '@/redux/action/auth';
+import { useAppSelector } from '@/hook';
 
 interface AuthenticationState {
   authentication: IUser | undefined;
   loading: boolean;
   error: string | null;
+  handleGetAuthentication: () => void;
 }
 
 export const useAuthentication = (): AuthenticationState => {
-   const [ authentication, setAuthentication ] = useState<IUser>();
+    const [ authentication, setAuthentication ] = useState<IUser>();
+    const { user } = useAppSelector(state => state.auth);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -29,10 +32,10 @@ export const useAuthentication = (): AuthenticationState => {
         })
         .catch(err => {
             setLoading(false);
-            console.log("err", err);
+            setAuthentication(user);
             setError(err?.response ? err?.response.data : err?.message);
         })
-  }
+    }
 
-  return { authentication, loading, error };
+  return { authentication, loading, error, handleGetAuthentication };
 };

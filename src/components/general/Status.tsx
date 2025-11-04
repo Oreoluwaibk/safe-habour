@@ -5,7 +5,8 @@ interface props {
   bg?: string;
   color?: string;
   size?: number;
-  onClick?: () => void
+  onClick?: () => void;
+  
 }
 const Status = ({ title, bg="#F4FFFA", color="#039855", size= 14, onClick}: props) => {
   return (

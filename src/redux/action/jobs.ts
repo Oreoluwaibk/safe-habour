@@ -1,5 +1,5 @@
 import axiosInstance from "../../../utils/axiosConfig";
-import { acceptInvite, hireWorker, jobs, jopApply, rejectInvite } from "../../../utils/interface";
+import { acceptInvite, completeJob, hireWorker, IJobHireRequest, jobs, jopApply, rejectInvite } from "../../../utils/interface";
 
 interface IParams {
   pageNumber: number; 
@@ -9,8 +9,14 @@ interface IParams {
   CreatedTo?: string;
   PreferredStartDate?: string;
   PreferredEndDate?: string;
-  Status?: number | undefined
+  Status?: number | undefined;
+  serviceTypeIds?: number[],
+  maxPrice?:number | undefined,
+  minPrice?:number | undefined,
+  availability?: boolean;
+  rating?: number;
 }
+
 export const getClientJobs = async (
   pageNumber: number = 1,
   pageSize: number = 10,
@@ -39,6 +45,8 @@ export const getClientJobs = async (
     if (CreatedTo) params.CreatedTo = CreatedTo;
     if (PreferredStartDate) params.PreferredStartDate = PreferredStartDate;
     if (PreferredEndDate) params.PreferredEndDate = PreferredEndDate;
+
+    
     const url = `/Job/client/jobs`;
     const response = await axiosInstance.get(url, { params });
 
@@ -72,17 +80,31 @@ export const getAllJobs = async (
 }
 
 export const getAJob = async (id: string) => {
-    const url = `/Jobs/${id}`;
-    const response = await axiosInstance.get(url, { baseURL: "https://safeharbour.azurewebsites.net" });
+  const url = `/Jobs/${id}`;
+  const response = await axiosInstance.get(url, { baseURL: "https://safeharbour.azurewebsites.net" });
 
-    return Promise.resolve(response);
+  return Promise.resolve(response);
 }
 
 export const postAJob = async (data: jobs) => {
-    const url = `/job`;
-    const response = await axiosInstance.post(url, data, { baseURL: "https://safeharbour.azurewebsites.net" });
+  const url = `/job`;
+  const response = await axiosInstance.post(url, data, { baseURL: "https://safeharbour.azurewebsites.net" });
 
-    return Promise.resolve(response);
+  return Promise.resolve(response);
+}
+
+export const completeJobAsWorker = async (data: completeJob) => {
+  const url = `/Job/serviceworker/complete`;
+  const response = await axiosInstance.post(url, data);
+
+  return Promise.resolve(response);
+}
+
+export const completeJobAsClient = async (data: completeJob) => {
+  const url = `/Job/client/complete`;
+  const response = await axiosInstance.post(url, data);
+
+  return Promise.resolve(response);
 }
 
 
@@ -94,7 +116,7 @@ export const applyForAJob = async (data: jopApply) => {
     return Promise.resolve(response);
 }
 
-export const getJobApplications = async (
+export const getWorkersApplications = async (
   pageNumber: number = 1,
   pageSize: number = 10,
   search?: string,
@@ -168,6 +190,89 @@ export const getAllJobApplications = async (
   return Promise.resolve(response);
 };
 
+export const getJobApplicationsByStatus = async (
+  pageNumber: number = 1,
+  pageSize: number = 10,
+  Status?: number
+) => {
+  const url = `/JobApplication/all`;
+
+  const params: {
+    pageNumber: number,
+    pageSize: number,
+    Status?: number
+  } = {
+    pageNumber,
+    pageSize,
+    Status
+  };
+
+  if (Status !== undefined) params.Status = Status;
+
+  const response = await axiosInstance.get(url, { params });
+  return Promise.resolve(response);
+};
+
+export const getUpcomingJobs = async (
+  pageNumber: number = 1,
+  pageSize: number = 10,
+  IsUpcomingJobs: boolean = true
+) => {
+  const url = `/JobApplication/all`;
+
+  const params: {
+    pageNumber: number,
+    pageSize: number,
+    IsUpcomingJobs: boolean;
+  } = {
+    pageNumber,
+    pageSize,
+    IsUpcomingJobs
+  };
+
+  const response = await axiosInstance.get(url, { params });
+  return Promise.resolve(response);
+};
+
+export const getServiceWorkerUpcomingJobs = async (
+  pageNumber: number = 1,
+  pageSize: number = 10,
+  IsUpcomingJobs: boolean = true
+) => {
+  const url = `/JobApplication/serviceworker/applications`;
+
+  const params: {
+    pageNumber: number,
+    pageSize: number,
+    IsUpcomingJobs: boolean;
+  } = {
+    pageNumber,
+    pageSize,
+    IsUpcomingJobs
+  };
+
+  const response = await axiosInstance.get(url, { params });
+  return Promise.resolve(response);
+};
+
+export const getServiceWorkerJobHistory = async (
+  pageNumber: number = 1,
+  pageSize: number = 10
+) => {
+  const url = `/JobApplication/serviceworker/completed-history`;
+
+  const params: {
+    pageNumber: number,
+    pageSize: number
+  } = {
+    pageNumber,
+    pageSize,
+  };
+
+  const response = await axiosInstance.get(url, { params });
+  return Promise.resolve(response);
+};
+
 export const getJobServiceApplications = async (
   id: string| number,
   pageNumber: number = 1,
@@ -215,14 +320,14 @@ export const getAJobApplication = async (id: string) => {
     return Promise.resolve(response);
 }
 
-export const AcceptJobApplication = async (id: string) => {
-    const url = `/JobApplication/application/${id}/accept`;
-    const response = await axiosInstance.put(url);
+export const acceptJobApplication = async (id: string) => {
+  const url = `/JobApplication/application/${id}/accept`;
+  const response = await axiosInstance.put(url);
 
-    return Promise.resolve(response);
+  return Promise.resolve(response);
 }
 
-export const hireServiceWorker = async (data: hireWorker) => {
+export const hireServiceWorker = async (data: IJobHireRequest) => {
     const url = `/JobApplication/hire-service-worker`;
     const response = await axiosInstance.post(url, data);
 

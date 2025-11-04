@@ -98,7 +98,7 @@ const ClientContainer = ({
 
                     <div className='flex md:hidden items-center gap-2'>
                         <SearchOutlined className="!text-black !text-lg" />
-                        <div className="icon-div icon-bg">
+                        <div className="icon-div icon-bg" style={{backgroundColor: "#BF021F"}}>
                             <BellFilled className="!text-white !text-lg" onClick={() => setShowNotification(!showNotification)} />
                         </div>
                         {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}

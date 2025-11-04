@@ -3,134 +3,224 @@ import WorkerContainer from '@/components/dashboard/WorkerContainer'
 import CardTitle from '@/components/general/CardTitle'
 import Rating from '@/components/general/Rating'
 import Status from '@/components/general/Status'
-import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons'
-import { App, Button, Card, Col, Row, Skeleton } from 'antd'
-import Image from 'next/image'
+import { ArrowLeftOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons'
+import { App, Avatar, Card, Col, Row, Skeleton, Image } from 'antd';
 import { useParams, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useState } from 'react'
-import { C1 } from '../../../../../../assets/image'
-import { Icon } from '@iconify/react'
-import { getAJob } from '@/redux/action/jobs'
-import { jobs } from '../../../../../../utils/interface'
+import React, { useCallback, useEffect, useState } from 'react';
+import { acceptJobApplication, completeJobAsWorker, getAJobApplication } from '@/redux/action/jobs'
+import { completeJob, IJobApplication, review } from '../../../../../../utils/interface'
 import { createErrorMessage } from '../../../../../../utils/errorInstance'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
 import { handleDisplayServices } from '../../../../../../utils/converters'
-import ApplyJob from '@/components/wallet/modal/ApplyJob';
+// import ApplyJob from '@/components/wallet/modal/ApplyJob';
 import moment from "moment";
-import { savedPreferredTime } from '../../../../../../utils/savedInfo'
+// import { savedPreferredTime } from '../../../../../../utils/savedInfo'
+// import RateModal from '@/components/wallet/modal/RateModal'
+// import Review from '@/components/client/settings/Review'
+import RateCard from '@/components/client/cards/RateCard'
+import { getClientJobReview } from '@/redux/action/review'
+import RoundBtn from '@/components/general/RoundBtn'
+import { useAppSelector } from '@/hook'
+import AcceptDecline from '@/components/wallet/modal/AcceptDecline'
+import { pictureUrl } from '../../../../../../utils/axiosConfig'
 
 const Page = () => {
     const router = useRouter();
     const { id } = useParams();
     const { modal } = App.useApp()
     const [ loading, setLoading ] = useState(false);
-    const [ job, setJob ] = useState<jobs>();
+    const [ actionLoading, setActionLoading ] = useState(false);
+    const [ job, setJob ] = useState<IJobApplication>({
+            "id": "5d4afdc1-3bc0-4992-6545-08de1618ba71",
+        "jobId": "8517cf86-2da6-4d53-3943-08de15311834",
+        "message": "i fill i am capable of ploughing the house and i also have proofs and relevant experiences",
+        "proposedRate": 200.00,
+        "status": 1,
+        "createdAt": "2025-10-28T11:54:49.6739794",
+        "acceptedAt": null,
+        "rejectedAt": null,
+        "rejectionReason": null,
+        "jobDetails": {
+            "id": "8517cf86-2da6-4d53-3943-08de15311834",
+            "serviceCategoryId": 2,
+            "createdAt": "2025-10-28T11:33:14.0527071",
+            "client": null,
+            "dateNeeded": "2025-10-29T23:00:00",
+            "jobTitle": "I want to plough my house",
+            "isReocurringJob": false,
+            "timePreference": 2,
+            "location": "Toronto",
+            "reoccurringDays": [],
+            "budget": 200.00,
+            "jobDescription": "The house roof",
+            "clientId": "b299795d-7e98-4e7a-9694-1a0e7a3e2241",
+            "status": 1,
+            isHireDirectly: false
+        }
+    });
     const { categories } = useServiceCategory();
+    const [ reviews, setReviews ] = useState<review[]>([]);
+    const [ confirmed ] = useState(false);
+    const { user } = useAppSelector(state => state.auth);
     const [ openModal, setOpenModal ] = useState(false);
+    const [ isAccept, setIsAccept ] = useState(false);   
 
-    const handleGetJobs = useCallback(
-    (id: string) => {
-      setLoading(true);
-      getAJob(id)
-        .then((res) => {
-          if (res.status === 200 || res.status === 201) {
-            setJob(res.data.data);
-          }
+    const handleGetJobApplication = useCallback(
+        (id: string) => {
+          setLoading(true);
+          getAJobApplication(id)
+            .then((res) => {
+              if (res.status === 200 || res.status === 201) {
+                setLoading(false);
+                setJob(res.data.data);
+                handleGetClientJobReviews(res.data.data.jobDetails.id);
+            }
         })
         .catch((err) => {
-          modal.error({
-            title: "Unable to get this job",
+            modal.error({
+            title: "Unable to get this application",
             content: err?.response
-              ? createErrorMessage(err.response.data)
-              : err.message,
+                ? createErrorMessage(err.response.data)
+                : err.message,
             onOk: () => setLoading(false),
-          });
+            });
+        })
+        .finally(() => setLoading(false));
+    },
+    [modal]);
+
+    const handleGetClientJobReviews = useCallback(
+    (id: string) => {
+        setLoading(true);
+        getClientJobReview(id)
+        .then((res) => {
+            if (res.status === 200 || res.status === 201) {
+            setLoading(false);
+            console.log(res.data.data);
+            setReviews(res.data.data);
+            }
+        })
+        .catch((err) => {
+            modal.error({
+            title: "Unable to get review for this job",
+            content: err?.response
+                ? createErrorMessage(err.response.data)
+                : err.message,
+                onOk: () => setLoading(false),
+            });
         })
         .finally(() => setLoading(false));
     },
     [modal] // dependencies
-  );
+    );
+    
+    useEffect(() => {
+        if (id) handleGetJobApplication(id.toString());
+    }, [id, handleGetJobApplication]);
 
-  useEffect(() => {
-    if (id) handleGetJobs(id.toString());
-  }, [id, handleGetJobs]);
+    const handleAccept = () => {
+        setActionLoading(true);
+        acceptJobApplication(id!.toString())
+        .then(res => {
+            if(res.status === 200 || res.status === 201) {
+                setActionLoading(false);
+                modal.success({
+                    title: res.data.message || "Job accepted successfully",
+                    onOk: () => {
+                        setActionLoading(false);
+                        handleGetJobApplication(id!.toString());
+                    }
+                })
+            }
+        })
+        .catch(err => {
+            modal.error({
+            title: "Unable to accept application",
+            content: err?.response
+                ? createErrorMessage(err.response.data)
+                : err.message,
+                onOk: () => setActionLoading(false)
+            });
+        })
+    }
+    
+    const handleMarkAsComplete = () => {
+        const payload: completeJob = {
+            jobId: job.jobDetails.id,
+            completionNotes: ""
+        }
+        setActionLoading(true);
+        completeJobAsWorker(payload)
+        .then(res => {
+            if(res.status === 200 || res.status === 201) {
+                    modal.success({
+                    title: res.data.message || "Job is marked as completed",
+                    onOk: () => {
+                        setActionLoading(false);
+                        handleGetJobApplication(id!.toString());
+                    }
+                })
+            
+            }
+        })
+        .catch(err => {
+            modal.error({
+            title: "Unable to mark this application as completed",
+            content: err?.response
+                ? createErrorMessage(err.response.data)
+                : err.message,
+                onOk: () => setActionLoading(false)
+            });
+        })
+    }
     
   return (
-    <WorkerContainer active='Dashboard'>
+    <WorkerContainer active='Schedule'>
     <div onClick={() => router.back()} className='flex items-center gap-4 cursor-pointer my-2 text-[#343434]'>
         <ArrowLeftOutlined />
         <span>Back</span>
     </div>
 
-    <Skeleton loading={loading}  className='!pb-6 min-h-[80vh]'>
-        <Row gutter={[15, 15]}>
+    <Skeleton loading={loading}  className='!pb-6 min-h-[90vh]'>
+        <Row gutter={[15, 15]} className='!pb-6 min-h-[90vh]'>
         <Col lg={24} sm={24} xs={24}>
         <Card
             title={
                 <div className='flex flex-col gap-1'>
-                    <CardTitle title={job?.jobTitle || ""} />
+                    <CardTitle title={job?.jobDetails.jobTitle || ""} />
                     <div className='flex items-center gap-3'>
-                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {job?.location}</span>
+                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {job?.jobDetails.location}</span>
                         <Rating />
-                        <p className='text-lg text-[#646464] font-medium'>${job?.budget}</p>
+                        <p className='text-lg text-[#646464] font-medium'>${job?.jobDetails.budget}</p>
                     </div>
                     <div className='flex items-center gap-4'>
-                        <Status size={12} title={job && handleDisplayServices(job.serviceCategory, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
+                        <Status size={12} title={job && handleDisplayServices(job.jobDetails.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
                     </div>
                 </div>
             }
             classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
             className='!mt-6'
-            extra={<Button onClick={() => setOpenModal(true)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Apply Now</Button>}
+            extra={
+            <>
+            {job.status === 2 && <div className='flex items-center gap-2 justify-end'>
+                <RoundBtn width={94} onClick={() => {}} title='Cancel' />
+                <RoundBtn primary width={159} onClick={handleMarkAsComplete} loading={actionLoading} title='Mark as Complete' />
+            </div>}
+            {job.jobDetails.isHireDirectly && job.status === 1 && <div className='flex items-center gap-2 justify-end'>
+                <RoundBtn width={94} onClick={() => {
+                    setIsAccept(false);
+                    setOpenModal(true);
+                }} title='Decline' />
+                <RoundBtn primary width={94} onClick={() => {
+                    setIsAccept(true);
+                    setOpenModal(true);
+                }} loading={actionLoading} title='Accept' />
+            </div>}
+            </>
+            // <Button onClick={() => setOpenModal(true)} icon={<StarOutlined />} type="default" className='!text-[#670316] !h-[48px]' style={{borderRadius: 50}}>Rate Experience</Button>
+        }
             loading={loading}
         />       
-        </Col>
-
-        <Col lg={14} sm={24} xs={24}>
-        <Card
-            title={
-                <div className='flex flex-col gap-1'>
-                    <CardTitle 
-                        title='Job Description' 
-                    />
-                </div>
-            }
-            classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
-            className='!mt-0'
-            actions={[<p key={1} className='text-left px-6 text-sm text-[#585858]'>{job?.jobDescription}</p>]}
-            loading={loading}
-        /> 
-
-        <Card
-            title={
-                <div className='flex flex-col gap-1'>
-                    <CardTitle 
-                        title='Job Details' 
-                    />
-                </div>
-            }
-            classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
-            className='!mt-3'
-            actions={[
-                <div className='px-4 flex items-center gap-6' key={1}>
-                    <div className='flex items-center gap-3'>
-                        <span className='text-[#646464] flex items-center gap-1'><Icon icon="lets-icons:date-today-light" fontSize={14} />State Date:</span>
-                        <span>{moment(job?.dateNeeded).format("DD/MM/YYYY")}</span>
-                    </div>
-
-                    <div className='flex items-center gap-3'>
-                        <span className='text-[#646464] flex items-center gap-1'><Icon icon="si:dollar-line" fontSize={14} />Payment:</span>
-                        <span>Hourly rate paid weekly</span>
-                    </div>
-
-                    <div className='flex items-center gap-3'>
-                        <span className='text-[#646464] flex items-center gap-1'><Icon icon="mingcute:time-line" fontSize={14} />Preferred Time:</span>
-                        <span>{job && savedPreferredTime.find(time => time.id === job?.timePreference)?.title}</span>
-                    </div>
-                </div>
-            ]}
-            loading={loading}
-        />
         </Col>
 
         <Col lg={10} sm={24} xs={24}>
@@ -139,8 +229,15 @@ const Page = () => {
                     <div>
                         <CardTitle title='Client Information' />
                         <div className='flex items-center gap-3'>
-                            <Image src={C1} alt='title' className='rounded-full h-[56px] w-[56px] object-cover' />
-                            <CardTitle title='Margaret Thompson' description={<Rating />} />
+                            {job?.jobDetails.client?.imageUrl && <Image src={`${pictureUrl}${job?.jobDetails.client?.imageUrl}`} alt='title' className='rounded-full h-[56px] w-[56px] object-cover' />}
+                            {!job?.jobDetails.client?.imageUrl && 
+                            <Avatar 
+                                icon={<UserOutlined className='text-2xl' />} 
+                                alt=''
+                                size={84} 
+                                className='h-[84px] w-[84px] rounded-full object-cover' 
+                            />}
+                            <CardTitle title={job?.jobDetails.client?.name || ""} description={<Rating />} />
                         </div>
                     </div>
                 }
@@ -151,7 +248,7 @@ const Page = () => {
 
                     <div className='flex items-center justify-between'>
                         <p className='text-lg text-[#1e1e1e]'>Member Since</p>
-                        <p className='text-lg text-[#1e1e1e] font-medium'>2025</p>
+                        <p className='text-lg text-[#1e1e1e] font-medium'>{job?.jobDetails.client && moment(job?.jobDetails.client?.createdAt).format("YYYY")}</p>
                     </div>
 
                     <div className='flex items-center justify-between'>
@@ -161,15 +258,48 @@ const Page = () => {
 
                     <div className='flex items-center justify-between'>
                         <p className='text-lg text-[#1e1e1e]'>Verification</p>
-                        <Status title='Verified' />
+                        <Status bg='' color={job?.jobDetails.client?.isVerified ? "#039855" : "#ff0004"} title={job?.jobDetails.client?.isVerified ? 'Verified' : "Not Verified"} />
                     </div>
 
                    
             </Card>
         </Col>
+
+        <Col lg={14} sm={24} xs={24}>
+        <Card
+            title={
+                <div className='flex flex-col gap-1'>
+                    <CardTitle 
+                        title='Client Review' 
+                    />
+                </div>
+            }
+            classNames={{ header: "!py-4", body: "", }}
+            className='!mt-0'
+            loading={loading}
+        >
+            {reviews && reviews.length > 0 && (
+                reviews.map((review, i: number) => (
+                    <RateCard reviewDetails={review} key={i} />
+                ))
+            )}
+            {!reviews && <p className='text-[#121212] text-center'>There are no client review for this job yet</p>}
+        </Card> 
+
+      
+        </Col>
     </Row>
     </Skeleton>
-    {openModal && job && <ApplyJob open={openModal} onCancel={() => setOpenModal(false)} job={job} />}
+    {openModal && 
+        <AcceptDecline 
+            open={openModal} 
+            onCancel={() => setOpenModal(false)} 
+            isAccept={isAccept} 
+            application={job} 
+            user={user}
+            refresh={() =>{
+                if(id) handleGetJobApplication(id.toString())}}
+        />}
     </WorkerContainer>
   )
 }

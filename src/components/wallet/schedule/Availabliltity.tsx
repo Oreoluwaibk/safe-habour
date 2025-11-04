@@ -1,27 +1,269 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Calendar, Card, Col, Flex, Row } from 'antd';
+import { App, Calendar, Card, Col, Flex, Form, Row } from 'antd';
 import type { CalendarProps } from 'antd';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
-import type { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import dayLocaleData from 'dayjs/plugin/localeData';
 import CardTitle from '@/components/general/CardTitle';
 import AddCalenderFlow from '../flows/AddCalenderFlow';
 import RoundBtn from '@/components/general/RoundBtn';
 import { Icon } from '@iconify/react';
+import { deleteSchedule, getSchedule, saveSchedule, updateSchedule } from '@/redux/action/schedules';
+import { createErrorMessage } from '../../../../utils/errorInstance';
+import { schedule } from '../../../../utils/interface';
+import moment from 'moment';
+import { dayOfWeek } from '../../../../utils/savedInfo';
 
 
 
 dayjs.extend(dayLocaleData);
 
 const Availabliltity = () => {
+    const { modal, message } = App.useApp();
+    const [form] = Form.useForm();
     const [ isAvailable, setIsAvailable ] = useState(false);
     const [ availability, setAvailability ] = useState(false);
+    const [ loading, setLoading ] = useState(false);
+    const [ markLoading, setMarkLoading ] = useState(false);
+    const [ deleteLoading, setDeleteLoading ] = useState(false);
+    const [ selectedDay, setSelectedDay ] = useState<Dayjs | null>(null);
+    const [ startTime, setStartTime ] = useState<dayjs.Dayjs | null>(null);
+    const [ endTime, setEndTime ] = useState<dayjs.Dayjs | null>(null);
+    const [ avaliableDays, setAvailableDays ] = useState<schedule[]>([]);
+    const [ editDay, setEditDay ] = useState<schedule>({
+        dayOfWeek: null,
+        startTime: "",
+        endTime: "",
+        isAvailable: false,
+        notes: "",
+        id: null,
+        scheduleDate: ""
+    });
+
     const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
         console.log(value.format('YYYY-MM-DD'), mode);
     };
-  return (//
+
+    const [ payLoad, setPayload ] = useState<schedule>({
+        dayOfWeek: null,
+        startTime: "",
+        endTime: "",
+        isAvailable: false,
+        notes: "",
+        scheduleDate: ""
+    });
+
+    const handleGetAvailabilty = useCallback(() => {
+        setLoading(true);
+        getSchedule()
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                console.log("response", res.data);
+                setAvailableDays(res.data.data);
+            }
+        })
+        .catch(err => {
+            setLoading(false);
+            modal.error({
+                title: "Unable to get schedule",
+                content: err?.response ? createErrorMessage(err.response.data) : err.message,
+            });
+        })
+    }, []);
+    
+    useEffect(() => {
+        handleGetAvailabilty();
+    }, []);
+
+    const handleSave = (availability: boolean = false) => {
+        if(editDay.id) handleUpdateSechedule(availability);
+        else handleSetSechedule(availability)
+    }
+
+    const handleSetSechedule = (availability: boolean = false) => {
+        const payload: schedule = {
+            ...payLoad,
+            isAvailable: availability,
+            scheduleDate: selectedDay?.toISOString() || "",
+        }
+
+        setLoading(true);
+        saveSchedule(payload)
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                
+                form.resetFields();
+                message.success("Day has been set successfully, to make day active, mark as available!");
+                const updatedDate = res.data.data;
+                handleGetAvailabilty();
+
+                setEditDay(updatedDate);
+                setAvailability(true);
+                setIsAvailable(true)
+                setEndTime(dayjs(updatedDate.endTime))
+                setPayload({ ...updatedDate });
+            }
+        })
+        .catch(err => {
+            setLoading(false);
+            modal.error({
+                title: "Unable to set schedule",
+                content: err?.response ? createErrorMessage(err.response.data) : err.message,
+            });
+        })
+    }
+
+    const handleUpdateSechedule = (availability: boolean = false) => { 
+        const payload: schedule = {
+            ...payLoad,
+            isAvailable: availability,
+            scheduleDate: selectedDay?.toISOString() || "",
+            dayOfWeek: dayOfWeek.findIndex(day => day.name === payLoad.dayOfWeek)
+        }
+        if(!editDay.id) return;
+        setLoading(true);
+        updateSchedule(editDay.id!, payload)
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                form.resetFields();
+                message.success("Day has been updated successfully!");
+                console.log("res", res.data);
+                const updatedDate = res.data.data;
+                handleGetAvailabilty();
+
+                setEditDay(updatedDate);
+                setAvailability(true);
+                setIsAvailable(true)
+                setEndTime(dayjs(updatedDate.endTime))
+                setPayload({ ...updatedDate });
+            }
+        })
+        .catch(err => {
+            setLoading(false);
+            modal.error({
+                title: "Unable to set schedule",
+                content: err?.response ? createErrorMessage(err.response.data) : err.message,
+            });
+        })
+    }
+
+    const handleToggleMarkAvaialable = (availability: boolean = false) => { 
+        const payload: schedule = {
+            ...payLoad,
+            isAvailable: availability,
+            scheduleDate: selectedDay?.toISOString() || "",
+            dayOfWeek: dayOfWeek.findIndex(day => day.name === payLoad.dayOfWeek)
+        }
+
+        if(!editDay.id) return;
+        setMarkLoading(true);
+        updateSchedule(editDay.id!, payload)
+        .then(res => {
+            if(res.status === 200) {
+                setMarkLoading(false);
+                form.resetFields();
+                message.success(`This time has been marked as ${availability ? "available" : "unavaialable"}!`);
+                const updatedDate = res.data.data;
+                handleGetAvailabilty();
+
+                setEditDay(updatedDate);
+                setAvailability(true);
+                setIsAvailable(true)
+                setEndTime(dayjs(updatedDate.endTime))
+                setPayload({ ...updatedDate });
+            }
+        })
+        .catch(err => {
+            setMarkLoading(false);
+            modal.error({
+                title: "Unable to set schedule",
+                content: err?.response ? createErrorMessage(err.response.data) : err.message,
+            });
+        })
+    }
+
+    const handledeleteSchedule = () => { 
+        if(!editDay.id) return;
+        setDeleteLoading(true);
+        deleteSchedule(editDay.id!)
+        .then(res => {
+            if(res.status === 200 || res.status === 204) {
+                setDeleteLoading(false);
+                form.resetFields();
+                message.success(res.data.message || "Time and date has been deleted successfully!");
+                handleGetAvailabilty();
+
+                setPayload({
+                    startTime: "",
+                    endTime: "",
+                    isAvailable: false,
+                    notes: "",
+                    dayOfWeek: 0,
+                    scheduleDate: ""
+                });
+                setEditDay({
+                    dayOfWeek: null,
+                    startTime: "",
+                    endTime: "",
+                    isAvailable: false,
+                    notes: "",
+                    id: null,
+                    scheduleDate: ""
+                })
+                setAvailability(false);
+                setIsAvailable(false);
+                setSelectedDay(null);
+                setStartTime(null);
+                setEndTime(null);
+            }
+        })
+        .catch(err => {
+            setDeleteLoading(false);
+            modal.error({
+                title: "Unable to delete schedule",
+                content: err?.response ? createErrorMessage(err.response.data) : err.message,
+            });
+        })
+    }
+
+    const onDateChange: CalendarProps<Dayjs>["onChange"] = (date) => {
+        const selected = avaliableDays.find(day => day.dayOfWeek === dayOfWeek[date.day()].name && day.scheduleDate.split("T")[0] === dayjs(date).format("YYYY-MM-DD"));
+        if(selected) {
+            setEditDay(selected);
+            setAvailability(true);
+            setIsAvailable(true)
+            setEndTime(dayjs(selected.endTime))
+            setPayload({ ...selected });
+        } else {
+            setPayload({
+                startTime: "",
+                endTime: "",
+                isAvailable: false,
+                notes: "",
+                dayOfWeek: date.day(),
+                scheduleDate: ""
+            });
+            setEditDay({
+                dayOfWeek: null,
+                startTime: "",
+                endTime: "",
+                isAvailable: false,
+                notes: "",
+                id: null,
+                scheduleDate: ""
+            })
+            setAvailability(false);
+            setIsAvailable(false);
+        }
+
+        setSelectedDay(date);
+    }
+  return (
     <Row gutter={[15, 15]}>
     <Col lg={12} sm={24} xs={24}>
         <Card 
@@ -110,6 +352,7 @@ const Availabliltity = () => {
                         );
                     }}
                     onPanelChange={onPanelChange}
+                    onChange={onDateChange}
                     className='!bg-[#FAFAFA]'
                     rootClassName='!bg-[#FAFAFA]'
                 />
@@ -119,7 +362,7 @@ const Availabliltity = () => {
 
     <Col lg={12} sm={24} xs={24}>
         <Card 
-            title={<CardTitle title='Thursday, September 18' />} 
+            title={<CardTitle title={selectedDay ? selectedDay.format("dddd, MMMM DD") : "Select a Day to continue"} />} 
             styles={{ body: {}}}
             extra={isAvailable && availability && <RoundBtn width={86} height={40} title='Edit' icon={<Icon icon="flowbite:edit-outline" fontSize={18} />}  onClick={() => setAvailability(false)} />}
         >
@@ -129,6 +372,20 @@ const Availabliltity = () => {
                     isAvailable={isAvailable} 
                     setAvailability={setAvailability} 
                     setIsAvailable={setIsAvailable} 
+                    payLoad={payLoad}
+                    setPayload={setPayload}
+                    selectedDay={selectedDay}
+                    handleSetSechedule={handleSave}
+                    loading={loading}
+                    setEndTime={setEndTime}
+                    setStartTime={setStartTime}
+                    startTime={startTime}
+                    endTime={endTime}
+                    form={form}
+                    markLoading={markLoading}
+                    handleToggleMarkAvaialable={handleToggleMarkAvaialable}
+                    deleteLoading={deleteLoading}
+                    handledeleteSchedule={handledeleteSchedule}
                 />
             </Card>
         </Card>

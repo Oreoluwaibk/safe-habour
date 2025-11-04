@@ -1,4 +1,5 @@
 import axiosInstance from "../../../utils/axiosConfig";
+import { IServiceDetail } from "../../../utils/interface";
 // import { userProfile } from "../../../utils/interface";
 
 
@@ -9,6 +10,13 @@ export const getServiceWorkerProfile = async () => {
     return Promise.resolve(response);
 }//api/ServiceWorker/profile
 
+export const getServiceWorkerMetrics = async () => {
+    const url = `/ServiceWorker/walletdashboard`;
+    const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
 export const updateServiceWorkerProfile = async (data: FormData) => {
     const url = `/ServiceWorker/profile`;
     const response = await axiosInstance.put(url, data);
@@ -16,9 +24,16 @@ export const updateServiceWorkerProfile = async (data: FormData) => {
     return Promise.resolve(response);
 }
 
+export const updateServiceWorkerRate = async (data: IServiceDetail) => {
+    const url = `/ServiceWorker/service-rate`;
+    const response = await axiosInstance.put(url, data);
+
+    return Promise.resolve(response);
+}
+
 export const editServiceWorkerProfile = async (data: FormData) => {
     const url = `/ServiceWorker/update`;
-    const response = await axiosInstance.put(url, data);
+    const response = await axiosInstance.put(url, data, { headers: { "Content-Type": "multipart/form-data"}});
 
     return Promise.resolve(response);
 }

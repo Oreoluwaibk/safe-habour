@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import WorkerContainer from '@/components/dashboard/WorkerContainer';
 import { App, Col, Row } from 'antd';
 import InfoWalletCards from '@/components/wallet/cards/InfoWalletCards';
@@ -11,13 +11,54 @@ import CompleteInfo from '@/components/general/CompleteInfo';
 import { useAppSelector } from '@/hook';
 import { useAuthentication } from '@/hooks/useAuthentication';
 import { useRouter } from 'next/navigation';
+import { getServiceWorkerMetrics } from '@/redux/action/serviceWorker';
+import { createErrorMessage } from '../../../../utils/errorInstance';
+import { EarningsSummary } from '../../../../utils/interface';
 
 const Page = () => {
   const router = useRouter();
   const [ closeInfo, setCloseInfo ] = useState(true);
-  const { message } = App.useApp();
+  const { message, modal } = App.useApp();
   const { user } = useAppSelector(state => state.auth);
   const { authentication } = useAuthentication();
+  const [ metrics, setMetric ] = useState<EarningsSummary>({
+    totalGrossEarnings: 0,
+    totalPlatformFees: 0,
+    totalEarnings: 0,
+    clearedBalance: 0,
+    pendingInEscrow: 0,
+    thisMonthEarnings: 0,
+    lastMonthEarnings: 0,
+    percentageChangeFromLastMonth: 0,
+    changeDescription: "No earnings yet",
+    totalCompletedJobs: 0,
+    responseRate: 0,
+    responseRateDescription: "",
+    totalFeesPaid: 0,
+    currentMonth: {
+      jobsCompleted: 0,
+      grossEarnings: 0,
+      platformFees: 0,
+      netEarnings: 0,
+      totalEarnings: 0,
+      feesPaid: 0,
+      year: 2025,
+      month: 11,
+      monthName: "November 2025",
+    },
+    previousMonth: {
+      jobsCompleted: 0,
+      grossEarnings: 0,
+      platformFees: 0,
+      netEarnings: 0,
+      totalEarnings: 0,
+      feesPaid: 0,
+      year: 2025,
+      month: 10,
+      monthName: "October 2025",
+    },
+  });
+  const [ loading, setLoading ] = useState(false);
 
   useEffect(() => {
     if(authentication) setCloseInfo(!authentication.isVerified);
@@ -28,6 +69,31 @@ const Page = () => {
       }, 2000);
     }
   }, [authentication, message, router]);
+
+  const handleGetMetrics = useCallback(() => {
+    setLoading(true);
+    getServiceWorkerMetrics()
+    .then(res => {
+      if(res.status === 200) {
+        setLoading(false);
+        setMetric(res.data);
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to get metrics",
+        content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+      });
+    })
+  }, []);
+
+  useEffect(() => {
+    handleGetMetrics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   return (
     <WorkerContainer active='Dashboard'>
@@ -47,16 +113,16 @@ const Page = () => {
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
             title='Total Earnings'
-            amount="$1,280.50"
+            amount={`$${metrics.totalEarnings.toFixed(2)}`}
             isWallet
-            info={<p className='text-xs'><span className='bg-[#ECFDF3] text-[#027A48] px-2 py-1 rounded-[16px]'>10%</span>  vs last month</p>}
+            info={<p className='text-xs'><span className='bg-[#ECFDF3] text-[#027A48] px-2 py-1 rounded-[16px]'>{metrics.percentageChangeFromLastMonth}%</span>  vs last month</p>}
             icon={<Icon icon="bx:dollar" color='#670316' />}
           />
         </Col>
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
             title='Pending Earnings'
-            amount="14"
+            amount={metrics.pendingInEscrow}
             isWallet
             info='In escrow'
             icon={<Icon icon="mingcute:time-line"  color='#670316' />}
@@ -65,7 +131,7 @@ const Page = () => {
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
             title='Completed Jobs'
-            amount="23"
+            amount={metrics.totalCompletedJobs}
             info={<p className='text-xs'><span className='bg-[#ECFDF3] text-[#027A48] px-2 py-1 rounded-[16px]'>8%</span>  vs last month</p>}
             icon={<Icon icon="nrk:media-media-complete" color='#670316' />}
             isWallet
@@ -74,7 +140,7 @@ const Page = () => {
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
             title='Response Rate'
-            amount="87%"
+            amount={metrics.responseRate}
             isWallet
             info="Keep it high"
             icon={<Icon icon="carbon:analytics" color='#670316' />}
@@ -88,7 +154,7 @@ const Page = () => {
         </Col>
 
         <Col lg={10} sm={12} xs={24}>
-          <UpcomingContainer />
+          <UpcomingContainer metrics={metrics} />
         </Col>
         
       </Row>

@@ -21,6 +21,13 @@ export const getMessageHistory = async (id: string) => {
     return Promise.resolve(response);
 }
 
+export const getAllMessages = async () => {
+    const url = `/Message/chats`;
+    const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
 export const getUnreadMessageCount = async (id: string) => {
     const url = `/Message/${id}/unread-count`;
     const response = await axiosInstance.get(url);

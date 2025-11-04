@@ -10,3 +10,4 @@ export { default as Filter } from "./filter.svg";
 export { default as CardBg } from "./card_bg.svg";
 export { default as MaskedLogo } from "./mashed_logo.svg";
 export { default as CheckedCircle } from "./check-circle.svg";
+export { default as EditSVG } from "./edit.svg";

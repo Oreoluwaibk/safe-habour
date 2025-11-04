@@ -57,7 +57,7 @@ const WorkerContainer = ({
      <Layout >
         <Layout>
             <Content className="bg-white">
-                <Header className="client-nav prim-bg bg-white" >
+                <Header className="client-nav prim-bg bg-white sticky top-5 z-[2]" >
                     <div className='flex items-center justify-between w-[60%]'>
                         <Link href="/" className=''>
                         <Image 

@@ -59,7 +59,7 @@ const Container = ({
             dispatch(logoutUser());
             message.success("You have loggued out successfully!");
         });
-    }, [router, message, dispatch]); 
+    }, [message, dispatch]); 
 
     const handleGoDashboard = () => {
         if(loginType === "ServiceWorker") router.push("/dashboard/worker/");

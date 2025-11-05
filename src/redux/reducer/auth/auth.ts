@@ -1,9 +1,32 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+// import { loginAction } from "@/redux/action/auth";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
-import { loginAction } from "../../action/auth";
-import { signinReducer } from "../../../../utils/interface";
+import { IUser, signinReducer } from "../../../../utils/interface";
+// import { loginAction } from "@/redux/action/auth";
+
 
 const isBrowser = typeof window !== "undefined";
+
+export const loginAction = createAsyncThunk(
+  "auth/login",
+  async (data: { token: string; user: IUser; roles: string[]; tokenExpiry: string }) => {
+    const { token, user, roles, tokenExpiry } = data;
+
+    if (isBrowser) {
+      localStorage.setItem("safehabour_user", JSON.stringify(user));
+      localStorage.setItem("safehabour_login_type", JSON.stringify(roles?.[0]));
+      localStorage.setItem("safehabour_token", token);
+      if (tokenExpiry) localStorage.setItem("safehabour_token_expiry", String(tokenExpiry));
+    }
+
+    return {
+      token,
+      user,
+      type: roles?.[0],
+      tokenExpiry,
+    };
+  }
+);
 
 const storedUser = isBrowser ? localStorage.getItem("safehabour_user") : null;
 const storedToken = isBrowser ? localStorage.getItem("safehabour_token") : null;

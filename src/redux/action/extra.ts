@@ -1,5 +1,6 @@
 import axios from "axios";
 import axiosInstance from "../../../utils/axiosConfig";
+import { INotificationSetting } from "../../../utils/interface";
 
 export const getLanguages = async () => {
     const url = `https://api.languagetoolplus.com/v2/languages`;
@@ -22,7 +23,7 @@ export const getNotificationSettings = async () => {
     return Promise.resolve(response);
 }
 
-export const updateNotificationSetting = async (data: any) => {
+export const updateNotificationSetting = async (data: INotificationSetting) => {
     const url = `/Authentication/notification-settings`;
     const response = await axiosInstance.put(url, data);
 

@@ -1,12 +1,12 @@
 import CardTitle from '@/components/general/CardTitle';
 import RoundBtn from '@/components/general/RoundBtn';
-import { App, Card, Col, DatePicker, Form, Modal, Row, TimePicker } from 'antd';
+import { App, Card, Col, Form, Modal, Row, TimePicker } from 'antd';
 import React, { useCallback, useState } from 'react'
 import { GroupedSchedule } from '../../../../utils/converters';
 import { schedule } from '../../../../utils/interface';
 import dayjs from 'dayjs';
 import { createErrorMessage } from '../../../../utils/errorInstance';
-import { saveBulkSchedule, updateBulkSchedule } from '@/redux/action/schedules';
+import { updateBulkSchedule } from '@/redux/action/schedules';
 import { dayOfWeek } from '../../../../utils/savedInfo';
 
 
@@ -29,23 +29,21 @@ const ApplyTemplate = ({ open, onCancel, allSchedule, avaliableDays, refresh }: 
         startTime: "",
         endTime: ""
     })
-    const [ payLoad, setPayload ] = useState<schedule[]>(allSchedule);
+    const [ payLoad ] = useState<schedule[]>(allSchedule);
 
     const handleUpdateSechedule = () => { 
         if(!time.startTime) return message.error("Set the start time to continue!");
         if(!time.endTime) return message.error("Set the end time to continue!");
 
-        const newPayload: schedule[] = payLoad.map(data => {
-            data.startTime = time.startTime,
+        payLoad.map(data => {
+            data.startTime = time.startTime;
             data.endTime = time.endTime;
-            data.dayOfWeek = dayOfWeek.findIndex(day => day.name === data.dayOfWeek)
+            data.dayOfWeek = dayOfWeek.findIndex(day => day.name === data.dayOfWeek);
             return data;
         })
-
-        console.log("ress", newPayload)
     
         setLoading(true);
-        updateBulkSchedule(newPayload)
+        updateBulkSchedule(payLoad)
         .then(res => {
             if(res.status === 200) {
                 setLoading(false);
@@ -63,12 +61,13 @@ const ApplyTemplate = ({ open, onCancel, allSchedule, avaliableDays, refresh }: 
             });
         })
     }
-    const handleSetStart = (date: any, dateString: string | string[]) => {
+    
+    const handleSetStart = (date: dayjs.Dayjs, dateString: string | string[]) => {
         setStartTime(date);
         setTime(prev => ({...prev, startTime: dateString.toString()}))
     }
-
-    const handleSetEnd = useCallback((date: any, dateString: string | string[]) => {
+    
+    const handleSetEnd = useCallback((date: dayjs.Dayjs, dateString: string | string[]) => {
         if (startTime && date.isBefore(startTime)) {
             setError("End time cannot be earlier than start time");
         } else {
@@ -141,7 +140,7 @@ const ApplyTemplate = ({ open, onCancel, allSchedule, avaliableDays, refresh }: 
                                 <div className='flex items-center justify-between' key={i}>
                                     <p>{days.dayOfWeek}</p>
                                     {days.startTime.map((time: string,i:number) => (
-                                        <p>{time} - {days.endTime[i]}</p>
+                                        <p key={i}>{time} - {days.endTime[i]}</p>
                                     ))}
                                 </div>
                             ))}

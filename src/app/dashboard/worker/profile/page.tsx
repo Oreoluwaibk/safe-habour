@@ -6,7 +6,6 @@ import React, { useState } from 'react'
 import "@/styles/setting.css";
 import ServicesInfo from '@/components/wallet/profile/Services'
 import Verification from '@/components/wallet/profile/Verification'
-import Review from '@/components/client/settings/Review'
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
 import WorkerReview from '@/components/wallet/profile/WorkerReview'
@@ -58,7 +57,7 @@ const Page = () => {
           />
         </Col>}
         {active === "Review" && <Col lg={24} sm={24} xs={24} className='md:!px-[100px]'>
-          <WorkerReview userId={authentication?.id! || ""}  />
+          <WorkerReview userId={authentication?.id || ""}  />
         </Col>}
       </Row>
     </WorkerContainer>

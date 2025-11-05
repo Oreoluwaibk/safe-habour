@@ -1,7 +1,7 @@
 "use client"
 import ClientContainer from '@/components/dashboard/ClientContainer'
 import CompleteInfo from '@/components/general/CompleteInfo'
-import { ArrowRightOutlined } from '@ant-design/icons'
+import { ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons'
 import React, { useCallback, useEffect, useState } from 'react';
 import "@/styles/client.css"
 import Link from 'next/link';
@@ -104,7 +104,7 @@ const Page = () => {
           : err.message,
       });
     })
-  }, []);
+  }, [modal]);
 
   useEffect(() => {
     handleGetMetrics();
@@ -118,7 +118,7 @@ const Page = () => {
   return (
     <ClientContainer active='Dashboard'>
       <div >
-        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.lastName}!</h1>
+        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.lastName}! {loading && <LoadingOutlined spin/>}</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
         {closeInfo && <CompleteInfo 

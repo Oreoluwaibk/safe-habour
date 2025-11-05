@@ -1,7 +1,7 @@
 import { App, Button, Input, Modal, Image, Avatar } from 'antd';
 import React, { useState } from 'react';
 import CardTitle from '@/components/general/CardTitle';
-import { acceptInvite, IJobApplication, IUser, JobDetails, rejectInvite } from '../../../../utils/interface';
+import { acceptInvite, IJobApplication, IUser, rejectInvite } from '../../../../utils/interface';
 import { acceptWorkInvite, rejectWorkInvite } from '@/redux/action/jobs';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { UserOutlined } from '@ant-design/icons';

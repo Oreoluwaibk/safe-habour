@@ -32,7 +32,7 @@ const WorkerReview = ({ userId }: props) => {
                 onOk: () => setLoading(false),
             });
         });
-    }, []);
+    }, [modal, userId]);
 
     useEffect(() => {
         handleGetReview();

@@ -35,7 +35,7 @@ const TwoFaModal = ({ open, onCancel, email }: props) => {
                     onOk: async () => {
                         setLoading(false);
                         const result = await dispatch(loginAction(res.data.data));
-                        
+                        console.log("result:", result)
                         const role = res.data.data?.roles?.[0];
                         if (lastRoute) {
                             router.push(lastRoute);

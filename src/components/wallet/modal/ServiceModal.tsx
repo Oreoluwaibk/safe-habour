@@ -26,17 +26,15 @@ const ServiceModal = ({
     const [form] = Form.useForm();
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);
-    const [ serviceName, setServiceName ] = useState(categories[selected!?.serviceCategoryId]?.name)
+    const [ serviceName, setServiceName ] = useState(selected && categories[selected?.serviceCategoryId]?.name || "")
 
-    console.log("Ss", selected);
-    
     useEffect(() => {
         if(isEdit && selected && categories.length > 0) 
-            setServiceName(categories[selected!?.serviceCategoryId]?.name)
+            setServiceName(categories[selected?.serviceCategoryId]?.name)
             form.setFieldsValue({
-                serviceCategoryId: categories[selected!?.serviceCategoryId]?.name,
-                hourlyRate: selected?.hourlyRate || 1,
-                yearsOfExperience: selected?.yearsOfExperience || 1
+                serviceCategoryId: selected && categories[selected?.serviceCategoryId]?.name || "",
+                hourlyRate: selected && selected?.hourlyRate || 1,
+                yearsOfExperience: selected && selected?.yearsOfExperience || 1
             })
     }, [isEdit, selected, categories, form])
     const handleSubmit = () => {
@@ -80,7 +78,7 @@ const ServiceModal = ({
         .then(value => {
             const payload = {
                 ...value,
-                serviceCategoryId: selected!?.serviceCategoryId.toString()
+                serviceCategoryId: selected && selected?.serviceCategoryId.toString() || ""
             }
             setLoading(true);
             updateServiceWorkerRate(payload)

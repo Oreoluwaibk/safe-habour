@@ -2,8 +2,8 @@
 import RoundBtn from '@/components/general/RoundBtn'
 import { CheckCircleOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { Icon } from '@iconify/react'
-import { App, Button, Col, DatePicker, Form, FormInstance, Row, TimePicker } from 'antd'
-import React, { useCallback, useEffect, useState } from 'react'
+import { App, Button, Col, Form, FormInstance, Row, TimePicker } from 'antd'
+import React, { useCallback, useState } from 'react'
 import { schedule } from '../../../../utils/interface'
 import dayjs from 'dayjs'
 
@@ -21,7 +21,7 @@ interface props {
     endTime: dayjs.Dayjs | null;
     setStartTime: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
     setEndTime: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
-    form: FormInstance<any>;
+    form: FormInstance<string>;
     handleToggleMarkAvaialable: (availability: boolean) => void;
     markLoading: boolean;
     deleteLoading: boolean;
@@ -39,7 +39,7 @@ const AddCalenderFlow = ({
     payLoad,
     setPayload,
     startTime,
-    endTime,
+    // endTime,
     setEndTime,
     setStartTime,
     form,
@@ -55,13 +55,13 @@ const AddCalenderFlow = ({
         if(!selectedDay) return message.error("Please select a day to continue!");
         setIsAvailable(true);
     }
-
-    const handleSetStart = (date: any, dateString: string | string[]) => {
+    
+    const handleSetStart = (date: dayjs.Dayjs, dateString: string | string[]) => {
         setStartTime(date);
         setPayload(prev => ({...prev, startTime: dateString.toString()}))
     }
-
-    const handleSetEnd = useCallback((date: any, dateString: string | string[]) => {
+    
+    const handleSetEnd = useCallback((date: dayjs.Dayjs, dateString: string | string[]) => {
          if (startTime && date.isBefore(startTime)) {
             setError("End time cannot be earlier than start time");
         } else {
@@ -69,6 +69,7 @@ const AddCalenderFlow = ({
             setEndTime(date);
             setPayload(prev => ({...prev, endTime: dateString.toString()}))
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleToggleAvailable = (value: boolean) => handleToggleMarkAvaialable(value);

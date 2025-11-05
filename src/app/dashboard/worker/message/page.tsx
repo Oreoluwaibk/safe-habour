@@ -1,11 +1,11 @@
 "use client"
 import ChatInfo from '@/components/client/chats/ChatInfo'
 // import ClientContainer from '@/components/dashboard/ClientContainer'
-import { EditFilled, SearchOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons'
 // import { Icon } from '@iconify/react'
 import { Row, Col, Card, Input, Button, App, CardProps } from 'antd'
 import Image from 'next/image'
-import React, { act, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { C1 } from '../../../../../assets/image'
 import { BsRecordFill } from 'react-icons/bs'
 import Messages from '@/components/client/chats/Messages'
@@ -23,7 +23,7 @@ const Page = () => {
     {id: 2, content: "Hello! Good Morning. Yes, I will be very much available tomorrow at 5 PM.", user: "Katherine Moss", time: "Thursday 11:40am"}
   ]);
   const [ chatList, setChatList ] = useState<MessageUserDto[]>([]);
-  const [ activeChat, setActiveChat ] = useState(null)
+  const [ activeChat, setActiveChat ] = useState<MessageUserDto | null>(null)
 
   const handleGetMessages = useCallback(() => {
     setLoading(true);
@@ -43,7 +43,7 @@ const Page = () => {
           : err.message,
       });
     })
-  }, []);
+  }, [modal]);
 
   useEffect(() => {
     handleGetMessages();
@@ -88,7 +88,7 @@ const Page = () => {
 
             <Row>
               {chatList.map((chat:MessageUserDto, i: number) => (
-                <Col lg={24} sm={24} xs={24} key={i}>
+                <Col lg={24} sm={24} xs={24} key={i} onClick={() => setActiveChat(chat)}>
                   <ChatInfo chat={chat} />
                 </Col>
               ))}

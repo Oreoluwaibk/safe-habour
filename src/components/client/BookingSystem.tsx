@@ -1,10 +1,12 @@
 "use client"
 import { App, Col, Pagination, PaginationProps, Row, Segmented, SegmentedProps } from 'antd'
-import React, { use, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import BookingCard from './cards/BookingCard'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { getJobApplicationsByStatus } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../utils/errorInstance'
+import { UserWorkerProfile } from '../../../utils/interface'
+import axios from 'axios'
 
 const BookingSystem = () => {
     const [ active, setActive ] = useState(1);
@@ -34,25 +36,34 @@ const BookingSystem = () => {
 
             if (res.status === 200 || res.status === 201) {
                 const newList = res.data.data?.list || [];
-
-                const totalList =  newList;
                 const totalItems = res.data.data?.totalItems || 0;
                 setWorkers(newList);
                 setTotalWorkers(totalItems || 0);
             }
-
-        } catch (err: any) {
-            modal.error({
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                modal.error({
                 title: "Unable to get applications",
-                content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
-            });
+                content: err.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                });
+            } else if (err instanceof Error) {
+                modal.error({
+                title: "Unexpected Error",
+                content: err.message,
+                });
+            } else {
+                modal.error({
+                title: "Unknown Error",
+                content: "Something went wrong.",
+                });
+            }
         } finally {
             setLoading(false);
         }
     },
-    [modal, loading, filters.pageNumber, filters.pageSize, filters.status]
+    [modal, loading, filters.pageSize]
     );
 
     useEffect(() => {
@@ -104,7 +115,7 @@ const BookingSystem = () => {
 
             <Col lg={24} sm={24} xs={24}>
                 <Row gutter={[15,15]}>
-                    {workers.map((worker: any) => (
+                    {workers.map((worker: UserWorkerProfile) => (
                         <Col key={worker.id} lg={12} sm={24} xs={24}>
                             <BookingCard worker={worker} />
                         </Col>

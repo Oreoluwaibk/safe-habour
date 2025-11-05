@@ -13,7 +13,7 @@ import { createErrorMessage } from '../../../../utils/errorInstance'
 import { GroupedSchedule, groupSchedulesByDay } from '../../../../utils/converters'
 
 const WeeklyTemplate = () => {
-  const { modal, message } = App.useApp();
+  const { modal } = App.useApp();
   const [ openException, setOpenException ] = useState(false);
   const [ openTemplate, setOpenTemplate ] = useState(false);
   const [ loading, setLoading ] = useState(false);
@@ -38,7 +38,7 @@ const WeeklyTemplate = () => {
         content: err?.response ? createErrorMessage(err.response.data) : err.message,
       });
     })
-  }, []);
+  }, [modal]);
 
   useEffect(() => {
     handleGetAvailabilty();

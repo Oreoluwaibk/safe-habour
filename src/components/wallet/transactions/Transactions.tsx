@@ -37,6 +37,7 @@ const Transactions = () => {
         .then(res => {
             if(res.status === 200) {
                 setLoading(false);
+                setTotal(res.data.length);
                 setTransactions(res.data.slice(0, 3));
             }
         })
@@ -48,7 +49,7 @@ const Transactions = () => {
                 : err.message,
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleGetFees = useCallback((
         pageNumber: number = 1,
@@ -77,7 +78,7 @@ const Transactions = () => {
                 : err.message,
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleGetPayouts = useCallback((
         pageNumber: number = 1,
@@ -106,7 +107,7 @@ const Transactions = () => {
                 : err.message,
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleGetFilter = useCallback(() => {
         if(type === "all" || type === "earning") 
@@ -115,6 +116,7 @@ const Transactions = () => {
             handleGetFees(filter.pageNumber, filter.pageSize, filter.StatusFilter, filter.TimePeriod);
         if(type === "payout") 
             handleGetPayouts(filter.pageNumber, filter.pageSize, filter.StatusFilter, filter.TimePeriod);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [type])
 
     const handleStatusFilter = useCallback((value: number) => {
@@ -126,6 +128,7 @@ const Transactions = () => {
             handleGetPayouts(filter.pageNumber, filter.pageSize, value, filter.TimePeriod);
 
         setFilters(prev => ({...prev, StatusFilter: value}));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter, type]);
 
     const handleTimeFilter = useCallback((value: number) => {
@@ -137,6 +140,7 @@ const Transactions = () => {
             handleGetPayouts(filter.pageNumber, filter.pageSize, filter.StatusFilter, value);
 
         setFilters(prev => ({...prev, TimePeriod: value}));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter, type]);
     
     useEffect(() => {
@@ -213,7 +217,7 @@ const Transactions = () => {
                 styles={{body: {display: "flex", flexDirection: "column", gap: 10}}}
             >
                 {transactions.map((transaction: PaymentTransaction, i: number) => (
-                    <TransactionCard isTransaction transaction={transaction} />
+                    <TransactionCard key={i} isTransaction transaction={transaction} />
                 ))}
 
                 {transactions.length === 0 && (

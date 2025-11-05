@@ -7,6 +7,7 @@ import { IJobApplication } from '../../../../utils/interface'
 import JobApplication from '../cards/JobApplication'
 import { getWorkersApplications } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../../utils/errorInstance'
+import axios from 'axios'
 
 const WorkerJobApplication = () => {
     const [ loading, setLoading ] = useState(false);
@@ -36,6 +37,7 @@ const WorkerJobApplication = () => {
         if (res.status === 200 || res.status === 201) {
           const newList = res.data.data?.list || [];
 
+          setTotalJobs(res.data.data.totalItems || 0);
           // ✅ Append for load more, otherwise replace
           setApplications((prev) =>
             isLoadMore ? [...prev, ...newList] : newList
@@ -44,13 +46,25 @@ const WorkerJobApplication = () => {
           // ✅ Determine if more results exist
           setHasMore(newList.length === filters.pageSize);
         }
-      } catch (err: any) {
-        modal.error({
-          title: "Unable to get applications",
-          content: err?.response
-            ? createErrorMessage(err.response.data)
-            : err.message,
-        });
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          modal.error({
+            title: "Unable to get applications",
+            content: err.response
+              ? createErrorMessage(err.response.data)
+              : err.message,
+          });
+        } else if (err instanceof Error) {
+          modal.error({
+            title: "Unexpected Error",
+            content: err.message,
+          });
+        } else {
+          modal.error({
+            title: "Unknown Error",
+            content: "Something went wrong.",
+          });
+        }
       } finally {
         setLoading(false);
       }

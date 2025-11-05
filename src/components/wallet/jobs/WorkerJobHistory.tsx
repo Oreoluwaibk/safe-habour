@@ -7,6 +7,8 @@ import JobHistoryCard from '../cards/JobHistoryCard'
 import { IJobApplication } from '../../../../utils/interface'
 import { getServiceWorkerJobHistory } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../../utils/errorInstance'
+import axios from 'axios'
+import { useAuthentication } from '@/hooks/useAuthentication'
 
 const WorkerJobHistory = () => {
     const [ loading, setLoading ] = useState(false);
@@ -16,6 +18,7 @@ const WorkerJobHistory = () => {
         pageNumber: 1,
         pageSize: 10,
     });
+    const { authentication } = useAuthentication();
     const [ totalJobs, setTotalJobs ] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const observerRef = useRef<HTMLDivElement | null>(null);
@@ -36,6 +39,7 @@ const WorkerJobHistory = () => {
             if (res.status === 200 || res.status === 201) {
                 const newList = res.data.data?.list || [];
 
+                setTotalJobs(res.data.data.totalItems || 0);
                 // ✅ Append for load more, otherwise replace
                 setJobs((prev) =>
                     isLoadMore ? [...prev, ...newList] : newList
@@ -44,13 +48,25 @@ const WorkerJobHistory = () => {
                     // ✅ Determine if more results exist
                 setHasMore(newList.length === filters.pageSize);
             }
-        } catch (err: any) {
-            modal.error({
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                modal.error({
                 title: "Unable to get worker's job history",
-                content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
-            });
+                content: err.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                });
+            } else if (err instanceof Error) {
+                modal.error({
+                title: "Unable to get worker's job history",
+                content: err.message,
+                });
+            } else {
+                modal.error({
+                title: "Unable to get worker's job history",
+                content: "Something went wrong.",
+                });
+            }
         } finally {
             setLoading(false);
         }
@@ -100,7 +116,7 @@ const WorkerJobHistory = () => {
         <Row gutter={[15, 15]} className='pb-6'>
             {jobs.map((job:IJobApplication, i: number) => (
                 <Col lg={24} sm={24} xs={24} key={i}>
-                    <JobHistoryCard />
+                    <JobHistoryCard user={authentication!} refresh={handleGetHistory} job={job} />
                 </Col>
             ))}
 

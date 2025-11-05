@@ -3,19 +3,22 @@ import CardTitle from '@/components/general/CardTitle'
 import RoundBtn from '@/components/general/RoundBtn'
 import Status from '@/components/general/Status'
 import { ClockCircleOutlined, EnvironmentOutlined, EyeOutlined } from '@ant-design/icons'
-import { Card } from 'antd'
-import { useRouter } from 'next/navigation'
+import { App, Card } from 'antd'
+// import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { IJobApplication } from '../../../../utils/interface'
 import moment from 'moment'
 import { savedPreferredTime } from '../../../../utils/savedInfo'
 import { acceptJobApplication } from '@/redux/action/jobs'
+import { createErrorMessage } from '../../../../utils/errorInstance'
 
 interface props {
   application: IJobApplication; // Replace 'any' with the actual type of application if available
 }
 const JobApplicationCard = ({ application }: props) => {
-    const router = useRouter();
+    // const router = useRouter();
+    const { modal } = App.useApp();
+    const [ loading, setLoading ] = useState(false);
     const [ statusTitle, setStatusTitle ] = React.useState<string>("");
     
     useEffect(() => {
@@ -33,28 +36,27 @@ const JobApplicationCard = ({ application }: props) => {
     }, [application.status]);
 
     const handleAccept = () => {
-            // setLoading(true);
+            setLoading(true);
             acceptJobApplication(application.id)
             .then(res => {
                 if(res.status === 200 || res.status === 201) {
-                    // setLoading(false);
-                    // modal.success({
-                    //     title: res.data.message || "Job accepted successfully",
-                    //     onOk: () => {
-                    //         setLoading(false);
-                    //         onRefresh();
-                    //     }
-                    // })
+                    modal.success({
+                        title: res.data.message || "Job accepted successfully",
+                        onOk: () => {
+                            setLoading(false);
+                            // onRefresh();
+                        }
+                    })
                 }
             })
             .catch(err => {
-                // modal.error({
-                // title: "Unable to accept application",
-                // content: err?.response
-                //     ? createErrorMessage(err.response.data)
-                //     : err.message,
-                // onOk: () => setLoading(false)
-                // });
+                modal.error({
+                    title: "Unable to accept application",
+                    content: err?.response
+                        ? createErrorMessage(err.response.data)
+                        : err.message,
+                    onOk: () => setLoading(false)
+                });
             })
         }
 
@@ -87,7 +89,7 @@ const JobApplicationCard = ({ application }: props) => {
         extra={<div className='flex flex-col items-end justify-between w-full'>
             <Status title='No Application Yet' bg='#f5f5f5' color='#1E1E1E' />
             <div style={{height: 30}}></div>
-            <RoundBtn icon={<EyeOutlined className='!text-[#670316]' />} title='View Details' onClick={handleAccept} />
+            <RoundBtn loading={loading} icon={<EyeOutlined className='!text-[#670316]' />} title='View Details' onClick={handleAccept} />
         </div>}
         classNames={{ header: "!pb-4", body: "flex flex-col gap-2"}}
        

@@ -22,7 +22,7 @@ const UpcomingContainer = ({ metrics }: props) => {
     const [ loading, setLoading ] = useState(false);
     const [ upcomingJobs, setUpcomingJobs ] = useState<IJobApplication[]>([]);
     const [ reviews, setReviews ] = useState([]);
-    const [ rating, setRating ] = useState("0.0")
+    const [ rating ] = useState("0.0")
 
     const handleGetUpcomingJobs = useCallback(() => {
         setLoading(true);
@@ -50,7 +50,7 @@ const UpcomingContainer = ({ metrics }: props) => {
                 : err.message,
             });
         })
-    }, [])
+    }, [modal])
 
     const handleGetWorkerReview = useCallback((id: string) => {
         setLoading(true);
@@ -69,7 +69,7 @@ const UpcomingContainer = ({ metrics }: props) => {
                 : err.message,
             });
         })
-    }, [user])
+    }, [modal])
 
     useEffect(() => {
         handleGetUpcomingJobs();

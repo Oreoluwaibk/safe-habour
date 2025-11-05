@@ -1,5 +1,5 @@
 import CardTitle from '@/components/general/CardTitle'
-import { App, Card, Col, Row } from 'antd'
+import {  Card, Col, Row } from 'antd'
 import React, { useState } from 'react'
 import ServiceInfoCard from '../cards/ServiceInfoCard'
 import RoundBtn from '@/components/general/RoundBtn'
@@ -22,7 +22,7 @@ const ServicesInfo = ({
     authLoading 
 }: props) => {
     const [ openAddModal,setOpenAddModal ] = useState(false);
-    const [ selected, setSelected ] = useState<IServiceDetail | null>(null);
+    const [ selected ] = useState<IServiceDetail | null>(null);
   return (
     <Card
         title={<CardTitle title='Services & Hourly Rates' />}

@@ -10,13 +10,19 @@ interface props {
     open: boolean;
     onCancel: () => void;
     active: string;
-    // loading: boolean;
+    isAuthenticated: boolean;
+    loading: boolean;
+    handleGoDashboard: () => void;
+    handleLogout: () => void;
 }
 const Sidemenu = ({
     open,
     onCancel,
-    active
-    // loading
+    active,
+    isAuthenticated,
+    loading,
+    handleLogout,
+    handleGoDashboard
 }: props) => {
     const router = useRouter();
   return (
@@ -50,10 +56,14 @@ const Sidemenu = ({
         
             
 
-            <div className='flex flex-col items-center gap-4'>
+            {!isAuthenticated && <div className='flex flex-col items-center gap-4'>
                 <Button  className='!text-[#667085] !text-base !h-[54px] !w-full' onClick={() => router.push("/auth/login")}>Login</Button>
                 <Button type='primary' className='!h-[54px] !w-full !rounded-[8px]' onClick={() => router.push("/auth/choose-auth")}>Sign Up</Button>
-            </div>
+            </div>}
+            {isAuthenticated && <div className='flex flex-col items-center gap-4'>
+                <Button loading={loading} className='!text-[#667085] !text-base !h-[54px] !w-full' onClick={handleLogout}>Logout</Button>
+                <Button type='primary' className='!h-[54px] !w-full !rounded-[8px]' onClick={handleGoDashboard}>Dashboard</Button>
+            </div>}
 
         </div>
     </Drawer>

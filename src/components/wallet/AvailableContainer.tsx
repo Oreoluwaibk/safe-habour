@@ -10,6 +10,7 @@ import { getAllJobs } from "@/redux/action/jobs";
 import { createErrorMessage } from "../../../utils/errorInstance";
 import { jobs } from "../../../utils/interface";
 import FilterCard from "./cards/FilterCard";
+import axios from "axios";
 
 interface props {
   isJobs?: boolean;
@@ -44,7 +45,7 @@ const AvailableContainer = ({ isJobs }: props) => {
 
       setLoading(true);
       try {
-        const queryParams: Record<string, any> = {};
+        const queryParams: Record<string, number[]|number|string|boolean> = {};
 
         // Only send valid values
         Object.entries(filters).forEach(([key, value]) => {
@@ -58,9 +59,9 @@ const AvailableContainer = ({ isJobs }: props) => {
         });
 
         const res = await getAllJobs(
-          queryParams.pageNumber,
-          queryParams.pageSize,
-          queryParams.search
+          queryParams.pageNumber as number,
+          queryParams.pageSize as number,
+          queryParams.search as string
         );
 
         if (res.status === 200 || res.status === 201) {
@@ -77,18 +78,30 @@ const AvailableContainer = ({ isJobs }: props) => {
             setHasMore(false);
           }else setHasMore(totalList.length < res.data.data?.totalItems);
         }
-      } catch (err: any) {
-        modal.error({
-          title: "Error",
-          content: err?.response
-            ? createErrorMessage(err.response.data)
-            : err.message,
-        });
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          modal.error({
+            title: "Unable to get Jobs",
+            content: err.response
+              ? createErrorMessage(err.response.data)
+              : err.message,
+          });
+        } else if (err instanceof Error) {
+          modal.error({
+            title: "Unable to get jobs",
+            content: err.message,
+          });
+        } else {
+          modal.error({
+            title: "Unable to get jobs",
+            content: "Something went wrong.",
+          });
+        }
       } finally {
         setLoading(false);
       }
     },
-    [modal, loading, filters.pageNumber, filters.pageSize, filters.search] // ✅ only stable dependencies
+    [modal, loading, filters, allJobs] 
   );
 
   /** ✅ Initial load */

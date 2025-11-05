@@ -7,17 +7,43 @@ import ColoredText from '@/components/general/ColoredText'
 import Search from '@/components/general/Search';
 import useWindowWidth from '@/hooks/useWindowResize'
 import { useRouter } from 'next/navigation'
+import { IClientParams } from '@/redux/action/client'
+import { useAppSelector } from '@/hook'
+// import useDebounce from '@/hooks/useDebounce'
 
 
 const Landing = () => {
     const [fontSize, setFontSize] = useState<number>(72);
     const width = useWindowWidth();
     const router = useRouter();
+    const [filters, setFilters] = useState<IClientParams>({
+        pageNumber: 1,
+        pageSize: 8,
+        searchTerm: "",
+        location: "",
+    });
+    const [ loading ] = useState(false);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
+
+    // const debouncedSearch = useDebounce(filters?.searchTerm as string, 500);
+    // const debouncedLocation = useDebounce(filters?.location as string, 500);
 
     useEffect(() => {
         const size = width <= 1042 ? 40 : 72;
         setFontSize(size);
     }, [width]);
+
+    const handleGoDashboard = (type: string) => {
+        if(type === "choose") {
+            if(isAuthenticated && loginType === "ClientUser") router.push("/dashboard/client")
+            else router.push("/auth/choose-auth")
+        }
+
+        if(type === "worker") {
+            if(isAuthenticated && loginType === "ServiceWorker") router.push("/dashboard/worker");
+            else router.push("/auth/sign-up")
+        }
+    }
     
   return (
     <div style={{position: "relative", backgroundColor: "#fff"}} className='min-h-[919px] '>
@@ -31,8 +57,8 @@ const Landing = () => {
                 <p className='!text-lg md!text-2xl w-full'>Connect with vetted care workers, babysitters, cooks, and home service professionals. Background-checked, and ready to help your family.</p>
 
                 <div className='flex items-center gap-8 mt-6'>
-                    <Button className='md:min-w-[220px]' onClick={() => router.push("/auth/choose-auth")}>Find a Care Worker</Button>
-                    <Button type="primary" className='md:min-w-[220px]' onClick={() => router.push("/auth/sign-up")}>Join as a Worker</Button>
+                    <Button className='md:min-w-[220px]' onClick={() => handleGoDashboard("choose")}>Find a Care Worker</Button>
+                    <Button type="primary" className='md:min-w-[220px]' onClick={() => handleGoDashboard("worker")}>Join as a Worker</Button>
                 </div>
             </Col>
 
@@ -64,7 +90,14 @@ const Landing = () => {
         </Row>
 
         <div className='my-8'>
-            <Search />
+            <Search 
+                search={filters.searchTerm || ""}
+                location={filters.location || ""}
+                onChangeSearch={(e) => setFilters(prev => ({...prev, searchTerm: e.target.value}))}
+                onChangeLocation={(e) => setFilters(prev => ({...prev, location: e.target.value}))}
+                loading={loading}
+                onSearchClick={() => {}}
+            />
         </div>
     </div>
   )

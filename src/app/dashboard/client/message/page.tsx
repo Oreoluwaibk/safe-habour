@@ -1,7 +1,7 @@
 "use client"
 import ChatInfo from '@/components/client/chats/ChatInfo'
 import ClientContainer from '@/components/dashboard/ClientContainer'
-import { EditFilled, SearchOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons'
 import { Row, Col, Card, Input, Button, App } from 'antd'
 import Image from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ const Page = () => {
   ])
 
   const [ chatList, setChatList ] = useState<MessageUserDto[]>([]);
-  const [ activeChat, setActiveChat ] = useState(null)
+  const [ activeChat, setActiveChat ] = useState<MessageUserDto | null>(null)
   
   const handleGetMessages = useCallback(() => {
     setLoading(true);
@@ -42,7 +42,7 @@ const Page = () => {
           : err.message,
       });
     })
-  }, []);
+  }, [modal]);
 
   useEffect(() => {
     handleGetMessages();
@@ -54,6 +54,7 @@ const Page = () => {
       <Row gutter={[15,15]}>
         <Col lg={8} sm={12} xs={24}>
           <Card 
+            loading={loading}
             variant="borderless" 
             style={{boxShadow: "none"}}
             styles={{header: {border: "none", boxShadow: "none"}}}
@@ -69,7 +70,7 @@ const Page = () => {
 
             <Row>
               {chatList.map((chat:MessageUserDto, i: number) => (
-                <Col lg={24} sm={24} xs={24} key={i}>
+                <Col lg={24} sm={24} xs={24} key={i} onClick={() => setActiveChat(chat)}>
                   <ChatInfo chat={chat} />
                 </Col>
               ))}

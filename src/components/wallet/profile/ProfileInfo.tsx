@@ -6,7 +6,6 @@ import { EnvironmentOutlined, LoadingOutlined, UserOutlined } from '@ant-design/
 import { App, Avatar, Button, Card, Col, DatePicker, Form, Image, Input, InputNumber, Row, Select, Upload } from 'antd'
 import React, { useEffect, useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
-import { useAppSelector } from '@/hook'
 import { categoryType, IUser } from '../../../../utils/interface'
 import { toFormData } from 'axios'
 import { updateServiceWorkerProfile } from '@/redux/action/serviceWorker'

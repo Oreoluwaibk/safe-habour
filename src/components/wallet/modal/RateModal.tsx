@@ -1,6 +1,5 @@
 import { App, Avatar, Button, Input, Modal, Rate, Image } from 'antd';
 import React, { useState } from 'react'
-import { C1 } from '../../../../assets/image';
 import CardTitle from '@/components/general/CardTitle';
 import { IUser, JobDetails, review } from '../../../../utils/interface';
 import { postWorkerJobReview } from '@/redux/action/review';

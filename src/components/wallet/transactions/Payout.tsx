@@ -37,7 +37,7 @@ const Payout = () => {
         onOk: () => setLoading(false)
       });
     })
-  }, []);
+  }, [modal]);
 
   const handleGetBankInfo= useCallback(() => {
     setLoading(true);
@@ -58,7 +58,7 @@ const Payout = () => {
         onOk: () => setLoading(false)
       });
     })
-  }, []);
+  }, [modal]);
 
   useEffect(() => {
     handleGetPayouts();

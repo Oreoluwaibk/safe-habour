@@ -6,7 +6,7 @@ import CardTitle from '@/components/general/CardTitle';
 import InfoWalletCards from '@/components/wallet/cards/InfoWalletCards';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
-import { App, Button, Card, Col, Form, Pagination, PaginationProps, Row, Segmented, Select } from 'antd';
+import { App, Button, Card, Col, Row, Segmented } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
 import { EarningsSummary, PaymentTransaction } from '../../../../../utils/interface';
 import { getServiceWorkerMetrics } from '@/redux/action/serviceWorker';
@@ -15,7 +15,6 @@ import Payout from '@/components/wallet/transactions/Payout';
 import Transactions from '@/components/wallet/transactions/Transactions';
 import { getWorkerPayments } from '@/redux/action/transaction';
 
-const FormItem = Form.Item;
 const Page = () => {
   const { modal } = App.useApp();
   const [ active, setActive ] = useState("Overview");
@@ -76,7 +75,7 @@ const Page = () => {
           : err.message,
       });
     })
-  }, []);
+  }, [modal]);
 
   const handleGetTransactions = useCallback(() => {
     setLoading(true);
@@ -95,7 +94,7 @@ const Page = () => {
           : err.message,
       });
     })
-  }, []);
+  }, [modal]);
   
   useEffect(() => {
     if(active === "Overview"){

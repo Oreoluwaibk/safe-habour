@@ -15,7 +15,7 @@ const Payout = () => {
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);
     const [ openAdd, setOpenAdd ] = useState(false);
-    const [ bankInfo, setBankInfo ] = useState<any|null>(null);
+    const [ bankInfo, setBankInfo ] = useState<null>(null);
 
     const handleGetBankInfo= useCallback(() => {
         setLoading(true);
@@ -36,7 +36,7 @@ const Payout = () => {
                 onOk: () => setLoading(false)
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleCreateStripeAccount = useCallback(() => {
         setLoading(true);
@@ -58,7 +58,7 @@ const Payout = () => {
                 onOk: () => setLoading(false)
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleOnboardStripeAccount = useCallback(() => {
         setLoading(true);
@@ -80,7 +80,7 @@ const Payout = () => {
                 onOk: () => setLoading(false)
             });
         })
-    }, []);
+    }, [modal]);
 
     useEffect(() => {
         handleGetBankInfo();

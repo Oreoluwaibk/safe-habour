@@ -3,13 +3,13 @@ import CardTitle from '@/components/general/CardTitle'
 import RoundBtn from '@/components/general/RoundBtn'
 import Status from '@/components/general/Status'
 import { ClockCircleOutlined, EnvironmentOutlined, EyeOutlined } from '@ant-design/icons'
-import { App, Card, message } from 'antd'
+import { App, Card } from 'antd'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { acceptInvite, completeJob, IJobApplication } from '../../../../utils/interface'
+import { completeJob, IJobApplication } from '../../../../utils/interface'
 import moment from 'moment'
 import { savedPreferredTime } from '../../../../utils/savedInfo'
-import { acceptJobApplication, acceptWorkInvite, completeJobAsWorker } from '@/redux/action/jobs'
+import { completeJobAsWorker } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../../utils/errorInstance'
 import AcceptDecline from '../modal/AcceptDecline'
 import { useAppSelector } from '@/hook'
@@ -19,7 +19,7 @@ interface props {
     application: IJobApplication;
     onRefresh: () => void;
 }
-const UpcomingScheduleCard = ({ confirmed, application, onRefresh }: props) => {
+const UpcomingScheduleCard = ({ application, onRefresh }: props) => {
     const router = useRouter();
     const { modal } = App.useApp();
     const { user } = useAppSelector(state => state.auth);
@@ -27,31 +27,31 @@ const UpcomingScheduleCard = ({ confirmed, application, onRefresh }: props) => {
     const [ statusTitle, setStatusTitle ] = React.useState<string>("");
     const [ openModal, setOpenModal ] = useState(false);
 
-    const handleAccept = () => {
-        setLoading(true);
-        acceptJobApplication(application.id)
-        .then(res => {
-            if(res.status === 200 || res.status === 201) {
-                setLoading(false);
-                modal.success({
-                    title: res.data.message || "Job accepted successfully",
-                    onOk: () => {
-                        setLoading(false);
-                        onRefresh();
-                    }
-                })
-            }
-        })
-        .catch(err => {
-            modal.error({
-            title: "Unable to accept application",
-            content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
-            onOk: () => setLoading(false)
-            });
-        })
-    }
+    // const handleAccept = () => {
+    //     setLoading(true);
+    //     acceptJobApplication(application.id)
+    //     .then(res => {
+    //         if(res.status === 200 || res.status === 201) {
+    //             setLoading(false);
+    //             modal.success({
+    //                 title: res.data.message || "Job accepted successfully",
+    //                 onOk: () => {
+    //                     setLoading(false);
+    //                     onRefresh();
+    //                 }
+    //             })
+    //         }
+    //     })
+    //     .catch(err => {
+    //         modal.error({
+    //         title: "Unable to accept application",
+    //         content: err?.response
+    //             ? createErrorMessage(err.response.data)
+    //             : err.message,
+    //         onOk: () => setLoading(false)
+    //         });
+    //     })
+    // }
 
     const handleMarkAsComplete = () => {
         const payload: completeJob = {

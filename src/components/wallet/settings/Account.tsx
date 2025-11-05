@@ -6,13 +6,11 @@ import { logoutUser } from '@/redux/reducer/auth/auth';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import { App, Button, Card, Form, Select } from 'antd';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { languageType } from '../../../../utils/interface';
 import { updateGeneralSettings } from '@/redux/action/settings';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { savedCurrency, savedTimeZone } from '../../../../utils/savedInfo';
-import { useAuthentication } from '@/hooks/useAuthentication';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -28,7 +26,7 @@ const Account = () => {
 
     useEffect(() => {
         if(user) {
-            let setLang: string[] = [];
+            const setLang: string[] = [];
             const lang = languages.filter((a1: languageType) => user.languages.some((a2: languageType) => a2.name === a1.name));
             lang.map(la => setLang.push(la.longCode))
             form.setFieldsValue({ 
@@ -39,7 +37,7 @@ const Account = () => {
             });
             setSelectedLang(setLang);        
         }
-    }, [form, user])
+    }, [form, user, languages])
 
     const handleLogout = () => {
         setLoading(true);
@@ -52,6 +50,7 @@ const Account = () => {
             }
         })
         .catch(err => {
+            console.log("Error logging out", err);
             setLoading(false);
             message.success("Logout successful!")
             dispatch(logoutUser());

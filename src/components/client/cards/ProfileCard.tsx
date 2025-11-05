@@ -2,7 +2,6 @@
 import { Avatar, Button, Card, Col, Row } from 'antd'
 import Image from 'next/image'
 import React from 'react'
-import { C1 } from '../../../../assets/image'
 import { ClockCircleOutlined, EnvironmentFilled, StarFilled, UserOutlined } from '@ant-design/icons'
 import { UserWorkerProfile } from '../../../../utils/interface'
 

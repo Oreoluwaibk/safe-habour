@@ -25,7 +25,7 @@ const WeeklyCard = ({ available, title, days, refresh }: props) => {
         extra={
             <div className='flex gap-4 items-center'>
                 {days.startTime.map((time: string,i:number) => (
-                    <p className='text-[#1E1E1E]'>{time} - {days.endTime[i]}</p>
+                    <p key={i} className='text-[#1E1E1E]'>{time} - {days.endTime[i]}</p>
                 ))}
                <RoundBtn title='Edit' onClick={() => setOpenEdit(true)} width={86} height={40} icon={<Icon icon="flowbite:edit-outline" />} />
             </div>

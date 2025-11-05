@@ -1,14 +1,13 @@
 "use client"
 import "@/styles/client.css"
 import { Checkbox, Col, Layout, Row, Tabs, TabsProps, Slider, Pagination, PaginationProps, App, Skeleton, Radio, InputNumber } from 'antd';
-import React, { act, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Search from '../general/Search';
 import { ArrowLeftOutlined, ArrowRightOutlined, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import { FaCloudRain } from "react-icons/fa";
 import Image from "next/image";
 import { Filter } from "../../../assets/icons";
 import { GiCook } from "react-icons/gi";
-import { HealthWorker, PlantationWorker } from "healthicons-react";
 import WorkersCard from "./cards/WorkersCard";
 import { Icon } from "@iconify/react";
 import { useServiceCategory } from "@/hooks/useServiceCategory";
@@ -17,20 +16,18 @@ import { getServiceWorkerByCategory, IClientParams } from "@/redux/action/client
 import { createErrorMessage } from "../../../utils/errorInstance";
 import useDebounce from "@/hooks/useDebounce";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import { min } from "moment";
-
 interface props {
     isDashboard?: boolean;
 }
 const { Content, Sider } = Layout;
 
 const icons = [
-    <Icon icon="healthicons:health-worker-24px" />,
-    <FaCloudRain />,
-    <GiCook />,
-    <Icon icon="streamline-sharp:cleaning-room-woman-solid" />,
-    <Icon icon="healthicons:plantation-worker" />,
-    <Icon icon="healthicons:health-worker-24px" />,
+    <Icon icon="healthicons:health-worker-24px" key={1} />,
+    <FaCloudRain key={2} />,
+    <GiCook key={3} />,
+    <Icon key={4} icon="streamline-sharp:cleaning-room-woman-solid" />,
+    <Icon key={5} icon="healthicons:plantation-worker" />,
+    <Icon key={6} icon="healthicons:health-worker-24px" />,
 ]
 const WorkerComponent = ({ isDashboard }: props) => {
     const { modal } = App.useApp();
@@ -119,22 +116,19 @@ const WorkerComponent = ({ isDashboard }: props) => {
                 onOk: () => setLoading(false)
             });
         })
-    }, [selectedCategory, filters, nearMe]);
+    }, [selectedCategory, filters, nearMe, modal]);
 
     useEffect(() => {
         handleGetWorker();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    console.log("filter", filters);
-    
-
     
     useEffect(() => {
         if (debouncedSearch) {
             handleGetWorker(undefined, 1, 8, debouncedSearch.toString())
             setFilters(prev => ({...prev, searchTerm: debouncedSearch.toString()}))
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearch]);
 
     useEffect(() => {
@@ -142,6 +136,7 @@ const WorkerComponent = ({ isDashboard }: props) => {
             handleGetWorker()
             setFilters(prev => ({...prev, location: debouncedLocation.toString()}))
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedLocation]);
 
     useEffect(() => {
@@ -153,6 +148,7 @@ const WorkerComponent = ({ isDashboard }: props) => {
                 minHourlyRate: Number(debouncedMin)
             }))
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedMax, debouncedMin]);
 
     const handleCategoryChange = (category: string) => {

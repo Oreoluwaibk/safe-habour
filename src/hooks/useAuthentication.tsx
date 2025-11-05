@@ -19,6 +19,7 @@ export const useAuthentication = (): AuthenticationState => {
 
     useEffect(() => {
         handleGetAuthentication();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleGetAuthentication = () => {

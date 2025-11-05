@@ -18,12 +18,11 @@ interface props {
     isApplication?: boolean;
     onRefresh: () => void;
 }
-const JobApplication = ({ accepted, application, isApplication, onRefresh }: props) => {
+const JobApplication = ({ accepted, application, onRefresh }: props) => {
     const router = useRouter();
     const { modal } = App.useApp();
     const { user } = useAppSelector(state => state.auth);
     const [ loading, setLoading ] = useState(false);
-    const [ isAccepted, setIsAccepted ] = React.useState(accepted || false);
     const [ openModal, setOpenModal ] = useState(false);
 
      const handleMarkAsComplete = () => {

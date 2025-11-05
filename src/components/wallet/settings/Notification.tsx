@@ -34,7 +34,7 @@ const Notification = () => {
             onOk: () => setLoading(false)
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleSilentLoad = useCallback(() => {
         getNotificationSettings()
@@ -53,7 +53,7 @@ const Notification = () => {
             onOk: () => setLoading(false)
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleUpdateSettings = (value: boolean, type: number) => {
         const payload = {

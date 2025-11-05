@@ -1,16 +1,8 @@
 "use client"
 import WorkerContainer from '@/components/dashboard/WorkerContainer'
-import CardTitle from '@/components/general/CardTitle'
-import Status from '@/components/general/Status'
 import AvailableContainer from '@/components/wallet/AvailableContainer'
-import FilterCard from '@/components/wallet/cards/FilterCard'
-import JobApplication from '@/components/wallet/cards/JobApplication'
-import JobHistoryCard from '@/components/wallet/cards/JobHistoryCard'
-import { App, Card, Col, Row, Segmented } from 'antd'
-import React, { useCallback, useEffect, useState } from 'react'
-import { createErrorMessage } from '../../../../../utils/errorInstance'
-import { IJobApplication } from '../../../../../utils/interface'
-import { getWorkersApplications } from '@/redux/action/jobs'
+import { Col, Row, Segmented } from 'antd'
+import React, { useState } from 'react'
 import WorkerJobHistory from '@/components/wallet/jobs/WorkerJobHistory'
 import WorkerJobApplication from '@/components/wallet/jobs/WorkerJobApplication'
 

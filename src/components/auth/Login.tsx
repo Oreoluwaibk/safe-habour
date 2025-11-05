@@ -10,7 +10,6 @@ import { login, loginAction } from '@/redux/action/auth';
 import { createErrorMessage } from '../../../utils/errorInstance';
 import { useAppDispatch, useAppSelector } from '@/hook';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
 import { setLastRoute } from '@/redux/reducer/auth/auth';
 import TwoFaModal from '../general/modal/TwoFaModal';
 
@@ -55,6 +54,7 @@ const Login = () => {
                         else  localStorage.removeItem("safehabour_credentials");
 
                         const result = await dispatch(loginAction(res.data.data));
+                        console.log("result:", result);
                         
                         const role = res.data.data?.roles?.[0];
                         if (lastRoute) {

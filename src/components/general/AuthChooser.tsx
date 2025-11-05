@@ -12,9 +12,9 @@ interface props {
 const AuthChooser = ({ icon, title, isSelected, onCheck }: props) => {
   return (
     <div className={`auth-chooser ${isSelected ? "auth-chooser-selected" : ""}`} onClick={onCheck}>
-        <Radio checked={isSelected} className='auth-radio' onClick={onCheck} />
-        <div className='icon-div'>{icon}</div>
-        <p className='auth-choose-p'>{title}</p>
+      <Radio checked={isSelected} className='auth-radio' onClick={onCheck} />
+      <div className='icon-div'>{icon}</div>
+      <p className='auth-choose-p'>{title}</p>
     </div>
   )
 }

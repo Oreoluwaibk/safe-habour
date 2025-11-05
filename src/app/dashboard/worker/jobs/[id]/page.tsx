@@ -7,7 +7,6 @@ import { ArrowLeftOutlined, EnvironmentOutlined, UserOutlined } from '@ant-desig
 import { App, Avatar, Button, Card, Col, Row, Skeleton, Image } from 'antd';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
-import { C1 } from '../../../../../../assets/image'
 import { Icon } from '@iconify/react'
 import { getAJob } from '@/redux/action/jobs'
 import { jobs } from '../../../../../../utils/interface'

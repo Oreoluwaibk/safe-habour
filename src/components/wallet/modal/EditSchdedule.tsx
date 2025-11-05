@@ -50,7 +50,6 @@ const EditSchdedule = ({ open, onCancel, days, refresh }: props) => {
                 setLoading(false);
                 form.resetFields();
                 message.success("Day has been updated successfully!");
-                const updatedDate = res.data.data;
                 refresh();
                 onCancel();
             }
@@ -63,13 +62,13 @@ const EditSchdedule = ({ open, onCancel, days, refresh }: props) => {
             });
         })
     }
-
-    const handleSetStart = (date: any, dateString: string | string[]) => {
+    
+    const handleSetStart = (date: dayjs.Dayjs, dateString: string | string[]) => {
         setStartTime(date);
         setPayload(prev => ({...prev, startTime: dateString.toString()}))
     }
-
-    const handleSetEnd = useCallback((date: any, dateString: string | string[]) => {
+    
+    const handleSetEnd = useCallback((date: dayjs.Dayjs, dateString: string | string[]) => {
         if (startTime && date.isBefore(startTime)) {
             setError("End time cannot be earlier than start time");
         } else {

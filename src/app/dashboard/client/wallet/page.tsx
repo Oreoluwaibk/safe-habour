@@ -6,9 +6,11 @@ import React, { useState } from 'react'
 import EscrowInfo from '@/components/general/EscrowInfo'
 import { SearchOutlined } from '@ant-design/icons'
 import TransactionCard from '@/components/client/cards/TransactionCard'
+import { PaymentTransaction } from '../../../../../utils/interface'
 
 const Page = () => {
   const [ isHistory, setIsHistory ] = useState(false);
+  const [ transactions ] = useState<PaymentTransaction[]>([]);
   return (
     <ClientContainer active='Wallet'>
       <Card variant="borderless" style={{padding: 0, border: "none"}}>
@@ -79,6 +81,9 @@ const Page = () => {
               )}
               styles={{body: {display: "flex", flexDirection: "column", gap: 10}}}
             >
+              {transactions.map((transaction: PaymentTransaction, i: number) => (
+                <TransactionCard key={i} isTransaction transaction={transaction} />
+              ))}
               {/* <TransactionCard isTransaction={isHistory} />
               <TransactionCard isTransaction={isHistory} />
               <TransactionCard isTransaction={isHistory} /> */}

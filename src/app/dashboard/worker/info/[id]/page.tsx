@@ -7,7 +7,7 @@ import { ArrowLeftOutlined, EnvironmentOutlined, UserOutlined } from '@ant-desig
 import { App, Avatar, Card, Col, Row, Skeleton, Image } from 'antd';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react';
-import { acceptJobApplication, completeJobAsWorker, getAJobApplication } from '@/redux/action/jobs'
+import { completeJobAsWorker, getAJobApplication } from '@/redux/action/jobs'
 import { completeJob, IJobApplication, review } from '../../../../../../utils/interface'
 import { createErrorMessage } from '../../../../../../utils/errorInstance'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
@@ -60,7 +60,6 @@ const Page = () => {
     });
     const { categories } = useServiceCategory();
     const [ reviews, setReviews ] = useState<review[]>([]);
-    const [ confirmed ] = useState(false);
     const { user } = useAppSelector(state => state.auth);
     const [ openModal, setOpenModal ] = useState(false);
     const [ isAccept, setIsAccept ] = useState(false);   
@@ -87,6 +86,7 @@ const Page = () => {
         })
         .finally(() => setLoading(false));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [modal]);
 
     const handleGetClientJobReviews = useCallback(
@@ -118,31 +118,31 @@ const Page = () => {
         if (id) handleGetJobApplication(id.toString());
     }, [id, handleGetJobApplication]);
 
-    const handleAccept = () => {
-        setActionLoading(true);
-        acceptJobApplication(id!.toString())
-        .then(res => {
-            if(res.status === 200 || res.status === 201) {
-                setActionLoading(false);
-                modal.success({
-                    title: res.data.message || "Job accepted successfully",
-                    onOk: () => {
-                        setActionLoading(false);
-                        handleGetJobApplication(id!.toString());
-                    }
-                })
-            }
-        })
-        .catch(err => {
-            modal.error({
-            title: "Unable to accept application",
-            content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
-                onOk: () => setActionLoading(false)
-            });
-        })
-    }
+    // const handleAccept = () => {
+    //     setActionLoading(true);
+    //     acceptJobApplication(id!.toString())
+    //     .then(res => {
+    //         if(res.status === 200 || res.status === 201) {
+    //             setActionLoading(false);
+    //             modal.success({
+    //                 title: res.data.message || "Job accepted successfully",
+    //                 onOk: () => {
+    //                     setActionLoading(false);
+    //                     handleGetJobApplication(id!.toString());
+    //                 }
+    //             })
+    //         }
+    //     })
+    //     .catch(err => {
+    //         modal.error({
+    //         title: "Unable to accept application",
+    //         content: err?.response
+    //             ? createErrorMessage(err.response.data)
+    //             : err.message,
+    //             onOk: () => setActionLoading(false)
+    //         });
+    //     })
+    // }
     
     const handleMarkAsComplete = () => {
         const payload: completeJob = {

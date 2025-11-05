@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { getServiceWorkerMetrics } from '@/redux/action/serviceWorker';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { EarningsSummary } from '../../../../utils/interface';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const Page = () => {
   const router = useRouter();
@@ -87,7 +88,7 @@ const Page = () => {
           : err.message,
       });
     })
-  }, []);
+  }, [modal]);
 
   useEffect(() => {
     handleGetMetrics();
@@ -98,7 +99,7 @@ const Page = () => {
   return (
     <WorkerContainer active='Dashboard'>
       <div >
-        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.lastName}!</h1>
+        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.lastName}! {loading && <LoadingOutlined spin/>}</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
         {closeInfo && <CompleteInfo 

@@ -1,5 +1,5 @@
 import axiosInstance from "../../../utils/axiosConfig";
-import { acceptInvite, completeJob, hireWorker, IJobHireRequest, jobs, jopApply, rejectInvite } from "../../../utils/interface";
+import { acceptInvite, completeJob, IJobHireRequest, jobs, jopApply, rejectInvite } from "../../../utils/interface";
 
 interface IParams {
   pageNumber: number; 

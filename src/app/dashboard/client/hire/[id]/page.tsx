@@ -8,7 +8,7 @@ import { App, Card, Col, Row } from 'antd';
 import React, { use, useCallback, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../../../utils/errorInstance';
 import { getWorkerSchedule } from '@/redux/action/schedules';
-import { UserWorkerProfile } from '../../../../../../utils/interface';
+import { review, UserWorkerProfile } from '../../../../../../utils/interface';
 import { useServiceCategory } from '@/hooks/useServiceCategory';
 import HireType from '@/components/client/modal/HireType';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -75,7 +75,8 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
         "timeZone": null,
         "currency": null,
         "isOnboarded": true
-    })
+    });
+     const [ reviews ] = useState<review[]>([]);
 
     console.log("sghe", showHireModal, id, categories);
     const handleGetServiceWorker = useCallback((id: string) => {
@@ -96,7 +97,7 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
                 onOk: () => setLoading(false)
             });
         })
-    }, []);
+    }, [modal]);
 
     const handleGetWorkerScedule = useCallback((id: string) => {
         setLoading(true);
@@ -117,7 +118,7 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
                 onOk: () => setLoading(false)
             });
         })
-    }, []);
+    }, [modal]);
 
     useEffect(() => {
         if(id) handleGetServiceWorker(id);
@@ -174,9 +175,12 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
                     <p className='t-pri text-2xl font-semibold'>Client Reviews</p>
 
                     <Row gutter={[15,15]}>
-                        <Col lg={24} sm={24} xs={24}>
-                            <RateCard />
-                        </Col>
+                        {reviews && reviews.length > 0 && (
+                            reviews.map((review, i: number) => (
+                                <RateCard reviewDetails={review} key={i} />
+                            ))
+                        )}
+                        {!reviews && <p className='text-[#121212] text-center'>There are no client review for this job yet</p>}
                     </Row>
                 </Card>
             </Col>

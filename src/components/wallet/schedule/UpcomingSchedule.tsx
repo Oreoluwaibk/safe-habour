@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import UpcomingScheduleCard from '../cards/UpcomingScheduleCard'
 import { createErrorMessage } from '../../../../utils/errorInstance'
 import { IJobApplication } from '../../../../utils/interface'
-import { getServiceWorkerUpcomingJobs, getUpcomingJobs } from '@/redux/action/jobs'
+import { getServiceWorkerUpcomingJobs } from '@/redux/action/jobs'
 
 const UpcomingSchedule = () => {
   const { modal } = App.useApp();
@@ -20,29 +20,26 @@ const UpcomingSchedule = () => {
 
   const handleGetUpcomingJobs = useCallback(
       async (isLoadMore = false) => {
-        // prevent duplicate fetches
         if (loading) return;
   
         setLoading(true);
-        try {
-          const queryParams: Record<string, any> = {};
-  
-          // Only send valid values
-          Object.entries(filters).forEach(([key, value]) => {
-            if (
-              value !== undefined &&
-              !(Array.isArray(value) && value.length === 0)
-            ) {
-              queryParams[key] = value;
-            }
-          });
-  
-          const res = await getServiceWorkerUpcomingJobs(
-            queryParams.pageNumber,
-            queryParams.pageSize
-          );
-  
+        const queryParams: Record<string, number> = {};
+
+        Object.entries(filters).forEach(([key, value]) => {
+          if (
+            value !== undefined &&
+            !(Array.isArray(value) && value.length === 0)
+          ) {
+            queryParams[key] = value;
+          }
+        });
+
+        getServiceWorkerUpcomingJobs(
+          queryParams.pageNumber,
+          queryParams.pageSize
+        ).then(res => {
           if (res.status === 200 || res.status === 201) {
+            setLoading(false);
             const newList = res.data.data?.list || [];
   
             // ✅ Append for load more, otherwise replace
@@ -56,19 +53,17 @@ const UpcomingSchedule = () => {
               setHasMore(false);
             }else setHasMore(totalList.length < res.data.data?.totalItems);
           }
-        } catch (err: any) {
-          modal.error({
+        })
+        .catch(err => {
+            modal.error({
             title: "Unable to get upcoming jobs",
             content: err?.response
               ? createErrorMessage(err.response.data)
               : err.message,
+            onOk: () => setLoading(false)
           });
-        } finally {
-          setLoading(false);
-        }
-      },
-      [modal, loading, filters.pageNumber, filters.pageSize] // ✅ only stable dependencies
-    );
+        })
+      }, [modal, loading, filters, upcomingJobs]);
 
   useEffect(() => {
       handleGetUpcomingJobs();

@@ -100,6 +100,13 @@ export const verifyDocuments = async (data: FormData) => {
     return Promise.resolve(response);
 }
 
+export const getVerifiedDocuments = async () => {
+    const url = `/me/verify-documents`;
+    const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
 export const getNotificationSetting = async () => {
     const url = `/Authentication/notification-settings`;
     const response = await axiosInstance.get(url);

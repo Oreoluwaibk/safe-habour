@@ -13,7 +13,6 @@ import { Icon } from '@iconify/react';
 import { deleteSchedule, getSchedule, saveSchedule, updateSchedule } from '@/redux/action/schedules';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { schedule } from '../../../../utils/interface';
-import moment from 'moment';
 import { dayOfWeek } from '../../../../utils/savedInfo';
 
 
@@ -72,10 +71,11 @@ const Availabliltity = () => {
                 content: err?.response ? createErrorMessage(err.response.data) : err.message,
             });
         })
-    }, []);
+    }, [modal]);
     
     useEffect(() => {
         handleGetAvailabilty();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSave = (availability: boolean = false) => {

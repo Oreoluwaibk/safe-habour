@@ -31,8 +31,8 @@ const FilterCard = ({ filter, setFilter }: props) => {
     const debouncedSearch = useDebounce(filter?.search, 500);
 
     useEffect(() => {
-        if (debouncedSearch) handleSearch(debouncedSearch)
-        // else handleGetInitial();
+        if (debouncedSearch) handleSearch(debouncedSearch as string)
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearch]);
 
     const handleSearch = (value: string) => {

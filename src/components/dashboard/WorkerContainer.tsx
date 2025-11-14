@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/client.css"
 import { BellFilled, MenuOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Layout } from 'antd';
+import { Avatar, Layout, Image as AntDImage } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
@@ -13,6 +13,8 @@ import WorkerSideMenu from "./WorkerSideMenu";
 import { useAppSelector } from "@/hook";
 import { logoutUser } from "@/redux/action/auth";
 import { INotification } from "../../../utils/interface";
+import { useAuthentication } from "@/hooks/useAuthentication";
+import { pictureUrl } from "../../../utils/axiosConfig";
 
 const { Content, Header } = Layout;
 
@@ -57,6 +59,7 @@ const WorkerContainer = ({
         "readAt": "2025-01-01T00:00:00Z",
         "deliveredAt": "2025-01-01T00:00:00Z"
     });
+    const { authentication } = useAuthentication();
 
    const handleLogout = useCallback(() => {
     logoutUser()
@@ -114,11 +117,19 @@ const WorkerContainer = ({
                         <div className="icon-div icon-bg">
                             <BellFilled className="!text-white !text-lg" onClick={() => setShowNotification(!showNotification)} />
                         </div>
-                        <div className="relative">
-                            <Avatar icon={<UserOutlined />} onClick={() => router.push("/dashboard/worker/profile")} size={48} className="cursor-pointer !border-[#039855] !border" />
-                            <div className="bg-[#EAFFF5] h-[14px] w-[14px] rounded-[100px] flex items-center justify-center absolute z-[1] right-[-4px] top-2">
+                        <div className="relative flex items-center">
+                            {authentication?.profilePicturePath && 
+                            <AntDImage 
+                                src={`${pictureUrl}${authentication.profilePicturePath}`} 
+                                alt={authentication.fullName} 
+                                preview={false}
+                                className="w-12! h-12! rounded-full! cursor-pointer" 
+                                onClick={() => router.push("/dashboard/worker/profile")}
+                            />}
+                            {!authentication?.profilePicturePath && <Avatar icon={<UserOutlined />} onClick={() => router.push("/dashboard/worker/profile")} size={48} className="cursor-pointer !border-[#039855] !border" />}
+                            {authentication?.isProfileComplete && <div className="bg-[#EAFFF5] h-[14px] w-[14px] rounded-[100px] flex items-center justify-center absolute z-[1] right-[-4px] top-2">
                                 <Image src={CheckedCircle} alt="image" className="!text-[#039855] " />
-                            </div>
+                            </div>}
                         </div>
                        
                         {/* <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button> */}

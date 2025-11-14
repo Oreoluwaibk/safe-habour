@@ -8,7 +8,7 @@ import { App, Button, Card, Col, Row, Skeleton, Image, Avatar } from 'antd'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react';
 import { completeJobAsWorker, getAJobApplication } from '@/redux/action/jobs'
-import { completeJob, IJobApplication, review } from '../../../../../../utils/interface'
+import { completeJob, IJobApplication } from '../../../../../../utils/interface'
 import { createErrorMessage } from '../../../../../../utils/errorInstance'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
 import { handleDisplayServices } from '../../../../../../utils/converters'

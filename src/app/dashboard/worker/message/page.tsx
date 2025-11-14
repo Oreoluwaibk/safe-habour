@@ -167,7 +167,7 @@ const Message = () => {
             <Row>
               {chatList.map((chat:IConversation, i: number) => (
                 <Col lg={24} sm={24} xs={24} key={i} onClick={() => setActiveChat(chat)}>
-                  <ChatInfo chat={chat} />
+                  <ChatInfo chat={chat} isActive={activeChat?.applicationId === chat.applicationId} />
                 </Col>
               ))}
 

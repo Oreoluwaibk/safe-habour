@@ -105,7 +105,7 @@ const BookingCard = ({ worker, onRefresh }: props) => {
     <Row className='booking-card' gutter={[15, 15]}>
         <Col lg={8} sm={8} xs={12} className='flex items-center justify-center md:!w-[209px]'>
             {/* <Image src={C1} alt='image' className='md:!h-full object-cover !w-[500px] rounded-[24px]' /> */}
-            {worker?.photoUrl && <Image preview={false} src={`${pictureUrl}${worker.photoUrl}`} alt='image' className='md:!h-full object-cover  rounded-[24px] w-full! h-full!' />}
+            {worker?.photoUrl && <img  src={`${pictureUrl}${worker.photoUrl}`} alt='image' className='object-cover rounded-[8px] w-full! h-full!' />}
             {!worker?.photoUrl && (
                 <Avatar icon={<UserOutlined size={80} className='text-4xl' />} alt='Worker image' shape="square" className='md:!h-full object-cover w-full!  rounded-[24px]' />
             )}

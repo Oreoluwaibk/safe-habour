@@ -9,7 +9,6 @@ interface props {
     authentication: IUser;
 }
 const VerificationSettings = ({ authentication }: props) => {
-    const [ loading ] = useState(false);
     const [ idCard, setIdCard ] = useState<RcFile | null>(null);
     const [ proofOfAddress, setProofOfAddress ] = useState<RcFile | null>(null);
   return (
@@ -33,14 +32,6 @@ const VerificationSettings = ({ authentication }: props) => {
                     type={1}
                     icon={<Icon icon="material-symbols-light:id-card-rounded" color='#505050' className='!text-xl' fontSize={20} />}
                 />
-                {/* <VerificationUpload  
-                    title='Police Background Check'
-                    description='Current police background check report'
-                    approved={authentication.hasIdentificationDocument}
-                    value={policeReport}
-                    setValue={setPoliceReport}
-                    type={1}
-                /> */}
             </Col>
             <Col lg={24} sm={24} xs={24}>
                 <UploadCard 

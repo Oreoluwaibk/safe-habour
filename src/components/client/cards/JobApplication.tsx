@@ -12,7 +12,7 @@ const JobApplication = () => {
   const { modal } = App.useApp();
 
   const [applications, setApplications] = useState<JobDetails[]>([]);
-  const [total, setTotal] = useState(0);
+  // const [total, setTotal] = useState(0);
 
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 10;
@@ -35,9 +35,7 @@ const JobApplication = () => {
 
         if (res.status === 200 || res.status === 201) {
           const newList = res.data.data?.list ?? [];
-          const totalItems = res.data.data?.totalItems ?? 0;
-
-          setTotal(totalItems);
+          // const totalItems = res.data.data?.totalItems ?? 0;
 
           setApplications((prev) =>
             loadMore ? [...prev, ...newList] : newList

@@ -51,6 +51,7 @@ const Account = () => {
         })
         .catch(err => {
             setLoading(false);
+            console.log("err:", err)
             message.success("Logout successful!")
             dispatch(logoutUser());
         })

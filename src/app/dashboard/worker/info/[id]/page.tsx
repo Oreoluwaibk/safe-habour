@@ -7,8 +7,8 @@ import { ArrowLeftOutlined, EnvironmentOutlined, StarOutlined, UserOutlined } fr
 import { App, Avatar, Card, Col, Row, Skeleton, Image } from 'antd';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react';
-import { completeJobAsWorker, getAJobApplication } from '@/redux/action/jobs'
-import { completeJob, IJobApplication, review } from '../../../../../../utils/interface'
+import { getAJobApplication } from '@/redux/action/jobs'
+import { IJobApplication, review } from '../../../../../../utils/interface'
 import { createErrorMessage } from '../../../../../../utils/errorInstance'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
 import { handleDisplayServices } from '../../../../../../utils/converters'
@@ -21,7 +21,6 @@ import RateCard from '@/components/client/cards/RateCard'
 import { getClientJobReview } from '@/redux/action/review'
 import RoundBtn from '@/components/general/RoundBtn'
 import { useAppSelector } from '@/hook'
-import AcceptDecline from '@/components/wallet/modal/AcceptDecline'
 import { pictureUrl } from '../../../../../../utils/axiosConfig'
 import useApplicationStatus from '@/hooks/useApplicationStatus'
 import RateModal from '@/components/wallet/modal/RateModal'
@@ -31,7 +30,6 @@ const Page = () => {
     const { id } = useParams();
     const { modal } = App.useApp()
     const [ loading, setLoading ] = useState(false);
-    const [ actionLoading, setActionLoading ] = useState(false);
     const [ job, setJob ] = useState<IJobApplication>({
             "id": "5d4afdc1-3bc0-4992-6545-08de1618ba71",
         "jobId": "8517cf86-2da6-4d53-3943-08de15311834",
@@ -65,7 +63,6 @@ const Page = () => {
     const [ reviews, setReviews ] = useState<review[]>([]);
     const { user } = useAppSelector(state => state.auth);
     const [ openModal, setOpenModal ] = useState(false);
-    const [ isAccept, setIsAccept ] = useState(false);  
     const { statusTitle, colors } = useApplicationStatus(job.status, 'application'); 
 
     const handleGetJobApplication = useCallback(

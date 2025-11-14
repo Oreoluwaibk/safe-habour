@@ -1,6 +1,6 @@
 "use client"
 import ResetPassword from '@/components/client/settings/ResetPassword';
-import TwoFactor from '@/components/client/settings/TwoFactor';
+// import TwoFactor from '@/components/client/settings/TwoFactor';
 import WorkerContainer from '@/components/dashboard/WorkerContainer';
 import Account from '@/components/wallet/settings/Account';
 import Notification from '@/components/wallet/settings/Notification';

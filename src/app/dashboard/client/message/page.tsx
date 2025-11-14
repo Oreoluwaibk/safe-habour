@@ -4,7 +4,7 @@ import ClientContainer from '@/components/dashboard/ClientContainer'
 import { LoadingOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Row, Col, Card, Input, Button, App, CardProps, Avatar, Image as AntdesingImg } from 'antd'
 import Image from 'next/image'
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, Suspense } from 'react';
 import { BsRecordFill } from 'react-icons/bs'
 import Messages from '@/components/client/chats/Messages'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
@@ -14,7 +14,7 @@ import { EditSVG } from '../../../../../assets/icons'
 import { pictureUrl } from '../../../../../utils/axiosConfig'
 import { useSearchParams } from 'next/navigation'
 
-const Page = () => {
+const Message = () => {
   const { modal, message: AntDesignMsg } = App.useApp()
   const [ loading, setLoading ] = useState(false);
   const [ messages, setMessages ] = useState<IMessage[]>([]);
@@ -47,7 +47,7 @@ const Page = () => {
           : err.message,
       });
     })
-  }, [modal]);
+  }, [modal, applicationId]);
 
   const handleGetMessageHistory = useCallback((id: string) => {
     setFetchLoading(true);
@@ -67,7 +67,7 @@ const Page = () => {
         onOk: () => setFetchLoading(false),
       });
     })
-  }, [modal, activeChat]);
+  }, [modal]);
 
   const handleGetSilent = (id: string) => {
     getMessageHistory(id)
@@ -219,5 +219,13 @@ const Page = () => {
     </ClientContainer>
   )
 }
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Message />
+    </Suspense>
+  );
+};
 
 export default Page

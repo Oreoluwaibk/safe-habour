@@ -12,7 +12,7 @@ interface props {
     reviews?: review[]
 }
 const Review = ({ worker, loading }: props) => {
-    const { modal, message: AntDesignMsg } = App.useApp();
+    const { modal } = App.useApp();
     const { user } = useAppSelector(state => state.auth);
     const [ checkLoading, setLoading ] = useState(false);
     const [ reviews, setReviews ] = useState<review[]>([]);

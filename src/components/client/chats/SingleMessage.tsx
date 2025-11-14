@@ -16,7 +16,7 @@ const SingleMessage = ({ message }: props) => {
 
     useEffect(() => {
         if(message.senderId === user.id) setIsUser(true);
-    }, [message])
+    }, [message, user.id])
   return (
     <div style={{display: "flex", justifyContent: isUser ? "right" :"left", gap: 10}}>
     {!isUser && <div className='relative'>

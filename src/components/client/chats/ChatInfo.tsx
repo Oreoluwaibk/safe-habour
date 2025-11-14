@@ -1,8 +1,7 @@
 import { Avatar, Card, Image } from 'antd';
 import React from 'react'
-import { C1 } from '../../../../assets/image'
 import { BsRecordFill } from 'react-icons/bs';
-import { IConversation, MessageUserDto } from '../../../../utils/interface';
+import { IConversation } from '../../../../utils/interface';
 import { timeAgo } from '../../../../utils/converters';
 import { pictureUrl } from '../../../../utils/axiosConfig';
 import { UserOutlined } from '@ant-design/icons';

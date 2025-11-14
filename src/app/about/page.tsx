@@ -3,7 +3,7 @@ import CustomLanding from "@/components/general/CustomLanding";
 import ImageText from "@/components/general/ImageText";
 import OurVision from "@/components/general/OurVision";
 import { Left, Right } from "../../../assets/image";
-import MeetOurTeam from "@/components/general/team/MeetOurTeam";
+// import MeetOurTeam from "@/components/general/team/MeetOurTeam";
 
 export default function Home() {
   return (

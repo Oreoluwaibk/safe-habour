@@ -1,5 +1,4 @@
 import axiosInstance from "../../../utils/axiosConfig";
-import { userProfile } from "../../../utils/interface";
 
 export interface IClientParams {
   pageNumber: number; 

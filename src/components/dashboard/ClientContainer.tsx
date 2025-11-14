@@ -69,6 +69,7 @@ const ClientContainer = ({
       })
       .catch((err) => {
         router.push("/auth/login");
+        console.log("err:", err)
       });
   }, [router]); // ✅ stable dependency
 

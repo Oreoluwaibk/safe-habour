@@ -1,7 +1,7 @@
 import { App, Col, Modal, Row, Segmented, SegmentedProps } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
-import { IClientApplicationDetails, IJobApplication, JobDetails } from '../../../../utils/interface';
-import { acceptJobApplication, getSingleJobApplication } from '@/redux/action/jobs';
+import { IClientApplicationDetails, JobDetails } from '../../../../utils/interface';
+import { getSingleJobApplication } from '@/redux/action/jobs';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import JobModalCard from '../cards/JobModalCard';
 
@@ -60,7 +60,7 @@ const ApplicationModal = ({
             });
         })
 
-    }, []);
+    }, [modal]);
 
     const handleGetJobsByStatus = useCallback((id: string, pageNumber: number = 1, status: number| undefined) => {
         setLoading(true);
@@ -96,7 +96,7 @@ const ApplicationModal = ({
                 onOk: () => setLoading(false)
             });
         })          
-    }, []);
+    }, [modal]);
 
     const handleChange = (value: SegmentedProps["value"]) => {
         setActive(value);

@@ -56,6 +56,7 @@ const Container = ({
         .catch((err) => {
             setLoading(false);
             dispatch(logoutUser());
+            console.log("err:", err)
             message.success("You have loggued out successfully!");
         });
     }, [message, dispatch]); 

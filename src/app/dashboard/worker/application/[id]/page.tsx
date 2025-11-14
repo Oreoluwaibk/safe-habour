@@ -14,7 +14,7 @@ import { useServiceCategory } from '@/hooks/useServiceCategory'
 import { handleDisplayServices } from '../../../../../../utils/converters'
 import moment from "moment";
 import RateModal from '@/components/wallet/modal/RateModal'
-import { getClientJobReview } from '@/redux/action/review'
+// import { getClientJobReview } from '@/redux/action/review'
 import { useAppSelector } from '@/hook'
 import { pictureUrl } from '../../../../../../utils/axiosConfig'
 import { Icon } from '@iconify/react'
@@ -27,7 +27,7 @@ const Page = () => {
   const router = useRouter();
   const { id } = useParams();
   const { modal } = App.useApp();
-  const { loginType, user } = useAppSelector(state => state.auth);
+  const { user } = useAppSelector(state => state.auth);
   const [ loading, setLoading ] = useState(false);
   const [ application, setApplication ] = useState<IJobApplication>({
     "id": "5d4afdc1-3bc0-4992-6545-08de1618ba71",
@@ -74,7 +74,7 @@ const Page = () => {
         if (res.status === 200 || res.status === 201) {
           setLoading(false);
           setApplication(res.data.data);
-          handleGetClientJobReviews(res.data.data.jobDetails.id);
+          // handleGetClientJobReviews(res.data.data.jobDetails.id);
         }
       })
       .catch((err) => {
@@ -92,29 +92,29 @@ const Page = () => {
   [modal] // dependencies
   );
 
-  const handleGetClientJobReviews = useCallback(
-  (id: string) => {
-    setLoading(true);
-    getClientJobReview(id)
-      .then((res) => {
-        if (res.status === 200 || res.status === 201) {
-          setLoading(false);
-          setReviews(res.data.data);
-        }
-      })
-      .catch((err) => {
-        modal.error({
-          title: "Unable to get review for this job",
-          content: err?.response
-            ? createErrorMessage(err.response.data)
-            : err.message,
-          onOk: () => setLoading(false),
-        });
-      })
-      .finally(() => setLoading(false));
-  },
-  [modal] // dependencies
-  );
+  // const handleGetClientJobReviews = useCallback(
+  // (id: string) => {
+  //   setLoading(true);
+  //   getClientJobReview(id)
+  //     .then((res) => {
+  //       if (res.status === 200 || res.status === 201) {
+  //         setLoading(false);
+  //         setReviews(res.data.data);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       modal.error({
+  //         title: "Unable to get review for this job",
+  //         content: err?.response
+  //           ? createErrorMessage(err.response.data)
+  //           : err.message,
+  //         onOk: () => setLoading(false),
+  //       });
+  //     })
+  //     .finally(() => setLoading(false));
+  // },
+  // [modal] // dependencies
+  // );
 
   const handleMarkAsComplete = () => {
     const payload: completeJob = {
@@ -300,7 +300,7 @@ const Page = () => {
       />}
      {openRateModal && 
       <RateModal 
-        refresh={() => handleGetClientJobReviews(application.jobDetails.id)} 
+        refresh={() => {}} 
         user={user} 
         job={application.jobDetails} 
         isWorker={true} 

@@ -4,7 +4,7 @@ import Status from '@/components/general/Status';
 import { ClockCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { App, Card } from 'antd';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { completeJob, IJobApplication } from '../../../../utils/interface';
 import moment from 'moment';
 import { createErrorMessage } from '../../../../utils/errorInstance';
@@ -19,7 +19,7 @@ interface props {
     isApplication?: boolean;
     onRefresh: () => void;
 }
-const JobApplication = ({ accepted, application, onRefresh }: props) => {
+const JobApplication = ({ application, onRefresh }: props) => {
     const router = useRouter();
     const { modal } = App.useApp();
     const { user } = useAppSelector(state => state.auth);

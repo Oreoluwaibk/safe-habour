@@ -67,6 +67,7 @@ const WorkerContainer = ({
       })
       .catch((err) => {
         router.push("/auth/login");
+        console.log("err:", err)
       });
   }, [router]); 
 

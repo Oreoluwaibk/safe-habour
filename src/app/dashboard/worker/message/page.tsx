@@ -5,7 +5,7 @@ import { LoadingOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons
 // import { Icon } from '@iconify/react'
 import { Row, Col, Card, Input, Button, App, CardProps, Avatar, Image as AntdesingImg } from 'antd'
 import Image from 'next/image'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { Suspense, useCallback, useEffect, useState } from 'react'
 import { BsRecordFill } from 'react-icons/bs'
 import Messages from '@/components/client/chats/Messages'
 import WorkerContainer from '@/components/dashboard/WorkerContainer'
@@ -15,7 +15,7 @@ import { IConversation, IMessage } from '../../../../../utils/interface'
 import { EditSVG } from '../../../../../assets/icons'
 import { pictureUrl } from '../../../../../utils/axiosConfig'
 
-const Page = () => {
+const Message = () => {
   const { modal, message: AntDesignMsg } = App.useApp()
   const [ loading, setLoading ] = useState(false);
   const [ messages, setMessages ] = useState<IMessage[]>([]);
@@ -62,7 +62,7 @@ const Page = () => {
         onOk: () => setFetchLoading(false),
       });
     })
-  }, [modal, activeChat]);
+  }, [modal]);
 
   const handleGetSilent = (id: string) => {
     getMessageHistory(id)
@@ -196,9 +196,14 @@ const Page = () => {
             </div>
             
             {activeChat && <div className='min-h-[104px] border border-[#D0D5DD] rounded-[8px] p-2 justify-end'>
-              <Input.TextArea placeholder='Send a message' className='!border-none !bg-[#F9FAFB]' ></Input.TextArea>
+              <Input.TextArea 
+                placeholder='Send a message' 
+                className='!border-none !bg-[#F9FAFB]' 
+                onChange={(e) => setMessage(e.target.value)}
+                value={message}
+              ></Input.TextArea>
               <div className='flex items-center justify-end'>
-                <Button type="primary" className='!w-[81px] !h-[40px] !rounded-[100px]'>Send</Button>
+                <Button onClick={handleSendMessage} loading={sendLoading} type="primary" className='!w-[81px] !h-[40px] !rounded-[100px]'>Send</Button>
               </div>
               
             </div>}
@@ -208,5 +213,13 @@ const Page = () => {
     </WorkerContainer>
   )
 }
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Message />
+    </Suspense>
+  );
+};
 
 export default Page

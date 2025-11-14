@@ -7,6 +7,7 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import CompleteInfo from '@/components/general/CompleteInfo';
 import { Icon } from '@iconify/react';
+import { LoadingOutlined } from '@ant-design/icons';
 
 interface props {
   title: string;
@@ -72,7 +73,7 @@ const UploadCard = ({ title, description, icon, isUploaded, value, type, setValu
   return (
     <Card  
       variant="borderless"
-       style={{backgroundColor: isUploaded ? "#FFF9FA" : "#FBFBFB", width: "100%"}} 
+      style={{backgroundColor: isUploaded ? "#FFF9FA" : "#FBFBFB", width: "100%"}} 
       styles={{body: {display: "flex", flexDirection: "column", gap:16, padding: "0 20px"}}}
     >
     <Upload 
@@ -83,17 +84,19 @@ const UploadCard = ({ title, description, icon, isUploaded, value, type, setValu
       style={{width: "100%"}}
       showUploadList={false}
     >
-        <div className='w-full'>
-            <div className='flex items-center gap-1'>
-              {icon} 
-              <p className='text-[#505050] font-medium text-lg '>{title}</p>
-            </div>
-           
-            <p className='text-[#808080]'>{description}</p>
-        </div>
-        {isUploaded && <div className='text-[#670316] bg-[#FFE4E9] rounded-[16px] px-2 h-[30px] flex items-center '>
-            <span className='text-[#670316] text-[12px]'>uploaded</span>
-        </div>}
+
+    <div className='w-full'>
+      <div className='flex items-center gap-1'>
+        {icon} 
+        <p className='text-[#505050] font-medium text-lg '>{title}</p>
+        {loading && <LoadingOutlined spin />}
+      </div>
+      
+      <p className='text-[#808080]'>{description}</p>
+    </div>
+    {isUploaded && <div className='text-[#670316] bg-[#FFE4E9] rounded-[16px] px-2 h-[30px] flex items-center '>
+      <span className='text-[#670316] text-[12px]'>uploaded</span>
+    </div>}
        
     </Upload> 
     {file && <CompleteInfo 

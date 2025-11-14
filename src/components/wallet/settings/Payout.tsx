@@ -1,17 +1,13 @@
 import AddCard from '@/components/client/modal/AddCard';
 import CardTitle from '@/components/general/CardTitle'
-import RoundBtn from '@/components/general/RoundBtn';
-import { PlusOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react'
-import { App, Button, Card, Form, Select } from 'antd'
+import { App, Button, Card } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { createStripeAccount, getWorkerBankInfo, onBoardWorkerOnStripe } from '@/redux/action/transaction';
 
-const FormItem = Form.Item;
-const Option = Select.Option;
 const Payout = () => {
-    const [form] = Form.useForm();
+    // const [form] = Form.useForm();
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);
     const [ openAdd, setOpenAdd ] = useState(false);

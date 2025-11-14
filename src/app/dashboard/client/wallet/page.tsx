@@ -100,7 +100,7 @@ const Page = () => {
   }, []);
   return (
     <ClientContainer active='Wallet'>
-      <Card variant="borderless" style={{padding: 0, border: "none"}}>
+      <Card loading={loading} variant="borderless" style={{padding: 0, border: "none"}}>
         <Row className='min-h-[85vh]!' gutter={[15, 15]} >
           <Col lg={24} sm={24} xs={24} className='mb-6'>
             <Segmented 

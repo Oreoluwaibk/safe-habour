@@ -3,9 +3,9 @@ import { App, Col, Pagination, PaginationProps, Row, Segmented, SegmentedProps, 
 import React, { useCallback, useEffect, useState } from 'react'
 import BookingCard from './cards/BookingCard'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
-import { getJobApplicationsByStatus } from '@/redux/action/jobs'
+// import { getJobApplicationsByStatus } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../utils/errorInstance'
-import { IBooking, UserWorkerProfile } from '../../../utils/interface'
+import { IBooking } from '../../../utils/interface'
 import axios from 'axios'
 import { getClientBookings } from '@/redux/action/client'
 

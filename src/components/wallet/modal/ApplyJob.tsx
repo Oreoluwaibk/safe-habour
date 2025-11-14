@@ -1,6 +1,6 @@
 import CardTitle from '@/components/general/CardTitle';
 import { App, Form, Input, InputNumber, Modal } from 'antd';
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { jobs } from '../../../../utils/interface';
 import RoundBtn from '@/components/general/RoundBtn';
 import { createErrorMessage } from '../../../../utils/errorInstance';

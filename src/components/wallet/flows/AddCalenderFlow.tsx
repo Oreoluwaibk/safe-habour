@@ -3,7 +3,7 @@ import { App, Button, Col, Form, FormInstance, Row, TimePicker } from 'antd';
 import { CheckCircleOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import RoundBtn from '@/components/general/RoundBtn';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { schedule } from '../../../../utils/interface';
 
 interface Props {
@@ -33,7 +33,7 @@ const FormItem = Form.Item;
 
 const AddCalenderFlow: React.FC<Props> = ({
   selectedDays,
-  editDays,
+  // editDays,
   isAvailable,
   availability,
   setIsAvailable,
@@ -43,7 +43,7 @@ const AddCalenderFlow: React.FC<Props> = ({
   handleSetSechedule,
   loading,
   startTime,
-  endTime,
+  // endTime,
   setStartTime,
   setEndTime,
   form,
@@ -51,7 +51,7 @@ const AddCalenderFlow: React.FC<Props> = ({
   markLoading,
   deleteLoading,
   handledeleteSchedule,
-  handleReset
+  // handleReset
 }) => {
   const { message } = App.useApp();
   const [error, setError] = useState('');
@@ -73,7 +73,7 @@ const AddCalenderFlow: React.FC<Props> = ({
       setEndTime(date);
       setPayload(prev => ({ ...prev, endTime: dateString.toString() }));
     }
-  }, [startTime]);
+  }, [startTime, setEndTime, setPayload]);
 
   const handleToggleAvailable = (value: boolean) => handleToggleMarkAvaialable(value);
 

@@ -24,11 +24,10 @@ const maxFileSize = 10000000;
 const PersonalSettings = ({ 
     authentication, 
     handleGetAuthentication, 
-    authLoading 
+    // authLoading 
 }: props) => {
     const [form] = Form.useForm();
-    const [ uploadValue, setUploadValue ] = useState<RcFile[]>([]);
-    const [ date, setDate ] = useState<string | string[]>("");
+    // const [ date, setDate ] = useState<string | string[]>("");
     const [ state, setState ] = useState("");
     const [ country, setCountry ] = useState("Canada");
     const [ initialCode, setInitialCode ] = useState("ca");
@@ -36,19 +35,6 @@ const PersonalSettings = ({
     const [ isEdit, setIsEdit ] = useState(false);
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);
-
-    const handleBeforeUpload = async (file: RcFile) => {
-        if (file.size > maxFileSize) return message.warning("Cannot upload file more than 10mb");
-        return setUploadValue([file]);
-    }
-
-    console.log("date", date, uploadValue);
-    
-    
-    const  handleRemovePicture = () => {
-        setUploadValue([]);
-        // setUploadName("");
-    };
 
     useEffect(() => {
         if(authentication) 
@@ -109,6 +95,10 @@ const PersonalSettings = ({
     }
 
     const handleUploadPicture = (file: RcFile) => {
+        if (file.size > maxFileSize) {
+            message.warning("Cannot upload file more than 10mb");
+            return;
+        }
         const payload = {
             ProfilePicture: file,
             userId: authentication?.id 
@@ -156,7 +146,7 @@ const PersonalSettings = ({
                 {uploading ? <LoadingOutlined spin className='absolute bottom-[10px] right-[5px]' /> :<Upload 
                     className='absolute bottom-[10px] right-[5px] cursor-pointer bg-[#003E8F] h-[30px] w-[30px] flex items-center justify-center rounded-[100px]'
                     beforeUpload={handleUploadPicture}
-                    onRemove={handleRemovePicture}
+                    // onRemove={handleRemovePicture}
                     accept=".jpg,.png,.jpeg," 
                     disabled={!isEdit}
                     showUploadList={false}
@@ -167,7 +157,7 @@ const PersonalSettings = ({
             
             {<Upload
                 beforeUpload={handleUploadPicture}
-                onRemove={handleRemovePicture}
+                // onRemove={handleRemovePicture}
                 accept=".jpg,.png,.jpeg,"
                 disabled={!isEdit}
                 showUploadList={false}
@@ -245,7 +235,7 @@ const PersonalSettings = ({
                 <FormItem 
                     label="Date of Birth" 
                     className="font-semibold" 
-                    name="age"
+                    name="dateOfBirth"
                     // rules={[
                     //     {required:true}
                     // ]}
@@ -253,8 +243,8 @@ const PersonalSettings = ({
                     <DatePicker 
                         size="large"
                         className='w-full border-none'
-                        placeholder='Select Date of Birth'
-                        onChange={(date, dateString) => setDate(dateString)}
+                        placeholder={authentication.dateOfBirth || 'Select Date of Birth'}
+                        // onChange={(date, dateString) => setDate(dateString)}
                         style={{width: "100%", border: "none", height:50, backgroundColor: "#f6f6f6"}}
                         disabled={!isEdit}
                     /> 

@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { UserWorkerProfile } from '../../../../utils/interface';
 import moment from 'moment';
 import HireType from '../modal/HireType';
-import { pictureUrl } from '../../../../utils/axiosConfig';
 
 interface props {
     worker: UserWorkerProfile

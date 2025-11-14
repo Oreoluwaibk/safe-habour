@@ -8,10 +8,9 @@ import CardTitle from '@/components/general/CardTitle';
 import AddCalenderFlow from '../flows/AddCalenderFlow';
 import RoundBtn from '@/components/general/RoundBtn';
 import { Icon } from '@iconify/react';
-import { deleteSchedule, getSchedule, saveBulkSchedule, updateSchedule, updateBulkSchedule } from '@/redux/action/schedules';
+import { deleteSchedule, getSchedule, saveBulkSchedule, updateBulkSchedule } from '@/redux/action/schedules';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { schedule } from '../../../../utils/interface';
-import { dayOfWeek } from '../../../../utils/savedInfo';
 
 dayjs.extend(dayLocaleData);
 

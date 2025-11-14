@@ -6,11 +6,10 @@ import { App, Card, Col, Row } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { createErrorMessage } from '../../../../utils/errorInstance'
 import { INotification } from '../../../../utils/interface'
-import { get } from 'http'
 
 const Page = () => {
   const [ loading, setLoading ] = React.useState(false);
-  const { message, modal } = App.useApp();
+  const { modal } = App.useApp();
   const [ notifications, setNotifications ] = useState<INotification[]>([]);
   const observerRef = useRef<HTMLDivElement | null>(null);
   const [hasMore, setHasMore] = useState(true);
@@ -113,11 +112,11 @@ const Page = () => {
     return () => observer.disconnect();
   }, [hasMore, loading]);
 
-  const handleMArkAsRead = useCallback((id: number) => {
+  // const handleMArkAsRead = useCallback((id: number) => {
 
-    // mark notification as read logic here
-    message.success("Notification marked as read");
-  }, [message]);
+  //   // mark notification as read logic here
+  //   message.success("Notification marked as read");
+  // }, [message]);
 
   React.useEffect(() => {
     handleGetNotifications();

@@ -58,7 +58,7 @@ export default function useApplicationStatus(status: string | number, type: 'job
                 default: setStatusTitle("Unrecognized Status"); break;
             }
         }
-    }, [status]);
+    }, [status, type]);
 
     return { statusTitle, colors };
 }

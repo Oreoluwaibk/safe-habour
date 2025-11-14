@@ -14,6 +14,7 @@ import HireType from '@/components/client/modal/HireType';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getWorkerReview } from '@/redux/action/review';
+import { useAppSelector } from '@/hook';
 
 const Page = ({ params }: {params: Promise<{ id: string }> }) => {
     const { id } = use(params);
@@ -80,8 +81,8 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
         "currency": null,
         "isOnboarded": true
     });
+    const { user } = useAppSelector(state => state.auth);
     const [ reviews, setReviews ] = useState<review[]>([]);
-     
     const handleGetServiceWorker = useCallback((id: string) => {
         setLoading(true);
         getServiceWorkerByUserID(id)
@@ -168,6 +169,8 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
                     worker={worker} 
                     applicationId={application || undefined}
                     onClick={() => setShowHireModal(true)} 
+                    user={user}
+                    onRefresh={() => handleGetServiceWorker(id)}
                 />
 
                 <AvailabilityCard />

@@ -1,13 +1,15 @@
 "use client"
 import { Avatar, Button, Card, Col, Row, Image as AntdImage, App } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ClockCircleOutlined, EnvironmentFilled, StarFilled, UserOutlined } from '@ant-design/icons'
-import { UserWorkerProfile } from '../../../../utils/interface'
+import { IUser, UserWorkerProfile } from '../../../../utils/interface'
 import { pictureUrl } from '../../../../utils/axiosConfig'
 import { getMessageHistory, sendMessage } from '@/redux/action/messages'
 import { useRouter } from 'next/navigation'
 import { createErrorMessage } from '../../../../utils/errorInstance'
 import Status from '@/components/general/Status'
+import useApplicationStatus from '@/hooks/useApplicationStatus';
+import RejectCancel from '../modal/RejectCancel';
 
 interface props {
     onClick: () => void;
@@ -15,44 +17,15 @@ interface props {
     loading: boolean;
     status: string | null;
     applicationId?: string | null;
+    user: IUser;
+    onRefresh: () => void
 }
-const ProfileCard = ({ onClick, worker, loading, status, applicationId }: props) => {
+const ProfileCard = ({ onClick, worker, loading, status, applicationId, user, onRefresh }: props) => {
     const [ checkLoading, setLoading ] = useState(false);
     const router = useRouter();
     const { modal } = App.useApp();
-    const [ statusTitle, setStatusTitle ] = React.useState<string>("");
-    const [ colors, setColors ] = useState({
-        bg: "#fff6f7",
-        color: "#ff0004"
-    });
-
-    useEffect(() => {
-        if (status) {
-            switch (status) {
-                case "1": {
-                    setStatusTitle("Pending");
-                    setColors({bg: "#FFF6F7", color: "#FF0004"});
-                } break;
-                case "2": {
-                    setStatusTitle("Accepted");
-                    setColors({bg: "#F3FFF4", color: "#018A06"});
-                } break;
-                case "3": {
-                    setStatusTitle("Declined");
-                    setColors({bg: "#FFF6F7", color: "#FF0004"});
-                } break;
-                case "4": {
-                    setStatusTitle("Completed");
-                    setColors({bg: "#FFF8F9", color: "#670316"});
-                } break;
-                case "5": {
-                    setStatusTitle("Cancelled");
-                    setColors({bg: "#FFF6F7", color: "#FF0004"});
-                } break;
-                default: setStatusTitle("Unknown"); break;
-            }
-        }
-    }, [status]);
+    const { colors, statusTitle } = useApplicationStatus(Number(status), "application");
+    const [ openModal, setOpenModal ] = useState(false);
 
     const handleCheckHistory = () => {
         setLoading(true);
@@ -135,7 +108,7 @@ const ProfileCard = ({ onClick, worker, loading, status, applicationId }: props)
 
                 <div className='flex items-center justify-end mt-6'>
                     {status && <p className='text-[#670316] font-medium text-lg mr-4'>${worker.hourlyRate?.toFixed(2)}/hr</p>}
-                    {status === "1" && applicationId && <Button type='default' className='!h-[40px] w-[128px] !rounded-[50px] !font-medium' onClick={onClick}>Cancel</Button>}
+                    {status === "1" && applicationId && <Button type='default' className='!h-[40px] w-[128px] !rounded-[50px] !font-medium' onClick={() => setOpenModal(true)}>Cancel</Button>}
                     {status === "2" && applicationId && <Button type='default' className='!h-[40px] w-[128px] !rounded-[50px] !font-medium' onClick={handleCheckHistory} loading={checkLoading}>Message</Button>}
                     {status !== "1" && status !== "2" && <Button type='primary' className='!h-[40px] w-[128px] !rounded-[50px] primary-bg text-white !font-medium' onClick={onClick}>Hire Me</Button>}
 
@@ -144,6 +117,16 @@ const ProfileCard = ({ onClick, worker, loading, status, applicationId }: props)
             
             </Col>
         </Row>
+         {openModal && (
+            <RejectCancel 
+                onCancel={() => setOpenModal(false)} 
+                open={openModal} 
+                applicationId={applicationId || ""} 
+                refresh={onRefresh}
+                user={user}
+                isReject
+            />
+        )}
     </Card>
   )
 }

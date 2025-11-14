@@ -135,11 +135,7 @@ const AvailableContainer = ({ isJobs }: props) => {
 
     observer.observe(observerRef.current);
 
-    return () => {
-      console.log("disconnecting observer");
-      
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [hasMore, loading, isJobs]);
 
   return (

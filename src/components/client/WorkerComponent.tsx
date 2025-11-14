@@ -302,7 +302,6 @@ const WorkerComponent = ({ isDashboard }: props) => {
                                     }}
                                     range
                                     onChangeComplete={(value) => {
-                                        console.log("value", value)
                                         setFilters(prev => ({
                                             ...prev, 
                                             minHourlyRate: value[0],

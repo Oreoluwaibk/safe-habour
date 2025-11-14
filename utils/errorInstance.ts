@@ -1,6 +1,4 @@
 export const createErrorMessage = (data: any) => {
-  console.log("data", data);
-
   if (!data) return "Unable to complete request, something went wrong";
 
   // ✅ Common top-level message formats

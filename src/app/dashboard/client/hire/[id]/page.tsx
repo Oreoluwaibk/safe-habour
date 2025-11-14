@@ -7,16 +7,20 @@ import { getServiceWorkerByUserID } from '@/redux/action/serviceWorker';
 import { App, Card, Col, Row } from 'antd';
 import React, { use, useCallback, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../../../utils/errorInstance';
-import { getWorkerSchedule } from '@/redux/action/schedules';
+// import { getWorkerSchedule } from '@/redux/action/schedules';
 import { review, UserWorkerProfile } from '../../../../../../utils/interface';
 import { useServiceCategory } from '@/hooks/useServiceCategory';
 import HireType from '@/components/client/modal/HireType';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { getWorkerReview } from '@/redux/action/review';
 
 const Page = ({ params }: {params: Promise<{ id: string }> }) => {
     const { id } = use(params);
     const { modal } = App.useApp();
+    const param = useSearchParams();
+    const status = param.get("status");
+    const application = param.get("application");
     const router = useRouter();
     const [ loading, setLoading ] = useState(false);
     const { categories } = useServiceCategory()
@@ -76,9 +80,8 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
         "currency": null,
         "isOnboarded": true
     });
-     const [ reviews ] = useState<review[]>([]);
-
-    console.log("sghe", showHireModal, id, categories);
+    const [ reviews, setReviews ] = useState<review[]>([]);
+     
     const handleGetServiceWorker = useCallback((id: string) => {
         setLoading(true);
         getServiceWorkerByUserID(id)
@@ -99,14 +102,34 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
         })
     }, [modal]);
 
-    const handleGetWorkerScedule = useCallback((id: string) => {
+    // const handleGetWorkerSchedule = useCallback((id: string) => {
+    //     setLoading(true);
+    //     getWorkerSchedule(id)
+    //     .then(res => {
+    //         if(res.status === 200) {
+    //             setLoading(false);
+    //             console.log("response", res.data);
+                
+    //         }
+    //     })
+    //     .catch(err => {
+    //         modal.error({
+    //             title: "Unable to get worker details",
+    //             content: err?.response
+    //                 ? createErrorMessage(err.response.data)
+    //                 : err.message,
+    //             onOk: () => setLoading(false)
+    //         });
+    //     })
+    // }, [modal]);
+
+    const handleGetWorkerReview = useCallback((id: string) => {
         setLoading(true);
-        getWorkerSchedule(id)
+        getWorkerReview(id)
         .then(res => {
             if(res.status === 200) {
                 setLoading(false);
-                console.log("response", res.data);
-                
+                setReviews(res.data.data);
             }
         })
         .catch(err => {
@@ -121,8 +144,12 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
     }, [modal]);
 
     useEffect(() => {
-        if(id) handleGetServiceWorker(id);
-        if(id) handleGetWorkerScedule(id)
+        if(id) {
+            handleGetServiceWorker(id);
+            handleGetWorkerReview(id);
+            // handleGetWorkerSchedule(id)
+        }
+        // if(id) handleGetWorkerScedule(id)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
     
@@ -135,7 +162,13 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
         
         <Row className='min-h-[90vh] pb-6' gutter={[15,15]}>
             <Col lg={10} sm={12} xs={24} className='!flex flex-col gap-6 h-full'>
-                <ProfileCard loading={loading} worker={worker} onClick={() => setShowHireModal(true)} />
+                <ProfileCard 
+                    status={status} 
+                    loading={loading} 
+                    worker={worker} 
+                    applicationId={application || undefined}
+                    onClick={() => setShowHireModal(true)} 
+                />
 
                 <AvailabilityCard />
             </Col>
@@ -175,12 +208,12 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
                     <p className='t-pri text-2xl font-semibold'>Client Reviews</p>
 
                     <Row gutter={[15,15]}>
-                        {reviews && reviews.length > 0 && (
+                        {reviews.length > 0 && (
                             reviews.map((review, i: number) => (
                                 <RateCard reviewDetails={review} key={i} />
                             ))
                         )}
-                        {!reviews && <p className='text-[#121212] text-center'>There are no client review for this job yet</p>}
+                        {reviews.length === 0 && <p className='text-[#121212] text-center'>There are no client review for this worker</p>}
                     </Row>
                 </Card>
             </Col>

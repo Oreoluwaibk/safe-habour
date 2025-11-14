@@ -1,16 +1,17 @@
 "use client"
-import { App, Col, Pagination, PaginationProps, Row, Segmented, SegmentedProps } from 'antd'
+import { App, Col, Pagination, PaginationProps, Row, Segmented, SegmentedProps, Skeleton } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import BookingCard from './cards/BookingCard'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { getJobApplicationsByStatus } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../utils/errorInstance'
-import { UserWorkerProfile } from '../../../utils/interface'
+import { IBooking, UserWorkerProfile } from '../../../utils/interface'
 import axios from 'axios'
+import { getClientBookings } from '@/redux/action/client'
 
 const BookingSystem = () => {
     const [ active, setActive ] = useState(1);
-    const [ workers, setWorkers ] = useState([]);
+    const [ workers, setWorkers ] = useState<IBooking[]>([]);
     const [ loading, setLoading ] = useState(false);
     const { modal } = App.useApp();
     const [filters, setFilters] = useState({
@@ -28,7 +29,7 @@ const BookingSystem = () => {
 
         setLoading(true);
         try {
-            const res = await getJobApplicationsByStatus(
+            const res = await getClientBookings(
                 pageNumber,
                 filters.pageSize,
                 status
@@ -104,40 +105,44 @@ const BookingSystem = () => {
     ]
   return (
     <div>
-        <Row gutter={[0, 30]} className='min-h-screen'>
-            <Col lg={24} sm={24} xs={24}>
-                <Segmented 
-                    options={segmentedItem}
-                    defaultValue={active}
-                    onChange={(value) => handlegetWorkersByStatus(Number(value))}  
-                />
-            </Col>
+        <div className='mb-2 mt-0'>
+            <Segmented 
+                options={segmentedItem}
+                defaultValue={active}
+                onChange={(value) => handlegetWorkersByStatus(Number(value))}  
+            />
+        </div>
+        <Skeleton loading={loading} className='h-full' >
+            <Row gutter={[0, 30]} className='min-h-screen'>
+                <Col lg={24} sm={24} xs={24}>
+                    <Row gutter={[15,15]}>
+                        {workers.map((worker) => (
+                            <Col key={worker.serviceWorkerId} lg={12} sm={24} xs={24}>
+                                <BookingCard worker={worker} onRefresh={() => handleGetApplications(filters.pageNumber, filters.status)} />
+                            </Col>
+                        ))}
+                        {workers.length === 0 && !loading && (
+                            <p className="text-center w-full text-[#121212] my-6">No workers found</p>
+                        )}
+                    </Row>
+                </Col>
 
-            <Col lg={24} sm={24} xs={24}>
-                <Row gutter={[15,15]}>
-                    {workers.map((worker: UserWorkerProfile) => (
-                        <Col key={worker.id} lg={12} sm={24} xs={24}>
-                            <BookingCard worker={worker} />
-                        </Col>
-                    ))}
-                </Row>
-            </Col>
-
-            <Col lg={24} sm={24} xs={24}>
-                <Pagination 
-                    responsive
-                    // style={{width: "100%", alignItems: "center", justifyContent:"center"}}
-                    showSizeChanger={false}
-                    itemRender={itemRender}
-                    total={totalWorkers}
-                    align="center"
-                    className="border-t border-t-[#eaecf0] !py-4"
-                    pageSize={filters.pageSize}
-                    current={filters.pageNumber}
-                    onChange={handlePagination}
-                />
-            </Col>
-        </Row>
+                <Col lg={24} sm={24} xs={24}>
+                    <Pagination 
+                        responsive
+                        // style={{width: "100%", alignItems: "center", justifyContent:"center"}}
+                        showSizeChanger={false}
+                        itemRender={itemRender}
+                        total={totalWorkers}
+                        align="center"
+                        className="border-t border-t-[#eaecf0] !py-4"
+                        pageSize={filters.pageSize}
+                        current={filters.pageNumber}
+                        onChange={handlePagination}
+                    />
+                </Col>
+            </Row>
+        </Skeleton>
     </div>
   )
 }

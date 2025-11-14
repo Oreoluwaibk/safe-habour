@@ -72,6 +72,25 @@ export const getWorkerFee = async (
     return Promise.resolve(response);
 }
 
+export const getClientFee = async (
+    pageNumber: number = 1,
+    pageSize: number = 10,
+    StatusFilter?: number,
+    TimePeriod?: number,
+) => {
+    const params: IParams = {
+      pageNumber,
+      pageSize,
+    };
+
+    if (StatusFilter) params.StatusFilter = StatusFilter;
+    if (TimePeriod) params.TimePeriod = TimePeriod;
+    const url = `/ClientUser/fees`;
+    const response = await axiosInstance.get(url, { params });
+
+    return Promise.resolve(response);
+}
+
 export const getWorkerBankInfo = async () => {
   const url = `/StripeConnect/bank-info`;
   const response = await axiosInstance.get(url);

@@ -23,6 +23,27 @@ export const getNotificationSettings = async () => {
     return Promise.resolve(response);
 }
 
+export const getPushNotifications = async (pageNumber: number = 1, pageSize: number = 10) => {
+    const params: {
+        pageNumber: number;
+        pageSize: number;
+    } = {
+      pageNumber,
+      pageSize,
+    };
+    const url = `/PushNotification/my-notifications`;
+    const response = await axiosInstance.get(url, { params });
+
+    return Promise.resolve(response);
+}///api/PushNotification/mark-all-as-read
+
+export const markNotificationAsRead = async () => {
+    const url = `/PushNotification/mark-all-as-read`;
+    const response = await axiosInstance.post(url, {});
+
+    return Promise.resolve(response);
+}
+
 export const updateNotificationSetting = async (data: INotificationSetting) => {
     const url = `/Authentication/notification-settings`;
     const response = await axiosInstance.put(url, data);

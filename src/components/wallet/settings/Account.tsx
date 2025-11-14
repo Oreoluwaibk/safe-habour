@@ -50,7 +50,6 @@ const Account = () => {
             }
         })
         .catch(err => {
-            console.log("Error logging out", err);
             setLoading(false);
             message.success("Logout successful!")
             dispatch(logoutUser());

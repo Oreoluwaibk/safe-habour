@@ -19,7 +19,6 @@ const WorkerReview = ({ userId }: props) => {
         .then(res => {
             if(res.status === 200 || res.status === 201){
                 setLoading(false);
-                // console.log("response", res.data);
                 setReviews(res.data.data);
             }
         })

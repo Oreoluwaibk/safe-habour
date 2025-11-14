@@ -34,7 +34,7 @@ const Page = () => {
            <WorkerJobHistory />
         </Col>}
 
-         {active === "My Applications" && <Col lg={24} sm={24} xs={24} className=' h-[58vh] overflow-y-auto'>
+         {active === "My Applications" && <Col lg={24} sm={24} xs={24} className='h-[60vh] overflow-y-auto scrollbar-hide'>
            <WorkerJobApplication />
         </Col>}
       </Row>

@@ -13,6 +13,7 @@ import NotificationCard from "../general/NotificationCard";
 import { MaskedLogo } from "../../../assets/icons";
 import { useAppSelector } from "@/hook";
 import { logoutUser } from "@/redux/action/auth";
+import { INotification } from "../../../utils/interface";
 
 const { Content, Header } = Layout;
 
@@ -37,6 +38,27 @@ const ClientContainer = ({
     const [ openJobModal, setOpenJobModal ] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
     const { isAuthenticated } = useAppSelector(state => state.auth);
+    const [ notification ] = useState<INotification>({
+    "id": "string",
+    "title": "string",
+    "message": "string",
+    "type": 0,
+    "typeName": "string",
+    "priority": 0,
+    "priorityName": "string",
+    "data": {
+        // key-value dynamic object
+    },
+    "actionUrl": "string",
+    "iconUrl": "string",
+    "requiresAction": true,
+    "isRead": false,
+    "isDelivered": false,
+    "expiresAt": "2025-01-01T00:00:00Z",
+    "createdAt": "2025-01-01T00:00:00Z",
+    "readAt": "2025-01-01T00:00:00Z",
+    "deliveredAt": "2025-01-01T00:00:00Z"
+    });
     
     const handleLogout = useCallback(() => {
     logoutUser()
@@ -46,7 +68,6 @@ const ClientContainer = ({
         }
       })
       .catch((err) => {
-        console.log("error logging out", err);
         router.push("/auth/login");
       });
   }, [router]); // ✅ stable dependency
@@ -107,7 +128,11 @@ const ClientContainer = ({
                 </Header>
                 <Layout className='!bg-white '>
                     {showNotification && <div className="fixed md:top-[120px] md:right-[15px] right-[30px] h-[134px] w-[80%] md:w-[400px] z-[2] mt-[-20px] cursor-pointer" onClick={() => router.push("/dashboard/notification")}>
-                        <NotificationCard isFixed onCancel={() => setShowNotification(false)} />
+                        <NotificationCard 
+                            isFixed 
+                            onCancel={() => setShowNotification(false)} 
+                            notification={notification}
+                        />
                     </div>}
                     <div className="md:px-[50px] px-4">
                     {children}

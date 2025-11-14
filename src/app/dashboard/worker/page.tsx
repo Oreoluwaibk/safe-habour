@@ -62,7 +62,7 @@ const Page = () => {
   const [ loading, setLoading ] = useState(false);
 
   useEffect(() => {
-    if(authentication) setCloseInfo(!authentication.isVerified);
+    if(authentication) setCloseInfo(!authentication.hasIdentificationDocument);
     if(authentication && !authentication?.isServiceWorkerOnboarded) {
       message.info("Please complete your profile to access all features.")
       setTimeout(() => {

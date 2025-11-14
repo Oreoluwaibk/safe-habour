@@ -3,7 +3,7 @@ import WorkerContainer from '@/components/dashboard/WorkerContainer'
 import CardTitle from '@/components/general/CardTitle'
 import Rating from '@/components/general/Rating'
 import Status from '@/components/general/Status'
-import { ArrowLeftOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, EnvironmentOutlined, StarOutlined, UserOutlined } from '@ant-design/icons'
 import { App, Avatar, Card, Col, Row, Skeleton, Image } from 'antd';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react';
@@ -23,6 +23,8 @@ import RoundBtn from '@/components/general/RoundBtn'
 import { useAppSelector } from '@/hook'
 import AcceptDecline from '@/components/wallet/modal/AcceptDecline'
 import { pictureUrl } from '../../../../../../utils/axiosConfig'
+import useApplicationStatus from '@/hooks/useApplicationStatus'
+import RateModal from '@/components/wallet/modal/RateModal'
 
 const Page = () => {
     const router = useRouter();
@@ -55,14 +57,16 @@ const Page = () => {
             "jobDescription": "The house roof",
             "clientId": "b299795d-7e98-4e7a-9694-1a0e7a3e2241",
             "status": 1,
-            isHireDirectly: false
+            isHireDirectly: false,
+            applicantCount: 0
         }
     });
     const { categories } = useServiceCategory();
     const [ reviews, setReviews ] = useState<review[]>([]);
     const { user } = useAppSelector(state => state.auth);
     const [ openModal, setOpenModal ] = useState(false);
-    const [ isAccept, setIsAccept ] = useState(false);   
+    const [ isAccept, setIsAccept ] = useState(false);  
+    const { statusTitle, colors } = useApplicationStatus(job.status, 'application'); 
 
     const handleGetJobApplication = useCallback(
         (id: string) => {
@@ -95,9 +99,8 @@ const Page = () => {
         getClientJobReview(id)
         .then((res) => {
             if (res.status === 200 || res.status === 201) {
-            setLoading(false);
-            console.log(res.data.data);
-            setReviews(res.data.data);
+                setLoading(false);
+                setReviews(res.data.data);
             }
         })
         .catch((err) => {
@@ -143,39 +146,9 @@ const Page = () => {
     //         });
     //     })
     // }
-    
-    const handleMarkAsComplete = () => {
-        const payload: completeJob = {
-            jobId: job.jobDetails.id,
-            completionNotes: ""
-        }
-        setActionLoading(true);
-        completeJobAsWorker(payload)
-        .then(res => {
-            if(res.status === 200 || res.status === 201) {
-                    modal.success({
-                    title: res.data.message || "Job is marked as completed",
-                    onOk: () => {
-                        setActionLoading(false);
-                        handleGetJobApplication(id!.toString());
-                    }
-                })
-            
-            }
-        })
-        .catch(err => {
-            modal.error({
-            title: "Unable to mark this application as completed",
-            content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
-                onOk: () => setActionLoading(false)
-            });
-        })
-    }
-    
+
   return (
-    <WorkerContainer active='Schedule'>
+    <WorkerContainer active='Jobs'>
     <div onClick={() => router.back()} className='flex items-center gap-4 cursor-pointer my-2 text-[#343434]'>
         <ArrowLeftOutlined />
         <span>Back</span>
@@ -187,7 +160,10 @@ const Page = () => {
         <Card
             title={
                 <div className='flex flex-col gap-1'>
-                    <CardTitle title={job?.jobDetails.jobTitle || ""} />
+                    <CardTitle 
+                        title={job?.jobDetails.jobTitle || "Hire Service"} 
+                        status={<Status title={statusTitle} bg={colors.bg} color={colors.color} />}
+                    />
                     <div className='flex items-center gap-3'>
                         <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {job?.jobDetails.location}</span>
                         <Rating />
@@ -201,24 +177,16 @@ const Page = () => {
             classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
             className='!mt-6'
             extra={
-            <>
-            {job.status === 2 && <div className='flex items-center gap-2 justify-end'>
-                <RoundBtn width={94} onClick={() => {}} title='Cancel' />
-                <RoundBtn primary width={159} onClick={handleMarkAsComplete} loading={actionLoading} title='Mark as Complete' />
-            </div>}
-            {job.jobDetails.isHireDirectly && job.status === 1 && <div className='flex items-center gap-2 justify-end'>
-                <RoundBtn width={94} onClick={() => {
-                    setIsAccept(false);
-                    setOpenModal(true);
-                }} title='Decline' />
-                <RoundBtn primary width={94} onClick={() => {
-                    setIsAccept(true);
-                    setOpenModal(true);
-                }} loading={actionLoading} title='Accept' />
-            </div>}
-            </>
-            // <Button onClick={() => setOpenModal(true)} icon={<StarOutlined />} type="default" className='!text-[#670316] !h-[48px]' style={{borderRadius: 50}}>Rate Experience</Button>
-        }
+                <RoundBtn 
+                    onClick={() => setOpenModal(true)} 
+                    icon={<StarOutlined />}
+                    
+                    title="Rate Experience" 
+                />
+            }
+            
+            // <RoundBtn onClick={() => setOpenModal(true)} icon={<StarOutlined />} type="default" className='!text-[#670316] !h-[48px]' style={{borderRadius: 50}}>Rate Experience</Button>
+        
             loading={loading}
         />       
         </Col>
@@ -234,8 +202,8 @@ const Page = () => {
                             <Avatar 
                                 icon={<UserOutlined className='text-2xl' />} 
                                 alt=''
-                                size={84} 
-                                className='h-[84px] w-[84px] rounded-full object-cover' 
+                                size={56} 
+                                className='h-[56px] w-[56px] rounded-full object-cover' 
                             />}
                             <CardTitle title={job?.jobDetails.client?.name || ""} description={<Rating />} />
                         </div>
@@ -290,16 +258,16 @@ const Page = () => {
         </Col>
     </Row>
     </Skeleton>
+    
     {openModal && 
-        <AcceptDecline 
-            open={openModal} 
-            onCancel={() => setOpenModal(false)} 
-            isAccept={isAccept} 
-            application={job} 
-            user={user}
-            refresh={() =>{
-                if(id) handleGetJobApplication(id.toString())}}
-        />}
+    <RateModal 
+        refresh={() => handleGetClientJobReviews(job.jobDetails.id)} 
+        user={user} 
+        job={job.jobDetails} 
+        isWorker={true} 
+        open={openModal} 
+        onCancel={() => setOpenModal(false)} 
+    />}
     </WorkerContainer>
   )
 }

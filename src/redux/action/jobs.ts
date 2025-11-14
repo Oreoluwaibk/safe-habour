@@ -320,9 +320,41 @@ export const getAJobApplication = async (id: string) => {
     return Promise.resolve(response);
 }
 
+export const getSingleJobApplication = async (
+  id: string, 
+  pageNumber: number = 1,
+  status?: number
+) => {
+    const params: {
+      pageNumber: number
+      status?: number,
+    } = {
+      pageNumber,
+    };
+    if (status !== undefined) params.status = status;
+    const url = `/JobApplication/job/${id}`;
+    const response = await axiosInstance.get(url, { params });
+
+    return Promise.resolve(response);
+}
+
 export const acceptJobApplication = async (id: string) => {
   const url = `/JobApplication/application/${id}/accept`;
   const response = await axiosInstance.put(url);
+
+  return Promise.resolve(response);
+}
+
+export const rejectJobApplication = async (data: {applicationId: string;rejectionReason: string;}) => {
+  const url = `/JobApplication/reject`;
+  const response = await axiosInstance.post(url, data);
+
+  return Promise.resolve(response);
+}
+
+export const cancelJobApplication = async (data: {applicationId: string;cancellationReason: string;}) => {
+  const url = `/JobApplication/cancel`;
+  const response = await axiosInstance.post(url, data);
 
   return Promise.resolve(response);
 }

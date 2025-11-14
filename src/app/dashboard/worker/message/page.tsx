@@ -1,29 +1,29 @@
 "use client"
 import ChatInfo from '@/components/client/chats/ChatInfo'
 // import ClientContainer from '@/components/dashboard/ClientContainer'
-import { SearchOutlined } from '@ant-design/icons'
+import { LoadingOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons'
 // import { Icon } from '@iconify/react'
-import { Row, Col, Card, Input, Button, App, CardProps } from 'antd'
+import { Row, Col, Card, Input, Button, App, CardProps, Avatar, Image as AntdesingImg } from 'antd'
 import Image from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
-import { C1 } from '../../../../../assets/image'
 import { BsRecordFill } from 'react-icons/bs'
 import Messages from '@/components/client/chats/Messages'
 import WorkerContainer from '@/components/dashboard/WorkerContainer'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
-import { getAllMessages } from '@/redux/action/messages'
-import { MessageUserDto } from '../../../../../utils/interface'
+import { getAllMessages, getMessageHistory, sendMessage } from '@/redux/action/messages'
+import { IConversation, IMessage } from '../../../../../utils/interface'
 import { EditSVG } from '../../../../../assets/icons'
+import { pictureUrl } from '../../../../../utils/axiosConfig'
 
 const Page = () => {
-  const { modal } = App.useApp()
+  const { modal, message: AntDesignMsg } = App.useApp()
   const [ loading, setLoading ] = useState(false);
-  const [ messages ] = useState([
-    {id: 1, content: "Hello!. Good Morning Are you available at 5 PM tomorrow to help in cleaning my house?", user: 1, time: "Thursday 11:41am"},
-    {id: 2, content: "Hello! Good Morning. Yes, I will be very much available tomorrow at 5 PM.", user: "Katherine Moss", time: "Thursday 11:40am"}
-  ]);
-  const [ chatList, setChatList ] = useState<MessageUserDto[]>([]);
-  const [ activeChat, setActiveChat ] = useState<MessageUserDto | null>(null)
+  const [ messages, setMessages ] = useState<IMessage[]>([]);
+  const [ sendLoading, setSendLoading ] = useState(false);
+  const [ fetchLoading, setFetchLoading ] = useState(false);
+  const [ message, setMessage ] = useState<string>("");
+  const [ chatList, setChatList ] = useState<IConversation[]>([]);
+  const [ activeChat, setActiveChat ] = useState<IConversation | null>(null)
 
   const handleGetMessages = useCallback(() => {
     setLoading(true);
@@ -31,7 +31,6 @@ const Page = () => {
     .then(res => {
       if(res.status === 200) {
         setLoading(false);
-        console.log(res.data);
         setChatList(res.data.data);
       }
     })
@@ -45,10 +44,79 @@ const Page = () => {
     })
   }, [modal]);
 
+  const handleGetMessageHistory = useCallback((id: string) => {
+    setFetchLoading(true);
+    getMessageHistory(id)
+    .then(res => {
+      if(res.status === 200) {
+        setFetchLoading(false);
+        setMessages(res.data.data.messages);
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to get chat history",
+        content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+        onOk: () => setFetchLoading(false),
+      });
+    })
+  }, [modal, activeChat]);
+
+  const handleGetSilent = (id: string) => {
+    getMessageHistory(id)
+    .then(res => {
+      if(res.status === 200) {
+        setMessages(res.data.data.messages);
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to get chat history",
+        content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+        onOk: () => setFetchLoading(false),
+      });
+    })
+  }
+
+  const handleSendMessage = () => {
+    if(!message) return AntDesignMsg.error("Please enter a message to send");
+    const payload = {
+      message,
+      applicationId: activeChat?.applicationId || ""
+    }
+    setSendLoading(true);
+    sendMessage(payload)
+    .then(res => {
+      if(res.status === 200 || res.status ===201) {
+        setSendLoading(false);
+        handleGetSilent(activeChat?.applicationId || "");
+        setMessage("");
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to send message",
+        content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+        onOk: () => setSendLoading(false),
+      });
+    })
+  }
+
   useEffect(() => {
     handleGetMessages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if(activeChat) handleGetMessageHistory(activeChat.applicationId); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeChat]);
 
   const title: CardProps["title"] = (
     <> 
@@ -57,16 +125,26 @@ const Page = () => {
       </p>}
       {activeChat && <div className='flex items-center gap-3 w-fit'>
         <div className='relative'>
-          <Image className='h-[40px] w-[40px] rounded-[100px] object-cover' src={C1} alt="" />
-          
+        {!activeChat.otherUserProfilePicture && <Avatar 
+          icon={<UserOutlined className='text-2xl' />} 
+          alt={activeChat.otherUserName} 
+          size={40} 
+          className='h-[40px] w-[40px] rounded-full object-cover' 
+        />}
+        {activeChat.otherUserProfilePicture && 
+        <AntdesingImg 
+          className='h-[40px]! w-[40px]! rounded-[100px] object-cover' 
+          src={`${pictureUrl}${activeChat?.otherUserProfilePicture}`} 
+          alt={activeChat.otherUserName} 
+        />}
         </div>
       
         <div className='flex flex-col text-sm'>
-          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>Phoenix Baker <span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-[16px] flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> online</span></p>              <p style={{ color: "#667085", fontWeight: 300}}>@phoenix</p>
+          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} <span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-[16px] flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> online</span></p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
         </div>
     </div>}
     </>
-  )
+  );
   return (
     <WorkerContainer active='Message'>
       <Row gutter={[15,15]}>
@@ -87,7 +165,7 @@ const Page = () => {
             </div>
 
             <Row>
-              {chatList.map((chat:MessageUserDto, i: number) => (
+              {chatList.map((chat:IConversation, i: number) => (
                 <Col lg={24} sm={24} xs={24} key={i} onClick={() => setActiveChat(chat)}>
                   <ChatInfo chat={chat} />
                 </Col>
@@ -110,7 +188,10 @@ const Page = () => {
             title={title}
           >
             <div className={`h-[80%] ${!activeChat && "flex flex-col items-center justify-center"}`}>
-              {activeChat && <Messages messages={messages} />}
+              {activeChat && (
+                fetchLoading ? <p className='text-center text-lg'>Loading chat history...<LoadingOutlined spin /></p> :
+                <Messages messages={messages} />
+              )}
               {!activeChat && <p className='text-center text-lg'>No current chat, select a chat to send messages!</p>}
             </div>
             

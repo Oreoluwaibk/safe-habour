@@ -23,7 +23,7 @@ export const getClientProfile = async () => {
     return Promise.resolve(response);
 }
 
-export const updateClientProfile = async (data: userProfile) => {
+export const updateClientProfile = async (data: FormData) => {
     const url = `/ClientUser/profile`;
     const response = await axiosInstance.put(url, data);
 
@@ -33,6 +33,18 @@ export const updateClientProfile = async (data: userProfile) => {
 export const getClientUser = async (id: string) => {
     const url = `/ClientUser/user/${id}`;
     const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
+export const getClientBookings = async (pageNumber: number = 1, pageSize: number = 1, status: number = 1) => {
+    const params: { pageNumber: number, pageSize: number, status: number } = {
+        pageNumber,
+        pageSize,
+        status
+    };
+    const url = `/JobApplication/client/bookings`;
+    const response = await axiosInstance.get(url, { params });
 
     return Promise.resolve(response);
 }

@@ -45,7 +45,6 @@ const Payout = () => {
     .then(res => {
       if(res.status === 200) {
         setLoading(false);
-        console.log(res.data);
         setBankInfo(res.data.data);
       }
     })

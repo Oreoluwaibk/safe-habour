@@ -112,7 +112,7 @@ const UpcomingSchedule = () => {
 
         {upcomingJobs.length === 0 && (
           <Col lg={24} sm={24} xs={24}>
-            <p className='text-[#121212] text-center mt-8'>You have no upcomig job at the moment</p>
+            <p className='text-[#121212] text-center mt-8'>You have no upcoming job at the moment</p>
           </Col>
         )}
 

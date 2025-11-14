@@ -26,7 +26,7 @@ export default function Home() {
           reverse
         />
         <OurVision />
-        <MeetOurTeam />
+        {/* <MeetOurTeam /> */}
       </div>
     </Container>
   );

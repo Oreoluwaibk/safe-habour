@@ -21,7 +21,7 @@ const WorkersCard = ({ worker }: props) => {
             <ClockCircleOutlined />
             <p className=''>{moment(worker.joinedDate).format("MMM DD, h:mm A")}</p>
         </div>
-        {worker?.profilePicturePath && <Image preview={false} src={`${pictureUrl}${worker.profilePicturePath}`} alt='image' className='md:!h-[169px] object-cover w-full' />}
+        {worker?.profilePicturePath && <Image preview={false} src={`${worker.profilePicturePath}`} alt='image' className='md:!h-[169px] object-cover w-full' />}
         {!worker.profilePicturePath && (
             <Avatar icon={<UserOutlined size={80} className='text-4xl' />} alt='Worker image' shape="square" className='md:!h-[169px] object-cover w-full!' />
         )}

@@ -67,7 +67,7 @@ const Page = () => {
         <Card
             title={
                 <div className='flex flex-col gap-1'>
-                    <CardTitle title={job?.jobTitle || ""} />
+                    <CardTitle title={job?.jobTitle || "Hire Service"} />
                     <div className='flex items-center gap-3'>
                         <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {job?.location}</span>
                         <Rating />

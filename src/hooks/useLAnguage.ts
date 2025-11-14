@@ -24,15 +24,14 @@ export const useLanguage = (): LanguageState => {
     setLoading(true);
     getLanguages()
     .then(res => {
-        if(res.status === 200) {
-            setLoading(false);
-            setLanguages(res.data);
-        }
+      if(res.status === 200) {
+        setLoading(false);
+        setLanguages(res.data);
+      }
     })
     .catch(err => {
-        setLoading(false);
-        console.log("err", err);
-        setError(err?.response ? err?.response.data : err?.message);
+      setLoading(false);
+      setError(err?.response ? err?.response.data : err?.message);
     })
   }
 

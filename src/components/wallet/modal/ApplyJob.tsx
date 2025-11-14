@@ -1,6 +1,6 @@
 import CardTitle from '@/components/general/CardTitle';
 import { App, Form, Input, InputNumber, Modal } from 'antd';
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { jobs } from '../../../../utils/interface';
 import RoundBtn from '@/components/general/RoundBtn';
 import { createErrorMessage } from '../../../../utils/errorInstance';
@@ -11,11 +11,22 @@ interface props {
     onCancel: () => void;
     job: jobs
 }
+
+const MAX_WORDS = 1000;
+
+function countWords(text?: string) {
+  if (!text) return 0;
+  const trimmed = text.trim();
+  return trimmed === "" ? 0 : trimmed.split(/\s+/).length;
+}
 const FormItem = Form.Item;
 const ApplyJob = ({ open, onCancel, job }: props) => {
     const { modal } = App.useApp();
     const [form] = Form.useForm();
     const [ loading, setLoading ] = useState(false);
+    const [message, setMessage] = useState(""); 
+    const [error, setError] = useState<string | null>(null);
+
 
     const handleApplyForJob = () => {
         form.validateFields()
@@ -53,6 +64,36 @@ const ApplyJob = ({ open, onCancel, job }: props) => {
         
     }
 
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const raw = e.target.value;
+  const words = raw.trim().split(/\s+/);
+
+  if (words.length > MAX_WORDS) {
+    const truncated = words.slice(0, MAX_WORDS).join(" ");
+    setMessage(truncated);
+    form.setFieldsValue({ message: truncated });
+    setError(`Message cannot exceed ${MAX_WORDS} words`);
+  } else {
+    setMessage(raw);
+    setError(null);
+    form.setFieldsValue({ message: raw });
+  }
+    };
+
+    const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const paste = e.clipboardData.getData("text");
+    const combined = (message + " " + paste).trim();
+    const words = combined.split(/\s+/);
+
+    if (words.length > MAX_WORDS) {
+        e.preventDefault();
+        const truncated = words.slice(0, MAX_WORDS).join(" ");
+        setMessage(truncated);
+        form.setFieldsValue({ message: truncated });
+        setError(`Message cannot exceed ${MAX_WORDS} words`);
+    }
+    };
+    
   return (
     <Modal 
         open={open}
@@ -68,13 +109,40 @@ const ApplyJob = ({ open, onCancel, job }: props) => {
         width={700}
     >
         <Form form={form} layout="vertical">
-            <FormItem rules={[{required: true}]} label="proposedcRate" name="proposedRate" initialValue={job.budget}>
+            <FormItem rules={[{required: true}]} label="Proposed Rate" name="proposedRate" initialValue={job.budget}>
                 <InputNumber style={{width: "100%"}} />
             </FormItem> 
+            <Form.Item
+            label="Message to client"
+            name="message"
+            validateStatus={error ? "error" : ""}
+            help={error || ""}
+            rules={[
+                { required: true, message: "Please enter your message" },
+                {
+                validator: (_, value: string) => {
+                    if (countWords(value) > MAX_WORDS) {
+                    return Promise.reject(
+                        new Error(`Message cannot exceed ${MAX_WORDS} words`)
+                    );
+                    }
+                    return Promise.resolve();
+                },
+                },
+            ]}
+            >
+            <Input.TextArea
+                value={message}
+                placeholder="Tell client why you're perfect for this job..."
+                rows={6}
+                onChange={handleChange}
+                onPaste={handlePaste}
+            />
+            </Form.Item>
 
-            <FormItem rules={[{required: true}]} label="Message to client" name="message">
-                <Input.TextArea placeholder="Tell client why you're perfect for this job..." rows={3} style={{width: "100%"}} />
-            </FormItem> 
+            <div style={{ marginBottom: 12, textAlign: "right", color: "#666" }}>
+            {countWords(message)} / {MAX_WORDS} words
+            </div>
         </Form>
     </Modal>
   )

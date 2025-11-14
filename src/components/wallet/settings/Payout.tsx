@@ -22,8 +22,7 @@ const Payout = () => {
         getWorkerBankInfo()
         .then(res => {
             if(res.status === 200) {
-            setLoading(false);
-                console.log(res.data);
+                setLoading(false);
                 setBankInfo(res.data.data);
             }
         })
@@ -44,7 +43,7 @@ const Payout = () => {
         .then(res => {
             if(res.status === 200) {
                 setLoading(false);
-                console.log(res.data);
+                // console.log(res.data);
                 window.open(res.data.data.url, "_blank");
                 // setBankInfo(res.data.data);
             }
@@ -66,7 +65,6 @@ const Payout = () => {
         .then(res => {
             if(res.status === 200) {
                 setLoading(false);
-                console.log(res.data);
                 window.open(res.data.data.url, "_blank");
                 // setBankInfo(res.data.data);
             }
@@ -105,7 +103,7 @@ const Payout = () => {
         </div>]}
     >
         <Card className='!mt-4'>
-            <div className='pb-6 pt-3 flex flex-col gap-4'>
+            {/* <div className='pb-6 pt-3 flex flex-col gap-4'>
                 <Card 
                     title={
                     <CardTitle 
@@ -118,9 +116,9 @@ const Payout = () => {
                     className='!bg-[#FFF4F6] !border-[#FFD6DE]'
                 />
                 <Button onClick={() => setOpenAdd(true)} type="default" className='!w-full !h-[48px]' style={{borderRadius: 50}} icon={<PlusOutlined />} >{"Add Payment Method"}</Button>
-            </div>
+            </div> */}
 
-            <Form form={form} layout="vertical">
+            {/* <Form form={form} layout="vertical">
                 <FormItem label="Payout Method" name="method">
                     <Select defaultValue="Card">
                         <Option>Card</Option>
@@ -137,7 +135,7 @@ const Payout = () => {
 
                     </Select>
                 </FormItem>
-            </Form>
+            </Form> */}
         </Card>
        {openAdd && <AddCard onCancel={() => setOpenAdd(false)} onClick={() => {}} open={openAdd} selection="Bank Account" />}
     </Card>

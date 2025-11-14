@@ -116,6 +116,44 @@ export interface Service {
   isActive: boolean;
 }
 
+export interface INotification {
+  id: string;
+  title: string;
+  message: string;
+  type: number;
+  typeName: string;
+  priority: number;
+  priorityName: string;
+  data: {
+    [key: string]: any;
+  };
+  actionUrl: string;
+  iconUrl: string;
+  requiresAction: boolean;
+  isRead: boolean;
+  isDelivered: boolean;
+  expiresAt: string;
+  createdAt: string;
+  readAt: string;
+  deliveredAt: string;
+}
+
+export interface IBooking {
+  applicationId: string;
+  jobId: string;
+  serviceWorkerId: string;
+  serviceWorkerFullName: string;
+  bio: string;
+  status: number;
+  hourlyRate: number;
+  location: string;
+  photoUrl: string;
+  dateCreated: string;
+  totalRating: number;
+  numberOfReviews: number;
+}
+
+
 export interface Language {
   name: string;
   code: string;
@@ -298,6 +336,7 @@ export interface categoryType {
 // types/job.ts
 
 export interface JobDetails {
+  applicantCount: number;
   id: string;
   serviceCategoryId: number;
   createdAt: string;
@@ -415,6 +454,38 @@ export interface MessageUserDto {
   isVerified: boolean;
   lastMessage: string;
   sentAt: string; 
+}
+export interface IConversation {
+  applicationId: string;
+  otherUserId: string;
+  otherUserName: string;
+  otherUserProfilePicture: string;
+  jobTitle: string;
+  lastMessage: string;
+  lastMessageAt: string;
+  unreadCount: number;
+}
+
+export interface IUserMessageProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  profilePicturePath: string;
+  isVerified: boolean;
+}
+
+export interface IMessage {
+  id: string;
+  applicationId: string;
+  senderId: string;
+  receiverId: string;
+  sender: IUserMessageProfile;
+  receiver: IUserMessageProfile;
+  content: string;
+  sentAt: string;
+  isRead: boolean;
+  readAt: string | null;
 }
 export interface MessageDto {
   id: string;
@@ -560,5 +631,49 @@ export const notificationDescriptions: Record<keyof typeof NotificationType, str
   EmailNotification: "Receive notifications via email",
 };
 
+export interface IJobDetails {
+  id: string;
+  serviceCategoryId: number;
+  createdAt: string;
+  dateNeeded: string;
+  jobTitle: string;
+  isReocurringJob: boolean;
+  timePreference: number;
+  location: string;
+  reoccurringDays: any[]; // You can type this better if you know the structure
+  budget: number;
+  jobDescription: string;
+  clientId: string;
+  status: number;
+  isHireDirectly: boolean;
+}
+
+export interface IServiceWorker {
+  id: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  photoUrl: string | null;
+  bio: string;
+  hourlyRate: number;
+  location: string;
+  totalRating: number;
+  numberOfReviews: number;
+}
+
+export interface IClientApplicationDetails {
+  id: string;
+  jobId: string;
+  serviceWorkerId: string;
+  message: string;
+  proposedRate: number;
+  status: number;
+  createdAt: string;
+  acceptedAt: string | null;
+  rejectedAt: string | null;
+  rejectionReason: string | null;
+  jobDetails: IJobDetails;
+  serviceWorker: IServiceWorker;
+}
 
 

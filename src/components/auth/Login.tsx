@@ -18,7 +18,7 @@ const Login = () => {
     const [ form ] = Form.useForm();
     const [ loading, setLoading ] = useState(false);
     const [ rememberMe, setRememberMe ] = useState(false);
-    const { modal } = App.useApp();
+    const { modal, message } = App.useApp();
     const { lastRoute } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -46,28 +46,24 @@ const Login = () => {
         .then(async (res) => {
             if (res.status === 200) {
                 setLoading(false);
-                modal.success({
-                    title: res.data.message,
-                    content: "",
-                    onOk: async () => {
-                        if (rememberMe)  localStorage.setItem("safehabour_credentials", JSON.stringify({ email, password }));
-                        else  localStorage.removeItem("safehabour_credentials");
 
-                        const result = await dispatch(loginAction(res.data.data));
-                        console.log("result:", result);
-                        
-                        const role = res.data.data?.roles?.[0];
-                        if (lastRoute) {
-                            router.push(lastRoute);
-                            dispatch(setLastRoute(null)); // clear it
-                        } 
-                        else if (role === "ClientUser") router.push("/dashboard/client");
-                        else if (role === "ServiceWorker") {
-                            if(res.data.data.user?.isServiceWorkerOnboarded) router.push("/dashboard/worker");
-                            else router.push("/dashboard/worker/intro");
-                        };
-                    },
-                });    
+                if (rememberMe)  localStorage.setItem("safehabour_credentials", JSON.stringify({ email, password }));
+                else  localStorage.removeItem("safehabour_credentials");
+
+                const result = await dispatch(loginAction(res.data.data));
+                console.log("result:", result);
+                
+                const role = res.data.data?.roles?.[0];
+                if (lastRoute) {
+                    router.push(lastRoute);
+                    dispatch(setLastRoute(null)); // clear it
+                } 
+                else if (role === "ClientUser") router.push("/dashboard/client");
+                else if (role === "ServiceWorker") {
+                    if(res.data.data.user?.isServiceWorkerOnboarded) router.push("/dashboard/worker");
+                    else router.push("/dashboard/worker/intro");
+                };
+                message.success(res.data.message || "Log in successful"); 
             }
             if(res.status === 202) {
                 setEmail(email);

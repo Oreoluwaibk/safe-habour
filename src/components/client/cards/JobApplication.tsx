@@ -1,51 +1,52 @@
-"use client"
-import { App, Col, Row, Skeleton } from 'antd'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import JobApplicationCard from './JobApplicationCard'
-import { IJobApplication } from '../../../../utils/interface'
-import { getAllJobApplications } from '@/redux/action/jobs'
-import { createErrorMessage } from '../../../../utils/errorInstance'
-import axios from 'axios'
+"use client";
+
+import { App, Card, Col, Row } from "antd";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import JobApplicationCard from "./JobApplicationCard";
+import { JobDetails } from "../../../../utils/interface";
+import { getClientJobs } from "@/redux/action/jobs";
+import { createErrorMessage } from "../../../../utils/errorInstance";
+import axios from "axios";
 
 const JobApplication = () => {
-  const [ loading, setLoading ] = useState(false);
   const { modal } = App.useApp();
-  const observerRef = useRef<HTMLDivElement | null>(null);
-  const [hasMore, setHasMore] = useState(true);
-  const [ applications, setApplications ] = useState<IJobApplication[]>([]);
-  const [filters, setFilters] = useState({
-    pageNumber: 1,
-    pageSize: 10,
-  });
-  const [ totalApplications, setTotalApplications ] = useState(0);
 
-  const handleGetApplications = useCallback(
-    async (isLoadMore = false) => {
-      // prevent duplicate fetches
+  const [applications, setApplications] = useState<JobDetails[]>([]);
+  const [total, setTotal] = useState(0);
+
+  const [pageNumber, setPageNumber] = useState(1);
+  const pageSize = 10;
+
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  // ------------------------
+  // Fetch Applications
+  // ------------------------
+  const fetchApplications = useCallback(
+    async (loadMore: boolean) => {
       if (loading) return;
 
       setLoading(true);
       try {
-
-        const res = await getAllJobApplications(
-          filters.pageNumber,
-          filters.pageSize,
-        );
+        const res = await getClientJobs(pageNumber, pageSize);
 
         if (res.status === 200 || res.status === 201) {
-          const newList = res.data.data?.list || [];
+          const newList = res.data.data?.list ?? [];
+          const totalItems = res.data.data?.totalItems ?? 0;
 
-          const totalList =  isLoadMore ? [...applications, ...newList] : newList;
-          const totalItems = res.data.data?.totalItems || 0;
-          setTotalApplications(totalItems || 0);
-          setApplications((prev) => isLoadMore ? [...prev, ...newList] : newList);
+          setTotal(totalItems);
 
-          // ✅ Determine if more results exist
-          if(totalList.length === totalItems || totalList.length > totalItems) {
-            setHasMore(false);
-          }else setHasMore(totalList.length < totalItems);
+          setApplications((prev) =>
+            loadMore ? [...prev, ...newList] : newList
+          );
+
+          // If returned items < pageSize → no more data
+          setHasMore(newList.length === pageSize);
         }
-      } catch (err: unknown) {
+      } catch (err) {
         if (axios.isAxiosError(err)) {
           modal.error({
             title: "Unable to get applications",
@@ -53,81 +54,92 @@ const JobApplication = () => {
               ? createErrorMessage(err.response.data)
               : err.message,
           });
-        } else if (err instanceof Error) {
-          modal.error({
-            title: "Unexpected Error",
-            content: err.message,
-          });
         } else {
           modal.error({
-            title: "Unknown Error",
-            content: "Something went wrong.",
+            title: "Unexpected Error",
+            content: err instanceof Error ? err.message : "Something went wrong",
           });
         }
       } finally {
         setLoading(false);
       }
     },
-    [modal, loading, filters.pageNumber, filters.pageSize, applications]
+    [pageNumber, pageSize, loading, modal]
   );
 
+  // ------------------------
+  // First Load
+  // ------------------------
   useEffect(() => {
-    handleGetApplications();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+    fetchApplications(false);
+  }, []); // eslint-disable-line
 
+  // ------------------------
+  // Load More on Page Change
+  // ------------------------
   useEffect(() => {
-    if (filters.pageNumber > 1 && totalApplications > applications.length) {
-      handleGetApplications(true);
-    }
-  }, [filters.pageNumber, handleGetApplications, totalApplications, applications.length]);
+    if (pageNumber === 1) return;
+    if (!hasMore) return;
 
+    fetchApplications(true);
+  }, [pageNumber]); // eslint-disable-line
+
+  // ------------------------
+  // Intersection Observer
+  // ------------------------
   useEffect(() => {
-    if (!observerRef.current) return;
+    const target = observerRef.current;
+    if (!target) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const target = entries[0];
-        if (target.isIntersecting && hasMore && !loading) {
-          setFilters((prev) => ({
-            ...prev,
-            pageNumber: prev.pageNumber + 1, // ✅ increment page safely
-          }));
+        const entry = entries[0];
+
+        if (entry.isIntersecting && hasMore && !loading) {
+          setPageNumber((prev) => prev + 1);
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1 }
     );
 
-    observer.observe(observerRef.current);
-    return observer.disconnect();
+    observer.observe(target);
+    return () => observer.disconnect();
   }, [hasMore, loading]);
 
+  // ------------------------
+  // UI
+  // ------------------------
   return (
-    <Skeleton loading={loading} className='h-full'>
-      <Row gutter={[15, 15]} className='h-full'>
-      {applications.map((application) => (
-        <Col key={application.id} lg={24} sm={24} xs={24}>
-          <JobApplicationCard application={application} />
+    <Card loading={loading && pageNumber === 1} className="h-full overflow-y-auto">
+      <Row gutter={[15, 15]} className="h-[85vh] overflow-y-auto">
+        {/* Applications List */}
+        {applications.map((app) => (
+          <Col key={app.id} lg={24} sm={24} xs={24}>
+            <JobApplicationCard jobDetails={app} />
+          </Col>
+        ))}
+
+        {/* Empty State */}
+        {applications.length === 0 && !loading && (
+          <Col span={24}>
+            <p className="text-center text-[#121212]">You have no applications</p>
+          </Col>
+        )}
+
+        {/* Loader / End Messages */}
+        <Col span={24} className="pb-4 text-center text-gray-400">
+          {loading && pageNumber > 1 && <p>Loading more...</p>}
+
+          {!hasMore && applications.length > 0 && (
+            <p>No more jobs available</p>
+          )}
+
+          {/* Trigger element */}
+          <div ref={observerRef} style={{ height: "1px" }} />
         </Col>
-      ))}
-      
-      <Col lg={24} sm={24} xs={24} className='pb-4'>
-        {loading && filters.pageNumber > 1 && (
-          <p className="text-center text-gray-400">Loading more...</p>
-        )}
-        {!hasMore && !loading && applications.length > 0 && (
-          <p className="text-center text-gray-400">
-            No more jobs available
-          </p>
-        )}
+      </Row>
+    </Card>
+  );
+};
 
-        {/* ✅ Intersection trigger */}
-        <div ref={observerRef} style={{ height: "1px" }} />
-      </Col>
-     
-    </Row>
-    </Skeleton>
-  )
-}
-
-export default JobApplication
+export default JobApplication;

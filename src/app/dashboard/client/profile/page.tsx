@@ -10,9 +10,11 @@ import VerificationSettings from "@/components/client/settings/VerificationSetti
 import ClientContainer from '@/components/dashboard/ClientContainer'
 import { Card, Col, Row, Segmented } from 'antd'
 import React, { useState } from 'react'
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 const Page = () => {
-  const [selected, setSelected ] = useState("Payment Methods");
+  const [selected, setSelected ] = useState("Profile Settings");
+  const { authentication, handleGetAuthentication, loading: authLoading } = useAuthentication();
   return (
    <ClientContainer active='Profile'>
     <Card variant="borderless" style={{padding: 0, border: "none", backgroundColor: "#F9FAFB", minHeight: "85vh"}}>
@@ -22,11 +24,16 @@ const Page = () => {
               options={["Profile Settings", "Notification Settings", "Password", "Payment Methods", "Verification Settings", "Two Factor Authentication", "Review"]}
               defaultValue={selected}
               onChange={(value) => setSelected(value)}
+              scrolling="auto"
             />
           </Col>
 
           {selected === "Profile Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
-            <PersonalSettings />
+            <PersonalSettings 
+              authentication={authentication!} 
+              handleGetAuthentication={handleGetAuthentication} 
+              authLoading={authLoading}
+            />
           </Col>}
 
           {selected === "Notification Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
@@ -46,7 +53,7 @@ const Page = () => {
           </Col>}
 
           {selected === "Verification Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
-            <VerificationSettings />
+            <VerificationSettings authentication={authentication!}  />
           </Col>}
 
           {selected === "Review" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>

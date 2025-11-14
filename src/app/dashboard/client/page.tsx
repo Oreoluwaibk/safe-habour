@@ -72,19 +72,19 @@ const Page = () => {
 
   const handleGetClientJobs = useCallback(() => {
     getClientJobs()
-      .then((res) => {
-        if (res.status === 200) {
-          if (res.data.data && res.data.data?.totalItems === 0) {
-            message.info(`Welcome ${user?.lastName}, kindly create a job to continue!`);
-            setTimeout(() => {
-              router.push("/dashboard/client/intro");
-            }, 2000);
-          }
+    .then((res) => {
+      if (res.status === 200) {
+        if (res.data.data && res.data.data?.totalItems === 0) {
+          message.info(`Welcome ${user?.lastName}, kindly create a job to continue!`);
+          setTimeout(() => {
+            router.push("/dashboard/client/intro");
+          }, 2000);
         }
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
+      }
+    })
+    .catch((err) => {
+      console.log("error", err);
+    });
   }, [router, user?.lastName, message]);
 
   const handleGetMetrics = useCallback(() => {

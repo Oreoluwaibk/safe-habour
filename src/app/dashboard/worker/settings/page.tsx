@@ -33,7 +33,7 @@ const Page = () => {
         </Col>}
           {active === "Security & Privacy" && <Col lg={24} sm={24} xs={24}>
           <ResetPassword />
-          <TwoFactor />
+          {/* <TwoFactor /> */}
         </Col>}
        {active === "Payout Settings" && <Col lg={24} sm={24} xs={24}  className='md:!px-[200px]'>
           <Payout />

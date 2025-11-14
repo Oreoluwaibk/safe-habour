@@ -36,7 +36,7 @@ const ProfileInfo = ({
     const [ loading, setLoading ] = useState(false);
     const [ isEdit, setIsEdit ] = useState(false);
     const [ state, setState ] = useState("");
-    const [ country, setCountry ] = useState("");
+    const [ country, setCountry ] = useState("Canada");
     const [ initialCode, setInitialCode ] = useState("ca");
     const [ uploading, setUploading ] = useState(false);
 
@@ -353,6 +353,7 @@ const ProfileInfo = ({
                     <CountryDropdown
                         defaultOptionLabel="Select Your Country"
                         value={country}
+                        defaultValue="Canada"
                         onChange={(val) => handleCountrySelect(val)}
                         name='registration'
                         disabled={!isEdit}

@@ -1,8 +1,8 @@
 import axiosInstance from "../../../utils/axiosConfig";
 
-export const sendMessage = async (id: string, message: string) => {
-    const url = `/Message/${id}/send`;
-    const response = await axiosInstance.post(url, { message });
+export const sendMessage = async (data: {message: string;applicationId:string}) => {
+    const url = `/Message/send`;
+    const response = await axiosInstance.post(url, data);
 
     return Promise.resolve(response);
 }

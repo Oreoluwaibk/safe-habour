@@ -39,21 +39,18 @@ const allServices = [
 const allLanguages = ["English", "Français", "Spanish"];
 
 const ItemSelect = ({ selected, setSelected, isLanguage }: Props) => {
-  const [search] = useState("");
+  // const [search] = useState("");
   const [open, setOpen] = useState(false);
 
-  const dataList = isLanguage ? allLanguages : allServices;
+  // const dataList = isLanguage ? allLanguages : allServices;
 
-  const filteredList = useMemo(
-    () =>
-      dataList.filter((item) =>
-        item.toLowerCase().includes(search.toLowerCase())
-      ),
-    [dataList, search]
-  );
-
-  console.log(filteredList);
-  
+  // const filteredList = useMemo(
+  //   () =>
+  //     dataList.filter((item) =>
+  //       item.toLowerCase().includes(search.toLowerCase())
+  //     ),
+  //   [dataList, search]
+  // );
 
   const handleToggleItem = (item: string) => {
     if (selected.includes(item)) {

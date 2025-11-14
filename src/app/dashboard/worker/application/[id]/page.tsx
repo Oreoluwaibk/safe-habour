@@ -58,7 +58,7 @@ const Page = () => {
       applicantCount: 0
     }
   });
-  const [ reviews, setReviews ] = useState<review[]>([]);
+  // const [ reviews, setReviews ] = useState<review[]>([]);
   const { categories } = useServiceCategory();
   const [ openModal, setOpenModal ] = useState(false);
   const [ openRateModal, setOpenRateModal ] = useState(false);
@@ -88,8 +88,7 @@ const Page = () => {
       })
       .finally(() => setLoading(false));
   },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [modal] // dependencies
+  [modal]
   );
 
   // const handleGetClientJobReviews = useCallback(

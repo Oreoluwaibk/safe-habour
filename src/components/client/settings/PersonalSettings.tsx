@@ -243,7 +243,7 @@ const PersonalSettings = ({
                     <DatePicker 
                         size="large"
                         className='w-full border-none'
-                        placeholder={authentication.dateOfBirth || 'Select Date of Birth'}
+                        placeholder={authentication?.dateOfBirth || 'Select Date of Birth'}
                         // onChange={(date, dateString) => setDate(dateString)}
                         style={{width: "100%", border: "none", height:50, backgroundColor: "#f6f6f6"}}
                         disabled={!isEdit}

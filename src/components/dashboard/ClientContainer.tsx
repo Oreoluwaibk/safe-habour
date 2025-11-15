@@ -37,7 +37,7 @@ const ClientContainer = ({
     const [open, setOpen] = useState(false);
     const [ openJobModal, setOpenJobModal ] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const [ notification ] = useState<INotification>({
     "id": "string",
     "title": "string",
@@ -76,6 +76,12 @@ const ClientContainer = ({
   useEffect(() => {
     if (!isAuthenticated) handleLogout();
   }, [isAuthenticated, handleLogout]); 
+
+  useEffect(() => {
+    if(isAuthenticated && loginType !== "ClientUser") {
+        router.replace("/dashboard/worker")
+    }
+  }, [loginType, isAuthenticated]);
     
   return (
      <Layout >

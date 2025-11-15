@@ -19,7 +19,7 @@ const AvailableJobCard = ({ job }: props) => {
     const [ openModal, setOpenModal ] = useState(false);
   return (
      <Card
-        title={<CardTitle title={job.jobTitle} description={`Client: ${job?.client?.name || ""}`} />}
+        title={<CardTitle title={job?.jobTitle || "Hire Service"} description={`Client: ${job?.client?.name || ""}`} />}
         extra={<Rating />}
         actions={[
           <div className='flex items-center justify-between px-4' key={1}>

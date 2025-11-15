@@ -5,6 +5,7 @@ import { acceptInvite, IJobApplication, IUser, rejectInvite } from '../../../../
 import { acceptWorkInvite, rejectWorkInvite } from '@/redux/action/jobs';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { UserOutlined } from '@ant-design/icons';
+import { pictureUrl } from '../../../../utils/axiosConfig';
 
 interface props {
   open: boolean;
@@ -105,7 +106,7 @@ const AcceptDecline = ({ open, onCancel, isAccept, user, refresh, application }:
         <div className='flex flex-col gap-4'>
             <div className='flex items-center justify-between bg-[#f9f9f9] px-2'>
                 <div className='flex items-center gap-3'>
-                    {user?.profilePicturePath && <Image className='!h-12 w-12 rounded-full object-cover' src={user.profilePicturePath} alt='' />}
+                    {user?.profilePicturePath && <Image className='!h-12 w-12 rounded-full object-cover' src={`${pictureUrl}${user.profilePicturePath}`} alt='' />}
                     {!user?.profilePicturePath && 
                         <Avatar 
                             icon={<UserOutlined className='text-2xl' />} 

@@ -30,40 +30,41 @@ const Page = () => {
     const { id } = useParams();
     const { modal } = App.useApp()
     const [ loading, setLoading ] = useState(false);
-    const [ job, setJob ] = useState<IJobApplication>({
-            "id": "5d4afdc1-3bc0-4992-6545-08de1618ba71",
-        "jobId": "8517cf86-2da6-4d53-3943-08de15311834",
-        "message": "i fill i am capable of ploughing the house and i also have proofs and relevant experiences",
-        "proposedRate": 200.00,
+    const [ application, setApplication ] = useState<IJobApplication>({
+    "id": "5d4afdc1-3bc0-4992-6545-08de1618ba71",
+    "jobId": "8517cf86-2da6-4d53-3943-08de15311834",
+    "message": "i fill i am capable of ploughing the house and i also have proofs and relevant experiences",
+    "proposedRate": 200.00,
+    "status": 1,
+    "createdAt": "2025-10-28T11:54:49.6739794",
+    "acceptedAt": null,
+    "rejectedAt": null,
+    "rejectionReason": null,
+    "client": null,
+    "jobDetails": {
+        "id": "8517cf86-2da6-4d53-3943-08de15311834",
+        "serviceCategoryId": 2,
+        "createdAt": "2025-10-28T11:33:14.0527071",
+
+        "dateNeeded": "2025-10-29T23:00:00",
+        "jobTitle": "I want to plough my house",
+        "isReocurringJob": false,
+        "timePreference": 2,
+        "location": "Toronto",
+        "reoccurringDays": [],
+        "budget": 200.00,
+        "jobDescription": "The house roof",
+        "clientId": "b299795d-7e98-4e7a-9694-1a0e7a3e2241",
         "status": 1,
-        "createdAt": "2025-10-28T11:54:49.6739794",
-        "acceptedAt": null,
-        "rejectedAt": null,
-        "rejectionReason": null,
-        "jobDetails": {
-            "id": "8517cf86-2da6-4d53-3943-08de15311834",
-            "serviceCategoryId": 2,
-            "createdAt": "2025-10-28T11:33:14.0527071",
-            "client": null,
-            "dateNeeded": "2025-10-29T23:00:00",
-            "jobTitle": "I want to plough my house",
-            "isReocurringJob": false,
-            "timePreference": 2,
-            "location": "Toronto",
-            "reoccurringDays": [],
-            "budget": 200.00,
-            "jobDescription": "The house roof",
-            "clientId": "b299795d-7e98-4e7a-9694-1a0e7a3e2241",
-            "status": 1,
-            isHireDirectly: false,
-            applicantCount: 0
-        }
+        isHireDirectly: false,
+        applicantCount: 0
+    }
     });
     const { categories } = useServiceCategory();
     const [ reviews, setReviews ] = useState<review[]>([]);
     const { user } = useAppSelector(state => state.auth);
     const [ openModal, setOpenModal ] = useState(false);
-    const { statusTitle, colors } = useApplicationStatus(job.status, 'application'); 
+    const { statusTitle, colors } = useApplicationStatus(application.status, 'application'); 
 
     const handleGetJobApplication = useCallback(
         (id: string) => {
@@ -72,7 +73,7 @@ const Page = () => {
             .then((res) => {
               if (res.status === 200 || res.status === 201) {
                 setLoading(false);
-                setJob(res.data.data);
+                setApplication(res.data.data);
                 handleGetClientJobReviews(res.data.data.jobDetails.id);
             }
         })
@@ -158,16 +159,16 @@ const Page = () => {
             title={
                 <div className='flex flex-col gap-1'>
                     <CardTitle 
-                        title={job?.jobDetails.jobTitle || "Hire Service"} 
+                        title={application?.jobDetails.jobTitle || "Hire Service"} 
                         status={<Status title={statusTitle} bg={colors.bg} color={colors.color} />}
                     />
                     <div className='flex items-center gap-3'>
-                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {job?.jobDetails.location}</span>
+                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {application?.jobDetails.location}</span>
                         <Rating />
-                        <p className='text-lg text-[#646464] font-medium'>${job?.jobDetails.budget}</p>
+                        <p className='text-lg text-[#646464] font-medium'>${application?.jobDetails.budget}</p>
                     </div>
                     <div className='flex items-center gap-4'>
-                        <Status size={12} title={job && handleDisplayServices(job.jobDetails.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
+                        <Status size={12} title={application && handleDisplayServices(application.jobDetails.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
                     </div>
                 </div>
             }
@@ -194,15 +195,15 @@ const Page = () => {
                     <div>
                         <CardTitle title='Client Information' />
                         <div className='flex items-center gap-3'>
-                            {job?.jobDetails.client?.imageUrl && <Image src={`${pictureUrl}${job?.jobDetails.client?.imageUrl}`} alt='title' className='rounded-full h-[56px] w-[56px] object-cover' />}
-                            {!job?.jobDetails.client?.imageUrl && 
+                            {application?.client?.imageUrl && <Image src={`${pictureUrl}${application?.client?.imageUrl}`} alt='title' className='rounded-full h-[56px] w-[56px] object-cover' />}
+                            {!application?.client?.imageUrl && 
                             <Avatar 
                                 icon={<UserOutlined className='text-2xl' />} 
                                 alt=''
                                 size={56} 
                                 className='h-[56px] w-[56px] rounded-full object-cover' 
                             />}
-                            <CardTitle title={job?.jobDetails.client?.name || ""} description={<Rating />} />
+                            <CardTitle title={application?.client?.name || ""} description={<Rating />} />
                         </div>
                     </div>
                 }
@@ -213,7 +214,7 @@ const Page = () => {
 
                     <div className='flex items-center justify-between'>
                         <p className='text-lg text-[#1e1e1e]'>Member Since</p>
-                        <p className='text-lg text-[#1e1e1e] font-medium'>{job?.jobDetails.client && moment(job?.jobDetails.client?.createdAt).format("YYYY")}</p>
+                        <p className='text-lg text-[#1e1e1e] font-medium'>{application?.client && moment(application?.client?.createdAt).format("YYYY")}</p>
                     </div>
 
                     <div className='flex items-center justify-between'>
@@ -223,7 +224,7 @@ const Page = () => {
 
                     <div className='flex items-center justify-between'>
                         <p className='text-lg text-[#1e1e1e]'>Verification</p>
-                        <Status bg='' color={job?.jobDetails.client?.isVerified ? "#039855" : "#ff0004"} title={job?.jobDetails.client?.isVerified ? 'Verified' : "Not Verified"} />
+                        <Status bg='' color={application?.client?.isVerified ? "#039855" : "#ff0004"} title={application?.client?.isVerified ? 'Verified' : "Not Verified"} />
                     </div>
 
                    
@@ -258,9 +259,9 @@ const Page = () => {
     
     {openModal && 
     <RateModal 
-        refresh={() => handleGetClientJobReviews(job.jobDetails.id)} 
+        refresh={() => handleGetClientJobReviews(application.jobDetails.id)} 
         user={user} 
-        job={job.jobDetails} 
+        job={application.jobDetails} 
         isWorker={true} 
         open={openModal} 
         onCancel={() => setOpenModal(false)} 

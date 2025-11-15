@@ -48,12 +48,12 @@ const Page = () => {
         .finally(() => setLoading(false));
     },
     [modal] // dependencies
-  );
+    );
 
-  useEffect(() => {
-    if (id) handleGetJobs(id.toString());
-  }, [id, handleGetJobs]);
-    
+    useEffect(() => {
+        if (id) handleGetJobs(id.toString());
+    }, [id, handleGetJobs]);
+        
   return (
     <WorkerContainer active='Jobs'>
     <div onClick={() => router.back()} className='flex items-center gap-4 cursor-pointer my-2 text-[#343434]'>

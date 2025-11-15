@@ -37,7 +37,7 @@ const WorkerContainer = ({
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const [ notification ] = useState<INotification>({
         "id": "string",
         "title": "string",
@@ -74,9 +74,14 @@ const WorkerContainer = ({
       });
   }, [router]); 
 
-  useEffect(() => {
-    if (!isAuthenticated) handleLogout();
-  }, [isAuthenticated, handleLogout]); 
+    useEffect(() => {
+        if (!isAuthenticated) handleLogout();
+    }, [isAuthenticated, handleLogout]); 
+
+    useEffect(() => {
+        if(isAuthenticated && loginType !== "ServiceWorker") 
+            router.replace("/dashboard/client")
+    }, [loginType, isAuthenticated])
 
   return (
      <Layout >

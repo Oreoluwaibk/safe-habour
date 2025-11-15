@@ -340,12 +340,6 @@ export interface JobDetails {
   id: string;
   serviceCategoryId: number;
   createdAt: string;
-  client?: {
-    name: string;
-    imageUrl: string;
-    createdAt: string;
-    isVerified: boolean;
-  }|null;
   dateNeeded: string;
   jobTitle: string;
   isReocurringJob: boolean;
@@ -359,6 +353,14 @@ export interface JobDetails {
   isHireDirectly: boolean;
 }
 
+export interface IClient {
+  name: string;
+  imageUrl: string;
+  createdAt: string;
+  isVerified: boolean;
+  reviews: review[]; // You can replace `any` with a proper review type if available
+}
+
 export interface IJobApplication {
   id: string;
   jobId: string;
@@ -370,8 +372,8 @@ export interface IJobApplication {
   rejectedAt: string | null;
   rejectionReason: string | null;
   jobDetails: JobDetails;
+  client?: IClient | null;
 }
-
 
 export interface EarningsSummary {
   totalGrossEarnings: number;

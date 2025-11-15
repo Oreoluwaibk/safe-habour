@@ -39,11 +39,11 @@ const Page = () => {
     "acceptedAt": null,
     "rejectedAt": null,
     "rejectionReason": null,
+    "client": null,
     "jobDetails": {
       "id": "8517cf86-2da6-4d53-3943-08de15311834",
       "serviceCategoryId": 2,
       "createdAt": "2025-10-28T11:33:14.0527071",
-      "client": null,
       "dateNeeded": "2025-10-29T23:00:00",
       "jobTitle": "I want to plough my house",
       "isReocurringJob": false,
@@ -252,15 +252,15 @@ const Page = () => {
             <div>
               <CardTitle title='Client Information' />
               <div className='flex items-center gap-3'>
-                {application?.jobDetails.client?.imageUrl && <Image src={`${pictureUrl}${application?.jobDetails.client?.imageUrl}`} alt='title' className='rounded-full h-[56px] w-[56px] object-cover' />}
-                {!application?.jobDetails.client?.imageUrl && 
+                {application?.client?.imageUrl && <Image style={{height: 56, width: 56, borderRadius: 100}} src={`${pictureUrl}${application?.client?.imageUrl}`} alt='title' className='rounded-full h-[56px]! w-[56px]! object-cover' />}
+                {!application?.client?.imageUrl && 
                 <Avatar 
                   icon={<UserOutlined className='text-2xl' />} 
                   alt=''
                   size={56} 
                   className='h-[56px] w-[56px] rounded-full object-cover' 
                 />}
-                <CardTitle title={application?.jobDetails.client?.name || ""} description={<Rating />} />
+                <CardTitle title={application?.client?.name || ""} description={<Rating />} />
               </div>
             </div>
           }
@@ -271,7 +271,7 @@ const Page = () => {
 
           <div className='flex items-center justify-between'>
             <p className='text-lg text-[#1e1e1e]'>Member Since</p>
-            <p className='text-lg text-[#1e1e1e] font-medium'>{application?.jobDetails?.client && moment(application?.jobDetails.client?.createdAt).format("YYYY")}</p>
+            <p className='text-lg text-[#1e1e1e] font-medium'>{application?.client && moment(application?.client?.createdAt).format("YYYY")}</p>
           </div>
 
           <div className='flex items-center justify-between'>
@@ -281,7 +281,7 @@ const Page = () => {
 
           <div className='flex items-center justify-between'>
             <p className='text-lg text-[#1e1e1e]'>Verification</p>
-            <Status bg='' color={application.jobDetails?.client?.isVerified ? "#039855" : "#ff0004"} title={application.jobDetails.client?.isVerified ? 'Verified' : "Not Verified"} />
+            <Status bg='' color={application?.client?.isVerified ? "#039855" : "#ff0004"} title={application.client?.isVerified ? 'Verified' : "Not Verified"} />
           </div>
         </Card>
       </Col>

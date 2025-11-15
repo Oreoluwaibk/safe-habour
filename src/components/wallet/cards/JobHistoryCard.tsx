@@ -20,7 +20,7 @@ const JobHistoryCard = ({ job, user, refresh }: props) => {
     <Card
         title={
             <div>
-                <CardTitle title={job.jobDetails.jobTitle} description={`Client: ${job.jobDetails.client?.name}`} status={<Status title='Completed' />} /> 
+                <CardTitle title={job.jobDetails.jobTitle} description={`Client: ${job.client?.name}`} status={<Status title='Completed' />} /> 
 
                 <div className='flex items-center gap-5 text-sm'>
                     <div className='flex items-center gap-2'>

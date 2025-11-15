@@ -62,7 +62,7 @@ const JobApplication = ({ application, onRefresh }: props) => {
             <div>
                 <CardTitle 
                     title={application.jobDetails.jobTitle || "Hire Service"} 
-                    description={application.jobDetails.client?.name || ""} 
+                    description={application.client?.name || ""} 
                     // status={<Status title='Completed' />} 
                     status={ <Status title={statusTitle} bg={colors.bg} color={colors.color} />} 
                 /> 

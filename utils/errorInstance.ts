@@ -1,39 +1,40 @@
-export const createErrorMessage = (data: any) => {
+export const createErrorMessage = (data: any): string => {
   if (!data) return "Unable to complete request, something went wrong";
 
-  // ✅ Common top-level message formats
-  if (data.error) return data.error;
-  if (data.message) return data.message;
-  if (data.detail) return data.detail;
-  if (data.title) return data.title;
-
-  // ✅ Handle ASP.NET style validation error object
+  // ✅ Highest priority: ASP.NET Core validation errors
   if (data.errors && typeof data.errors === "object") {
     const messages: string[] = [];
 
-    for (const key in data.errors) {
-      if (Array.isArray(data.errors[key])) {
-        messages.push(`${key}: ${data.errors[key].join(", ")}`);
-      } else {
-        messages.push(`${key}: ${data.errors[key]}`);
+    Object.values(data.errors).forEach((value: any) => {
+      if (Array.isArray(value)) {
+        messages.push(...value);
+      } else if (typeof value === "string") {
+        messages.push(value);
       }
-    }
+    });
 
     if (messages.length > 0) {
       return messages.join(" | ");
     }
   }
 
-  // ✅ Handle array or generic object
-  if (Array.isArray(data)) {
-    return data.join(", ");
-  }
+  // ✅ Common direct message formats
+  if (data.error) return data.error;
+  if (data.message) return data.message;
+  if (data.detail) return data.detail;
 
-  if (typeof data === "object" && data !== null) {
-    const parts = Object.entries(data)
-      .map(([key, value]) => `${key}: ${value}`)
+  // Title comes LAST, because "One or more validation errors occurred."
+  // is useless without the messages.
+  if (data.title) return data.title;
+
+  // Array fallback
+  if (Array.isArray(data)) return data.join(", ");
+
+  // Generic object fallback
+  if (typeof data === "object") {
+    return Object.entries(data)
+      .map(([key, val]) => `${key}: ${val}`)
       .join(", ");
-    return parts || "Unknown error occurred";
   }
 
   return "Unable to complete request, something went wrong";

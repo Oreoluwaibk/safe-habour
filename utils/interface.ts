@@ -375,6 +375,13 @@ export interface IJobApplication {
   client?: IClient | null;
 }
 
+export interface PushNotificationPayload {
+  title: string;
+  message: string;
+  data?: any;
+  createdAt?: string;
+}
+
 export interface EarningsSummary {
   totalGrossEarnings: number;
   totalPlatformFees: number;

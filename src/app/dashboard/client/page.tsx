@@ -9,7 +9,7 @@ import { Col, Row, App } from 'antd';
 import InfoCards from '@/components/client/cards/InfoCards';
 import WorkerComponent from '@/components/client/WorkerComponent';
 import { useAppSelector } from '@/hook';
-import { getClientJobs } from '@/redux/action/jobs';
+// import { getClientJobs } from '@/redux/action/jobs';
 import { useRouter } from 'next/navigation';
 import { useAuthentication } from '@/hooks/useAuthentication';
 import { createErrorMessage } from '../../../../utils/errorInstance';
@@ -70,22 +70,22 @@ const Page = () => {
     if(authentication) setCloseInfo(!authentication.isProfileComplete)
   }, [authentication])
 
-  const handleGetClientJobs = useCallback(() => {
-    getClientJobs()
-    .then((res) => {
-      if (res.status === 200) {
-        if (res.data.data && res.data.data?.totalItems === 0) {
-          message.info(`Welcome ${user?.lastName}, kindly create a job to continue!`);
-          setTimeout(() => {
-            router.push("/dashboard/client/intro");
-          }, 2000);
-        }
-      }
-    })
-    .catch((err) => {
-      console.log("error", err);
-    });
-  }, [router, user?.lastName, message]);
+  // const handleGetClientJobs = useCallback(() => {
+  //   getClientJobs()
+  //   .then((res) => {
+  //     if (res.status === 200) {
+  //       if (res.data.data && res.data.data?.totalItems === 0) {
+  //         message.info(`Welcome ${user?.lastName}, kindly create a job to continue!`);
+  //         setTimeout(() => {
+  //           router.push("/dashboard/client/intro");
+  //         }, 2000);
+  //       }
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log("error", err);
+  //   });
+  // }, [router, user?.lastName, message]);
 
   const handleGetMetrics = useCallback(() => {
     setLoading(true);
@@ -111,9 +111,9 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    handleGetClientJobs();
-  }, [handleGetClientJobs]);
+  // useEffect(() => {
+  //   handleGetClientJobs();
+  // }, [handleGetClientJobs]);
 
   return (
     <ClientContainer active='Dashboard'>

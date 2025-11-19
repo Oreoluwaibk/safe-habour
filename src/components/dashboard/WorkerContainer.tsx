@@ -12,9 +12,10 @@ import { CheckedCircle, MaskedLogo } from "../../../assets/icons";
 import WorkerSideMenu from "./WorkerSideMenu";
 import { useAppSelector } from "@/hook";
 import { logoutUser } from "@/redux/action/auth";
-import { INotification } from "../../../utils/interface";
+import { INotification, PushNotificationPayload } from "../../../utils/interface";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { pictureUrl } from "../../../utils/axiosConfig";
+import { createSignalRConnection } from "@/lib/signalRConnection";
 
 const { Content, Header } = Layout;
 
@@ -37,7 +38,7 @@ const WorkerContainer = ({
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType, token } = useAppSelector(state => state.auth);
     const [ notification ] = useState<INotification>({
         "id": "string",
         "title": "string",
@@ -61,6 +62,33 @@ const WorkerContainer = ({
     });
     const { authentication } = useAuthentication();
 
+    useEffect(() => {
+        const connection = createSignalRConnection(token);
+        console.log("The connection is here");
+        
+        // Start connection
+        connection
+        .start()
+        .then(() => console.log("SignalR connected successfully"))
+        .catch((err) => console.error("Error connecting to SignalR:", err));
+
+        // Listen for typed event
+        connection.on(
+            "ReceiveNotification",
+            (payload: PushNotificationPayload) => {
+                console.log("New Notification:", payload);
+
+                // Example: toast or UI update
+                // toast.info(`${payload.title}: ${payload.message}`);
+            }
+        );
+
+        // Cleanup listener when component unmounts
+        return () => {
+            connection.off("ReceiveNotification");
+        };
+    }, [token]);
+
    const handleLogout = useCallback(() => {
     logoutUser()
       .then((res) => {
@@ -72,7 +100,7 @@ const WorkerContainer = ({
         router.push("/auth/login");
         console.log("err:", err)
       });
-  }, [router]); 
+    }, [router]); 
 
     useEffect(() => {
         if (!isAuthenticated) handleLogout();

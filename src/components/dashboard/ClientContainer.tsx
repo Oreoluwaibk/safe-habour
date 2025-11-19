@@ -13,7 +13,9 @@ import NotificationCard from "../general/NotificationCard";
 import { MaskedLogo } from "../../../assets/icons";
 import { useAppSelector } from "@/hook";
 import { logoutUser } from "@/redux/action/auth";
-import { INotification } from "../../../utils/interface";
+import { INotification, PushNotificationPayload } from "../../../utils/interface";
+import { createSignalRConnection } from "@/lib/signalRConnection";
+// import type { NotificationPayload } from "@/types/signalr";
 
 const { Content, Header } = Layout;
 
@@ -37,7 +39,7 @@ const ClientContainer = ({
     const [open, setOpen] = useState(false);
     const [ openJobModal, setOpenJobModal ] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType, token } = useAppSelector(state => state.auth);
     const [ notification ] = useState<INotification>({
     "id": "string",
     "title": "string",
@@ -59,6 +61,32 @@ const ClientContainer = ({
     "readAt": "2025-01-01T00:00:00Z",
     "deliveredAt": "2025-01-01T00:00:00Z"
     });
+
+    useEffect(() => {
+        const connection = createSignalRConnection(token);
+
+        // Start connection
+        connection
+        .start()
+        .then(() => console.log("SignalR connected successfully"))
+        .catch((err) => console.error("Error connecting to SignalR:", err));
+
+        // Listen for typed event
+        connection.on(
+        "ReceiveNotification",
+        (payload: PushNotificationPayload) => {
+            console.log("New Notification:", payload);
+
+            // Example: toast or UI update
+            // toast.info(`${payload.title}: ${payload.message}`);
+        }
+        );
+
+        // Cleanup listener when component unmounts
+        return () => {
+        connection.off("ReceiveNotification");
+        };
+    }, [token]);
     
     const handleLogout = useCallback(() => {
     logoutUser()
@@ -71,17 +99,17 @@ const ClientContainer = ({
         router.push("/auth/login");
         console.log("err:", err)
       });
-  }, [router]); // ✅ stable dependency
+    }, [router]); // ✅ stable dependency
 
-  useEffect(() => {
-    if (!isAuthenticated) handleLogout();
-  }, [isAuthenticated, handleLogout]); 
+    useEffect(() => {
+        if (!isAuthenticated) handleLogout();
+    }, [isAuthenticated, handleLogout]); 
 
-  useEffect(() => {
-    if(isAuthenticated && loginType !== "ClientUser") {
-        router.replace("/dashboard/worker")
-    }
-  }, [loginType, isAuthenticated]);
+    useEffect(() => {
+        if(isAuthenticated && loginType !== "ClientUser") {
+            router.replace("/dashboard/worker")
+        }
+    }, [loginType, isAuthenticated]);
     
   return (
      <Layout >

@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { ClockCircleOutlined, EnvironmentFilled, StarFilled, UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Col, Row, Image, App } from 'antd'
+import { Avatar, Button, Col, Row, App } from 'antd'
 import { useRouter } from 'next/navigation'
 import { IBooking } from '../../../../utils/interface'
 import moment from 'moment'

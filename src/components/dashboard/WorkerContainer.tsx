@@ -1,6 +1,6 @@
 "use client"
 import "@/styles/client.css"
-import { BellFilled, MenuOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Image as AntDImage } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -84,7 +84,7 @@ const WorkerContainer = ({
     useEffect(() => {
         if(isAuthenticated && loginType !== "ServiceWorker") 
             router.replace("/dashboard/client")
-    }, [loginType, isAuthenticated])
+    }, [loginType, isAuthenticated, router])
 
   return (
      <Layout >

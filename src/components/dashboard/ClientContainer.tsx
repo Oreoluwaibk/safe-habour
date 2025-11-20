@@ -86,7 +86,7 @@ const ClientContainer = ({
         if(isAuthenticated && loginType !== "ClientUser") {
             router.replace("/dashboard/worker")
         }
-    }, [loginType, isAuthenticated]);
+    }, [loginType, isAuthenticated, router]);
 
     const handlePostJob = () => {
         if(!authentication?.isVerified) 

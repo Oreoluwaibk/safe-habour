@@ -10,18 +10,18 @@ import InfoCards from '@/components/client/cards/InfoCards';
 import WorkerComponent from '@/components/client/WorkerComponent';
 import { useAppSelector } from '@/hook';
 // import { getClientJobs } from '@/redux/action/jobs';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useAuthentication } from '@/hooks/useAuthentication';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { getClientMetrics } from '@/redux/action/client';
 import { IClientDashboardMetrics } from '../../../../utils/interface';
 
 const Page = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const { modal } = App.useApp();
   const [ closeInfo, setCloseInfo ] = useState(false);
   const { user } = useAppSelector(state => state.auth);
-  const { message } = App.useApp();
+  // const { message } = App.useApp();
   const { authentication } = useAuthentication();
   const [ metrics, setMetrics ] = useState<IClientDashboardMetrics>({ 
     "activeJobs": 0, 

@@ -6,7 +6,6 @@ import { C1 } from '../../../assets/image'
 import { CloseOutlined, LoadingOutlined } from '@ant-design/icons'
 import { INotification } from '../../../utils/interface'
 import { timeAgo } from '../../../utils/converters'
-import { markNotificationOneAsRead } from '@/redux/action/extra'
 
 interface props {
   isFixed?: boolean;
@@ -26,7 +25,7 @@ const NotificationCard = ({ isFixed, onCancel, notification, loading, onClick }:
       padding: isFixed ? "10px 2px 5px" : "20px"
     }
   }}>
-  <div className='bg-[#FFF9FA] flex items-center justify-center !h-6 !w-6'>'
+  <div className='bg-[#FFF9FA] flex items-center justify-center !h-6 !w-6'>
     <Image src={Lightening} alt={""} /> 
   </div>
 

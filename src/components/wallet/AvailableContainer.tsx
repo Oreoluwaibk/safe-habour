@@ -75,7 +75,7 @@ const AvailableContainer = ({ isJobs }: { isJobs?: boolean }) => {
         setLoading(false);
       }
     },
-    [filters, loading, allJobs]
+    [filters, loading, allJobs, modal]
   );
 
   useEffect(() => {

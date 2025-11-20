@@ -7,7 +7,7 @@ import { BellFilled } from "@ant-design/icons";
 import { Badge, Dropdown, Divider, Button } from "antd";
 import { Notification } from "@/lib/signalRConnection";
 import NotificationCard from "../general/NotificationCard";
-import { markNotificationAsRead, markNotificationOneAsRead } from "@/redux/action/extra";
+import { markNotificationAsRead } from "@/redux/action/extra";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/hook";
 

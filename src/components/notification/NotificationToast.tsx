@@ -29,7 +29,7 @@ export default function NotificationToast() {
     });
 
     return unsubscribe;
-  }, [subscribeToNotifications]);
+  }, [subscribeToNotifications, notification, loginType, router]);
 
   return null;
 }

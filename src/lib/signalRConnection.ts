@@ -115,7 +115,7 @@ class SignalRService {
       console.warn("SignalR: not connected yet - onNotification skipped");
       return;
     }
-    this.connection.on("ReceiveNotification", (payload: any) => {
+    this.connection.on("ReceiveNotification", (payload: Notification) => {
       // Optionally validate/normalize here
       callback(payload as Notification);
     });
@@ -130,7 +130,7 @@ class SignalRService {
       console.warn("SignalR: not connected yet - onMessage skipped");
       return;
     }
-    this.connection.on("ReceiveMessage", (payload: any) => {
+    this.connection.on("ReceiveMessage", (payload: IMessage) => {
       console.log("Message recieved", payload);
       
       callback(payload as IMessage);

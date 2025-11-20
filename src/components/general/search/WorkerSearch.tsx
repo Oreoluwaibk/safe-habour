@@ -4,6 +4,8 @@ import { Select, Spin } from "antd";
 import { getAllJobs } from "@/redux/action/jobs";
 import { useRouter } from "next/navigation";
 import { CloseCircleFilled, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { OptionProps } from "antd/es/select";
+import { JobDetails } from "../../../../utils/interface";
 
 interface props {
     width: number;
@@ -15,7 +17,7 @@ const WorkerSearch: React.FC<props> = ({ width }) => {
     const [searchValue, setSearchValue] = useState("");
     const [debouncedValue, setDebouncedValue] = useState("");
     const [loading, setLoading] = useState(false);
-    const [options, setOptions] = useState<any[]>([]);
+    const [options, setOptions] = useState<OptionProps[]>([]);
 
     // 🔄 Debounce (500ms)
     useEffect(() => {
@@ -38,10 +40,9 @@ const WorkerSearch: React.FC<props> = ({ width }) => {
         try {
         const res = await getAllJobs(1, 20, debouncedValue);
         const result = res.data.data.list;
-        console.log("result", result)
 
-        const formatted = result.map((item: any) => ({
-            label: item.name || `${item.jobTitle} (${item.location || "No specified location"})` || "Untitled",
+        const formatted = result.map((item: JobDetails) => ({
+            label: `${item.jobTitle} (${item.location || "No specified location"})` || "Untitled",
             value: item.id,
         }));
 
@@ -90,10 +91,14 @@ const WorkerSearch: React.FC<props> = ({ width }) => {
             disabled={isPending} 
         />}
 
-        {showSearch && <CloseCircleFilled 
+        {showSearch && (
+        isPending ? 
+            <LoadingOutlined spin className="text-white! ml-1" />
+        :    
+        <CloseCircleFilled 
             className="text-white! ml-1 cursor-pointer" 
             onClick={handleReset} 
-        />}
+        />)}
     </div>
   );
 };

@@ -1,5 +1,4 @@
 "use client"
-import ClientContainer from '@/components/dashboard/ClientContainer'
 import NotificationCard from '@/components/general/NotificationCard'
 import { getPushNotifications } from '@/redux/action/extra'
 import { App, Card, Col, Row } from 'antd'

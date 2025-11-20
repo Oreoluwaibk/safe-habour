@@ -1,9 +1,7 @@
 // hooks/useSignalR.ts
 import { useEffect, useCallback, useMemo } from "react";
-// import { signalRService, Notification, ChatMessage } from "@/lib/signalr-service";
-import { useSelector } from "react-redux";
 import { useAppSelector } from "@/hook";
-import signalRService, { ChatMessage, Notification } from "@/lib/signalRConnection";
+import signalRService, { Notification } from "@/lib/signalRConnection";
 import { IMessage } from "../../utils/interface";
 
 export function useSignalR() {

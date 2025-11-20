@@ -3,9 +3,10 @@ import { Card, Checkbox, Input, InputNumber, Select, Slider, DatePicker } from '
 import React, { useEffect, useState } from 'react'
 import "@/styles/client.css"
 import CardTitle from '@/components/general/CardTitle'
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons'
+import { FilterOutlined, LoadingOutlined, SearchOutlined } from '@ant-design/icons'
 import useDebounce from '@/hooks/useDebounce'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
+import { RangePickerProps } from 'antd/es/date-picker'
 
 const { RangePicker } = DatePicker;
 
@@ -43,16 +44,15 @@ const FilterCard = ({ filter, setFilter }: Props) => {
   const debouncedSearch = useDebounce(searchValue, 500);
   const debouncedLocation = useDebounce(location, 500);
 
-  /** 🔍 Debounced Search */
   useEffect(() => {
-    setFilter(prev => ({ ...prev, search: debouncedSearch.toString(), pageNumber: 1 }));
-  }, [debouncedSearch]);
+    setFilter(prev => ({ 
+        ...prev, 
+        search: debouncedSearch.toString(),
+        location: debouncedLocation.toString(), 
+        pageNumber: 1 
+    }));
+  }, [debouncedSearch, setFilter, debouncedLocation]);
 
-  useEffect(() => {
-    setFilter(prev => ({ ...prev, location: debouncedLocation.toString(), pageNumber: 1 }));
-  }, [debouncedLocation]);
-
-  /** Handlers */
   const handleCheckbox = (checkedValues: number[]) => {
     setFilter(prev => ({
       ...prev,
@@ -70,7 +70,7 @@ const FilterCard = ({ filter, setFilter }: Props) => {
     }));
   };
 
-  const handleDate = (dates: any) => {
+  const handleDate: RangePickerProps["onChange"] = (dates) => {
     setFilter(prev => ({
       ...prev,
       from: dates?.[0]?.toISOString() || "",
@@ -114,8 +114,8 @@ const FilterCard = ({ filter, setFilter }: Props) => {
       </div>
 
       <div className="filter-container">
-        <p className="t-pri text-base">Service Type</p>
-        <Checkbox.Group className="flex flex-col gap-2" onChange={handleCheckbox}>
+        <p className="t-pri text-base">Service Type {categoryLoading && <LoadingOutlined spin />}</p>
+        <Checkbox.Group  className="flex flex-col gap-2" onChange={handleCheckbox}>
           {categories.map(cat => (
             <Checkbox key={cat.id} value={cat.id}>
               {cat.name}

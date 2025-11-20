@@ -5,7 +5,7 @@ import { LoadingOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons
 // import { Icon } from '@iconify/react'
 import { Row, Col, Card, Input, Button, App, CardProps, Avatar, Image as AntdesingImg } from 'antd'
 import Image from 'next/image'
-import React, { Suspense, useCallback, useEffect, useState } from 'react'
+import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { BsRecordFill } from 'react-icons/bs'
 import Messages from '@/components/client/chats/Messages'
 import WorkerContainer from '@/components/dashboard/WorkerContainer'
@@ -14,6 +14,7 @@ import { getAllMessages, getMessageHistory, sendMessage } from '@/redux/action/m
 import { IConversation, IMessage } from '../../../../../utils/interface'
 import { EditSVG } from '../../../../../assets/icons'
 import { pictureUrl } from '../../../../../utils/axiosConfig'
+import { useSignalR } from '@/hooks/useSignalR'
 
 const Message = () => {
   const { modal, message: AntDesignMsg } = App.useApp()
@@ -23,7 +24,9 @@ const Message = () => {
   const [ fetchLoading, setFetchLoading ] = useState(false);
   const [ message, setMessage ] = useState<string>("");
   const [ chatList, setChatList ] = useState<IConversation[]>([]);
-  const [ activeChat, setActiveChat ] = useState<IConversation | null>(null)
+  const [ activeChat, setActiveChat ] = useState<IConversation | null>(null);
+  const { subscribeToMessages, isConnected } = useSignalR();
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const handleGetMessages = useCallback(() => {
     setLoading(true);
@@ -63,6 +66,22 @@ const Message = () => {
       });
     })
   }, [modal]);
+
+  console.log("is connected", isConnected);
+  
+
+  useEffect(() => {
+    const unsub = subscribeToMessages((m) => {
+      if (m.applicationId === activeChat?.applicationId) {
+        console.log("mess", m);
+        
+        setMessages((p) => [...p, m]);
+        setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" }), 50);
+      }
+    });
+
+    return unsub;
+  }, [subscribeToMessages, activeChat?.applicationId]);
 
   const handleGetSilent = (id: string) => {
     getMessageHistory(id)
@@ -140,7 +159,7 @@ const Message = () => {
         </div>
       
         <div className='flex flex-col text-sm'>
-          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} <span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-[16px] flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> online</span></p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
+          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} {isConnected &&<span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-[16px] flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> connected</span>}</p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
         </div>
     </div>}
     </>

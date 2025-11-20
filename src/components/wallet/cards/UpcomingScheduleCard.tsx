@@ -63,7 +63,7 @@ const UpcomingScheduleCard = ({ application, onRefresh }: props) => {
         title={
         <div className='flex flex-col gap-1 pb-5'>
             <CardTitle 
-                title={application.jobDetails.jobTitle} 
+                title={application.jobDetails.jobTitle || "Hire Service"} 
                 description={`Client: ${application.jobDetails.jobDescription}`}
                 status={ <Status title={statusTitle} bg={colors.bg} color={colors.color} />} 
             />

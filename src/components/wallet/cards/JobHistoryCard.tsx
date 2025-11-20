@@ -4,7 +4,7 @@ import Status from '@/components/general/Status'
 import { ClockCircleOutlined, EyeOutlined, StarOutlined } from '@ant-design/icons'
 import { Button, Card, Rate } from 'antd'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useState, useTransition } from 'react'
 import RateModal from '../modal/RateModal'
 import { IJobApplication, IUser } from '../../../../utils/interface'
 
@@ -16,6 +16,13 @@ interface props {
 const JobHistoryCard = ({ job, user, refresh }: props) => {
     const router = useRouter();
     const [ openModal, setOpenModal ] = useState(false);
+    const [isPending, startTransition] = useTransition();
+
+    const handleRedirect = () => {
+        startTransition(() => {
+            router.push(`/dashboard/worker/info/${job.id}`);
+        });
+    }
   return (
     <Card
         title={
@@ -43,7 +50,7 @@ const JobHistoryCard = ({ job, user, refresh }: props) => {
             <div className='flex items-center justify-end px-4' key={1}>
                 <div className='flex items-center gap-4 px-6 py-4'>
                 <Button icon={<StarOutlined />} type="default" className='md:!min-w-[129px] !h-[48px] !text-[#670316]' style={{borderRadius: 50}} onClick={() => setOpenModal(true)}>Rate Experience</Button>
-                <Button onClick={() => router.push(`/dashboard/worker/info/${job.id}`)} icon={<EyeOutlined />} type="primary" className='md:!min-w-[129px] !h-[48px]' style={{borderRadius: 50}}>View Details</Button>
+                <Button onClick={handleRedirect} loading={isPending} icon={<EyeOutlined />} type="primary" className='md:!min-w-[129px] !h-[48px]' style={{borderRadius: 50}}>View Details</Button>
             </div>
             </div>
         ]}

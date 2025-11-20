@@ -20,7 +20,9 @@ interface props {
     noStatus?: boolean;
     type?: number;
     value?: RcFile | null;
-    setValue?: React.Dispatch<React.SetStateAction<RcFile | null>>
+    setValue?: React.Dispatch<React.SetStateAction<RcFile | null>>;
+    accept?: string;
+    isUploaded: boolean;
     // uploaded?: boolean;
 }
 const maxFileSize = 10000000;
@@ -32,7 +34,9 @@ const VerificationUpload = ({
     noStatus,
     type,
     setValue,
-    value
+    value,
+    accept= ".pdf, .doc, .docx, .jpeg, .jpg, .png",
+    isUploaded
 }: props) => {
     const { user } = useAppSelector(state => state.auth);
     const { message, modal } = App.useApp();
@@ -57,7 +61,7 @@ const VerificationUpload = ({
         .then(res => {
             if(res.status === 200 || res.status === 201){
                 setLoading(false);
-                message.success(res.data.message)
+                message.success("Your document are being reviewed")
                 if (setValue) setValue(file)
             }
         })
@@ -74,12 +78,7 @@ const VerificationUpload = ({
 
     const handleBeforeUpload = async (file: RcFile) => {
         if (file.size > maxFileSize) return message.warning("Cannot upload file more than 10mb");
-
-        // const bas = await getBase64(file);
-        // setUploadName(file.name);
         handleUpload(file)
-        
-        
         return setFile(file);
     }
 
@@ -89,9 +88,14 @@ const VerificationUpload = ({
         title={
             <CardTitle 
                 title={title} 
-                description={description} 
+                description={`${description} (max size 10mb)`} 
                 icon={icon} 
-                status={!noStatus && <Status color={approved ? "#018A06" :'#FF0004'} bg={approved ? "#F3FFF4" :'#FFF7F9'} title={approved ? "approved" : "pending"} />}
+                status={!noStatus && 
+                    <Status 
+                        color={approved && isUploaded ? "#018A06" : isUploaded && !approved ? "#FFDD33" :'#FF0004'} 
+                        bg={approved && isUploaded ? "#F3FFF4" : isUploaded && !approved ? "#FFFBE6" : '#FFF7F9'} 
+                        title={approved && isUploaded ? "approved" : isUploaded && !approved  ? "pending verification" : "Not uploaded"} />
+                    }
         />}
         actions={[
             <div key={1} className='flex items-center justify-between px-6 py-4 !w-full'>
@@ -102,7 +106,7 @@ const VerificationUpload = ({
                 // fileList={[file]}
                 beforeUpload={handleBeforeUpload}
                 onRemove={handleRemovePicture}
-                accept=".pdf, .doc, .docx" 
+                accept={accept} 
                 showUploadList={false}
             >
                 <Button loading={loading} type="default" className='!w-full !h-[48px]' style={{borderRadius: 50}} icon={<UploadOutlined />}>{approved ? "Replace " :"Upload"} Document</Button>

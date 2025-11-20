@@ -12,10 +12,12 @@ import { CheckedCircle, MaskedLogo } from "../../../assets/icons";
 import WorkerSideMenu from "./WorkerSideMenu";
 import { useAppSelector } from "@/hook";
 import { logoutUser } from "@/redux/action/auth";
-import { INotification, PushNotificationPayload } from "../../../utils/interface";
+import { INotification } from "../../../utils/interface";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { pictureUrl } from "../../../utils/axiosConfig";
-import { createSignalRConnection } from "@/lib/signalRConnection";
+import { NotificationBell } from "../notification/NotificationBell";
+import NotificationToast from "../notification/NotificationToast";
+import WorkerSearch from "../general/search/WorkerSearch";
 
 const { Content, Header } = Layout;
 
@@ -38,7 +40,7 @@ const WorkerContainer = ({
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType, token } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const [ notification ] = useState<INotification>({
         "id": "string",
         "title": "string",
@@ -61,33 +63,6 @@ const WorkerContainer = ({
         "deliveredAt": "2025-01-01T00:00:00Z"
     });
     const { authentication } = useAuthentication();
-
-    useEffect(() => {
-        const connection = createSignalRConnection(token);
-        console.log("The connection is here");
-        
-        // Start connection
-        connection
-        .start()
-        .then(() => console.log("SignalR connected successfully"))
-        .catch((err) => console.error("Error connecting to SignalR:", err));
-
-        // Listen for typed event
-        connection.on(
-            "ReceiveNotification",
-            (payload: PushNotificationPayload) => {
-                console.log("New Notification:", payload);
-
-                // Example: toast or UI update
-                // toast.info(`${payload.title}: ${payload.message}`);
-            }
-        );
-
-        // Cleanup listener when component unmounts
-        return () => {
-            connection.off("ReceiveNotification");
-        };
-    }, [token]);
 
    const handleLogout = useCallback(() => {
     logoutUser()
@@ -144,12 +119,12 @@ const WorkerContainer = ({
                     
 
                     <div className='hidden md:flex items-center gap-4'>
-                        <div className="icon-div icon-bg">
-                            <SearchOutlined className="!text-white !text-lg" />
+                        <WorkerSearch width={300} />
+                        <NotificationToast />
+                        <div className="mt-2">
+                            <NotificationBell />
                         </div>
-                        <div className="icon-div icon-bg">
-                            <BellFilled className="!text-white !text-lg" onClick={() => setShowNotification(!showNotification)} />
-                        </div>
+                          {/* <NotificationBell /> */}
                         <div className="relative flex items-center">
                             {authentication?.profilePicturePath && 
                             <AntDImage 
@@ -170,9 +145,7 @@ const WorkerContainer = ({
 
                     <div className='flex md:hidden items-center gap-2'>
                         <SearchOutlined className="!text-black !text-lg" />
-                        <div className="icon-div icon-bg">
-                            <BellFilled className="!text-white !text-lg" onClick={() => setShowNotification(!showNotification)} />
-                        </div>
+                        <NotificationBell />
                         {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
                     </div>
 

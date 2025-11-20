@@ -5,8 +5,11 @@ interface IParams {
   pageNumber: number; 
   pageSize: number;
   search?: string;
+  SearchTerm?: string;
   CreatedFrom?: string;
   CreatedTo?: string;
+  NeededFrom?: string;
+  NeededTo?: string;
   PreferredStartDate?: string;
   PreferredEndDate?: string;
   Status?: number | undefined;
@@ -15,6 +18,10 @@ interface IParams {
   minPrice?:number | undefined,
   availability?: boolean;
   rating?: number;
+  location?: string;
+  from?: string;
+  to?: string;
+  Rating?: string;
 }
 
 export const getClientJobs = async (
@@ -57,26 +64,32 @@ export const getAllJobs = async (
   pageNumber: number = 1,
   pageSize: number = 10,
   search?: string,
-  CreatedFrom?: string,
-  CreatedTo?: string,
-  PreferredStartDate?: string,
-  PreferredEndDate?: string,
+  serviceTypeIds?: number[],
+  maxPrice?:number | undefined,
+  minPrice?:number | undefined,
+  rating?: number,
+  location?: string,
+  from?: string,
+  to?: string,
 ) => {
-    const params: IParams = {
-      pageNumber,
-      pageSize,
-    };
+  const params: IParams = {
+    pageNumber,
+    pageSize,
+  };
 
-    if (search) params.search = search;
-    if (CreatedFrom) params.CreatedFrom = CreatedFrom;
-    if (CreatedTo) params.CreatedTo = CreatedTo;
-    if (PreferredStartDate) params.PreferredStartDate = PreferredStartDate;
-    if (PreferredEndDate) params.PreferredEndDate = PreferredEndDate;
-    
-    const url = `/Job/all`;
-    const response = await axiosInstance.get(url, { params });
+  if (search) params.SearchTerm = search;
+  if (from) params.NeededFrom = from;
+  if (to) params.NeededTo = to;
+  if (serviceTypeIds) params.serviceTypeIds = serviceTypeIds;
+  if (maxPrice) params.maxPrice = maxPrice;
+  if (minPrice) params.minPrice = minPrice;
+  if (location) params.location = location;
+  if (rating) params.rating = rating;
+  
+  const url = `/Job/all`;
+  const response = await axiosInstance.get(url, { params });
 
-    return Promise.resolve(response);
+  return Promise.resolve(response);
 }
 
 export const getAJob = async (id: string) => {

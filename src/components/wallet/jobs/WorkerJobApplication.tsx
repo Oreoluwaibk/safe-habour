@@ -108,7 +108,7 @@ const WorkerJobApplication = () => {
       classNames={{
       header: "",
       }}
-      className='h-[65vh] overflow-y-auto'
+      className='h-[65vh] overflow-y-auto hidescroll'
       // loading={loading}
     >
         <Row gutter={[15, 15]}>

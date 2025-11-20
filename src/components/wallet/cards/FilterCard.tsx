@@ -1,142 +1,181 @@
-import { Button, Card, Checkbox, Input, InputNumber, Select, Slider } from 'antd'
-import React, { useEffect } from 'react'
+// FilterCard.tsx
+import { Card, Checkbox, Input, InputNumber, Select, Slider, DatePicker } from 'antd'
+import React, { useEffect, useState } from 'react'
 import "@/styles/client.css"
 import CardTitle from '@/components/general/CardTitle'
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons'
 import useDebounce from '@/hooks/useDebounce'
+import { useServiceCategory } from '@/hooks/useServiceCategory'
 
-interface props  {
-    filter: {
-        pageNumber: number;
-        pageSize: number;
-        search: string;
-        serviceTypeIds: number[];
-        maxPrice: number | undefined;
-        minPrice: number | undefined;
-        availability: boolean | undefined;
-        rating: number | undefined;
-    };
-    setFilter: React.Dispatch<React.SetStateAction<{
-        pageNumber: number;
-        pageSize: number;
-        search: string;
-        serviceTypeIds: number[];
-        maxPrice: number | undefined;
-        minPrice: number | undefined;
-        availability: boolean | undefined;
-        rating: number | undefined;
-    }>>
+const { RangePicker } = DatePicker;
+
+interface Props {
+  filter: {
+    pageNumber: number;
+    pageSize: number;
+    search: string;
+    serviceTypeIds: number[];
+    maxPrice: number | undefined;
+    minPrice: number | undefined;
+    from: string;
+    to: string;
+    rating: number | undefined;
+    location: string;
+  };
+  setFilter: React.Dispatch<React.SetStateAction<{
+    pageNumber: number;
+    pageSize: number;
+    search: string;
+    serviceTypeIds: number[];
+    maxPrice: number | undefined;
+    minPrice: number | undefined;
+    from: string;
+    to: string;
+    rating: number | undefined;
+    location: string;
+  }>>;
 }
-const FilterCard = ({ filter, setFilter }: props) => {
-    const debouncedSearch = useDebounce(filter?.search, 500);
 
-    useEffect(() => {
-        if (debouncedSearch) handleSearch(debouncedSearch as string)
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearch]);
+const FilterCard = ({ filter, setFilter }: Props) => {
+  const { loading: categoryLoading, categories } = useServiceCategory();
+  const [ searchValue, setSearchValue ] = useState("");
+  const [ location, setLocation ] = useState("");
+  const debouncedSearch = useDebounce(searchValue, 500);
+  const debouncedLocation = useDebounce(location, 500);
 
-    const handleSearch = (value: string) => {
-        // if(!value) return;
-        setFilter(prev => {return {...prev, search: value}});
-    }
+  /** 🔍 Debounced Search */
+  useEffect(() => {
+    setFilter(prev => ({ ...prev, search: debouncedSearch.toString(), pageNumber: 1 }));
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    setFilter(prev => ({ ...prev, location: debouncedLocation.toString(), pageNumber: 1 }));
+  }, [debouncedLocation]);
+
+  /** Handlers */
+  const handleCheckbox = (checkedValues: number[]) => {
+    setFilter(prev => ({
+      ...prev,
+      serviceTypeIds: checkedValues,
+      pageNumber: 1
+    }));
+  };
+
+  const handlePriceRange = (range: number[]) => {
+    setFilter(prev => ({
+      ...prev,
+      minPrice: range[0],
+      maxPrice: range[1],
+      pageNumber: 1
+    }));
+  };
+
+  const handleDate = (dates: any) => {
+    setFilter(prev => ({
+      ...prev,
+      from: dates?.[0]?.toISOString() || "",
+      to: dates?.[1]?.toISOString() || "",
+      pageNumber: 1
+    }));
+  };
+
   return (
     <Card
-        title={
+      title={
         <CardTitle 
-        title="Filter Jobs" 
-        icon={<span className='bg-[#FFEAEE] flex items-center justify-center !h-6 !w-6 rounded-[100px]'>
-        <FilterOutlined className='text-[#670316]' />
-        </span>}          
-        />}
-         classNames={{ header: "linear" }}
+          title="Filter Jobs"
+          icon={
+            <span className='bg-[#FFEAEE] flex items-center justify-center !h-6 !w-6 rounded-[100px]'>
+              <FilterOutlined className='text-[#670316]' />
+            </span>
+          }
+        />
+      }
+      classNames={{ header: "linear" }}
     >
-    <div className='flex items-center justify-between !mb-4'>
-        <p className="t-pri text-base">Filter By</p>
-
-        <div className='flex gap-2'>
-            <Button type="default" className='!h-[38px] !text-[#670316] !border-[#670316] !bg-[#FFF5F7] !rounded-[68px]'>Advance</Button>
-            <Button type="default" className='!h-[38px] !text-[#393939] !border-[#E9E9E9] !bg-[#F6F6F6] !rounded-[68px]'>Clear</Button>
-        </div>
-    </div>
-    <div className="filter-container">
+      <div className="filter-container">
         <p className="t-pri text-base">Location</p>
+        <Input
+          placeholder="Toronto"
+          value={location}
+          prefix={<SearchOutlined />}
+          onChange={(e) => setLocation(e.target.value)}
+        />
+      </div>
 
-        <Select placeholder="Toronto">
-            
-        </Select>
-    </div>
-    <div className="filter-container">
+      <div className="filter-container">
         <p className="t-pri text-base">Search Jobs</p>
+        <Input
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder='Search for jobs'
+          prefix={<SearchOutlined />}
+        />
+      </div>
 
-        <Input value={filter?.search} onChange={(e) => handleSearch(e.target.value)} placeholder='Search for jobs' prefix={<SearchOutlined />} />
-    </div>
-
-    <div className="filter-container">
+      <div className="filter-container">
         <p className="t-pri text-base">Service Type</p>
-
-        <Checkbox.Group className="flex flex-col gap-2" onChange={(value) => console.log(value)}>
-            <Checkbox value={1}>
-                Care Workers
+        <Checkbox.Group className="flex flex-col gap-2" onChange={handleCheckbox}>
+          {categories.map(cat => (
+            <Checkbox key={cat.id} value={cat.id}>
+              {cat.name}
             </Checkbox>
-            <Checkbox>
-                Babysitters & Childcare
-            </Checkbox>
-            <Checkbox>
-                House Chores & Cleaning
-            </Checkbox>
-            <Checkbox>
-                Personal Cook
-            </Checkbox>
-            <Checkbox>
-                Support Workers
-            </Checkbox>
-            <Checkbox>
-                Companion Workers
-            </Checkbox>
+          ))}
         </Checkbox.Group>
-    </div>
+      </div>
 
-    <div className="filter-container">
+      <div className="filter-container">
         <p className="t-pri text-base">Price</p>
 
-        <div className="flex items-center w-full gap-1">
-            <span>0</span>
-            <Slider 
-                min={0}
-                max={1000}
-                style={{width: "100%"}}
-                styles={{
-                    track: {backgroundColor: "#670318", height: 6},
-                    handle: {color: "#670318", backgroundColor: "#670318", },
-                    rail: {backgroundColor: "#ffecef", height: 6}
-                }}
-                range
-                
-            />
-            <span>$999</span>
-        </div>
+        <Slider
+          min={0}
+          max={1000}
+          range
+          value={[filter.minPrice || 0, filter.maxPrice || 1000]}
+          onChange={handlePriceRange}
+        />
 
         <div className="flex items-center gap-4">
-            <InputNumber placeholder="Min" className="bg-white h-[35px] !w-[81px] !rounded-[12px]" />-
-            <InputNumber placeholder="Max" className="bg-white h-[35px] !w-[81px] !rounded-[12px]" />
+          <InputNumber
+            placeholder="Min"
+            value={filter.minPrice}
+            onChange={(v) => setFilter(prev => ({ ...prev, minPrice: v || 0, pageNumber: 1 }))}
+          />
+          -
+          <InputNumber
+            placeholder="Max"
+            value={filter.maxPrice}
+            onChange={(v) => setFilter(prev => ({ ...prev, maxPrice: v || 1000, pageNumber: 1 }))}
+          />
         </div>
-    </div> 
-    <div className="filter-container">
+      </div>
+
+      <div className="filter-container">
         <p className="t-pri text-base">Availability</p>
+        <RangePicker onChange={handleDate} />
+      </div>
 
-        <Select placeholder="Any Time">
-            
+      <div className="filter-container">
+        <p className="t-pri text-base">Minimum Rating</p>
+        <Select
+          placeholder="Any Rating"
+          onChange={(value) =>
+            setFilter(prev => ({
+              ...prev,
+              rating: value,
+              pageNumber: 1,
+            }))
+          }
+        >
+          <Select.Option value={1}>⭐ 1+</Select.Option>
+          <Select.Option value={2}>⭐ 2+</Select.Option>
+          <Select.Option value={3}>⭐ 3+</Select.Option>
+          <Select.Option value={4}>⭐ 4+</Select.Option>
+          <Select.Option value={5}>⭐ 5</Select.Option>
         </Select>
-    </div>
-    <div className="filter-container">
-        <p className="t-pri text-base">Minimum Client Rating</p>
-
-        <Select placeholder="Any Rating">
-            
-        </Select>
-    </div>
+      </div>
     </Card>
-  )
-}
+  );
+};
 
-export default FilterCard
+export default FilterCard;

@@ -4,7 +4,7 @@ import Status from '@/components/general/Status';
 import { ClockCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { App, Card } from 'antd';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useState, useTransition } from 'react'
 import { completeJob, IJobApplication } from '../../../../utils/interface';
 import moment from 'moment';
 import { createErrorMessage } from '../../../../utils/errorInstance';
@@ -26,6 +26,7 @@ const JobApplication = ({ application, onRefresh }: props) => {
     const [ loading, setLoading ] = useState(false);
     const [ openModal, setOpenModal ] = useState(false);
     const { statusTitle, colors } = useApplicationStatus(application.status, 'application');
+    const [isPending, startTransition] = useTransition();
 
     const handleMarkAsComplete = () => {
         const payload: completeJob = {
@@ -56,6 +57,12 @@ const JobApplication = ({ application, onRefresh }: props) => {
             });
         })
     }
+
+    const handleRedirect = () => {
+        startTransition(() => {
+            router.push(`/dashboard/worker/application/${application.id}`)
+        });
+    }
   return (
     <Card
         title={
@@ -85,8 +92,9 @@ const JobApplication = ({ application, onRefresh }: props) => {
 
                     <RoundBtn 
                         primary 
-                        onClick={() => router.push(`/dashboard/worker/application/${application.id}`)} 
+                        onClick={handleRedirect} 
                         title='View Details' 
+                        loading={isPending}
                         icon={<EyeOutlined className='text-[#670316]' />} 
                     />
                 </div>}
@@ -117,11 +125,11 @@ const JobApplication = ({ application, onRefresh }: props) => {
 
         classNames={{ header: "!py-4", body: "flex flex-col gap-2"}}
     >
-        {application.message && <div className='flex flex-col gap-4'>
+        {<div className='flex flex-col gap-4'>
             <p className='text-[#343434] text-base font-semibold'>Your Message:</p>
 
             <span className='border-[#C5C5C5]! border text-[#1e1e1e] text-sm px-3 py-4 rounded-xl bg-[#FBFBFB]'>
-            {application.message}
+            {application.message || "No message for this job"}
             </span>
         </div>}
 

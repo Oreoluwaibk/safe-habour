@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/client.css"
 import { BellFilled, MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Layout } from 'antd';
+import { App, Button, Layout } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
@@ -13,9 +13,10 @@ import NotificationCard from "../general/NotificationCard";
 import { MaskedLogo } from "../../../assets/icons";
 import { useAppSelector } from "@/hook";
 import { logoutUser } from "@/redux/action/auth";
-import { INotification, PushNotificationPayload } from "../../../utils/interface";
-import { createSignalRConnection } from "@/lib/signalRConnection";
-// import type { NotificationPayload } from "@/types/signalr";
+import { INotification } from "../../../utils/interface";
+import NotificationToast from "../notification/NotificationToast";
+import { NotificationBell } from "../notification/NotificationBell";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 const { Content, Header } = Layout;
 
@@ -36,10 +37,12 @@ const ClientContainer = ({
     active
 }:Props) => {
     const router = useRouter();
+    const { message } = App.useApp();
     const [open, setOpen] = useState(false);
     const [ openJobModal, setOpenJobModal ] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType, token } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
+    const { authentication } = useAuthentication();
     const [ notification ] = useState<INotification>({
     "id": "string",
     "title": "string",
@@ -62,32 +65,6 @@ const ClientContainer = ({
     "deliveredAt": "2025-01-01T00:00:00Z"
     });
 
-    useEffect(() => {
-        const connection = createSignalRConnection(token);
-
-        // Start connection
-        connection
-        .start()
-        .then(() => console.log("SignalR connected successfully"))
-        .catch((err) => console.error("Error connecting to SignalR:", err));
-
-        // Listen for typed event
-        connection.on(
-        "ReceiveNotification",
-        (payload: PushNotificationPayload) => {
-            console.log("New Notification:", payload);
-
-            // Example: toast or UI update
-            // toast.info(`${payload.title}: ${payload.message}`);
-        }
-        );
-
-        // Cleanup listener when component unmounts
-        return () => {
-        connection.off("ReceiveNotification");
-        };
-    }, [token]);
-    
     const handleLogout = useCallback(() => {
     logoutUser()
       .then((res) => {
@@ -110,6 +87,12 @@ const ClientContainer = ({
             router.replace("/dashboard/worker")
         }
     }, [loginType, isAuthenticated]);
+
+    const handlePostJob = () => {
+        if(!authentication?.isVerified) 
+            return message.info("You have not been verified, this feature is only available to verified users!");
+        setOpenJobModal(true);
+    }
     
   return (
      <Layout >
@@ -146,10 +129,17 @@ const ClientContainer = ({
                         <div className="icon-div icon-bg">
                             <SearchOutlined className="!text-white !text-lg" />
                         </div>
-                        <div className="icon-div icon-bg">
-                            <BellFilled className="!text-white !text-lg" onClick={() => setShowNotification(!showNotification)} />
+                        <NotificationToast />
+                        <div className="mt-2">
+                            <NotificationBell />
                         </div>
-                        <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button>
+                        <Button 
+                            type='primary' 
+                            className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' 
+                            onClick={handlePostJob}>
+                                <PlusOutlined className="" /> 
+                                Post a Job
+                            </Button>
                     </div>
 
                     <div className='flex md:hidden items-center gap-2'>

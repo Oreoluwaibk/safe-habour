@@ -44,6 +44,13 @@ export const markNotificationAsRead = async () => {
     return Promise.resolve(response);
 }
 
+export const markNotificationOneAsRead = async (data: {ids: string[], markAll: boolean}) => {
+    const url = `/PushNotification/mark-as-read`;
+    const response = await axiosInstance.post(url, data);
+
+    return Promise.resolve(response);
+}
+
 export const updateNotificationSetting = async (data: INotificationSetting) => {
     const url = `/Authentication/notification-settings`;
     const response = await axiosInstance.put(url, data);

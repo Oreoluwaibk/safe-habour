@@ -4,8 +4,9 @@ import NotificationCard from '@/components/general/NotificationCard'
 import { getPushNotifications } from '@/redux/action/extra'
 import { App, Card, Col, Row } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { createErrorMessage } from '../../../../utils/errorInstance'
-import { INotification } from '../../../../utils/interface'
+import WorkerContainer from '@/components/dashboard/WorkerContainer'
+import { createErrorMessage } from '../../../../../utils/errorInstance'
+import { INotification } from '../../../../../utils/interface'
 
 const Page = () => {
   const [ loading, setLoading ] = React.useState(false);
@@ -123,7 +124,7 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-  <ClientContainer active='Notification'>
+  <WorkerContainer active='Notification'>
     <Card variant="borderless" styles={{body: {border: "none", padding: 0}}} style={{ minHeight: "90vh", border: "none", boxShadow: "none", padding: 0}}>
       <Row gutter={[15,15]}>
         {notifications.map((notification) => (
@@ -151,7 +152,7 @@ const Page = () => {
         </Col>
       </Row>
     </Card>
-  </ClientContainer>
+  </WorkerContainer>
   )
 }
 

@@ -93,6 +93,7 @@ export interface IUser {
   roles: string[];
   isStripeConnectEnabled: boolean;
   hasIdentificationDocument: boolean;
+  isIdentityDocumentApproved: boolean;
   hasLocationDocument: boolean;
   isTwoFactorAuthenticationEnabled: boolean;
   isServiceWorkerOnboarded: boolean | null;
@@ -117,25 +118,27 @@ export interface Service {
 }
 
 export interface INotification {
-  id: string;
+  id?: string;
   title: string;
   message: string;
   type: number;
-  typeName: string;
-  priority: number;
-  priorityName: string;
-  data: {
+  typeName?: string;
+  priority?: number;
+  priorityName?: string;
+  data?: {
     [key: string]: any;
   };
-  actionUrl: string;
-  iconUrl: string;
-  requiresAction: boolean;
-  isRead: boolean;
-  isDelivered: boolean;
-  expiresAt: string;
-  createdAt: string;
-  readAt: string;
-  deliveredAt: string;
+  actionUrl?: string;
+  iconUrl?: string;
+  requiresAction?: boolean;
+  isRead?: boolean;
+  isDelivered?: boolean;
+  expiresAt?: string;
+  createdAt?: string;
+  readAt?: string;
+  deliveredAt?: string;
+  timestamp?: string;
+
 }
 
 export interface IBooking {
@@ -485,7 +488,7 @@ export interface IUserMessageProfile {
 }
 
 export interface IMessage {
-  id: string;
+  id?: string;
   applicationId: string;
   senderId: string;
   receiverId: string;

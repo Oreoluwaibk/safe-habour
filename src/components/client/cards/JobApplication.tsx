@@ -113,7 +113,7 @@ const JobApplication = () => {
         {/* Applications List */}
         {applications.map((app) => (
           <Col key={app.id} lg={24} sm={24} xs={24}>
-            <JobApplicationCard jobDetails={app} />
+            <JobApplicationCard jobDetails={app} refresh={() => fetchApplications(false)} />
           </Col>
         ))}
 

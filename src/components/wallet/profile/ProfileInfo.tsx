@@ -349,6 +349,7 @@ const ProfileInfo = ({
                     label="Country" 
                     className="font-semibold" 
                     name="country"
+                    initialValue="Canada"
                 >
                     <CountryDropdown
                         defaultOptionLabel="Select Your Country"

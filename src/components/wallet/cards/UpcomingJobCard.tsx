@@ -17,7 +17,7 @@ const UpcomingJobCard = ({ job }: props) => {
   
   return (
     <Card
-      title={<CardTitle icon={<span className='bg-[#039855] h-3 w-3 rounded-full'></span>} title={job.jobDetails.jobTitle} description={job.client?.name} />}
+      title={<CardTitle icon={<span className='bg-[#039855] h-3 w-3 rounded-full'></span>} title={job.jobDetails.jobTitle || "Hire Service"} description={job.client?.name} />}
       extra={<span className='text-[#646464]'><ClockCircleOutlined className='mr-2' />{getRelativeDateLabel(job.acceptedAt || job.createdAt)}, {moment(job.acceptedAt || job.createdAt).format("hh:mm a")}</span>}
       actions={[<div key={1} className='px-4 text-left'>
         <Status title={statusTitle} bg={colors.bg} color={colors.color} />

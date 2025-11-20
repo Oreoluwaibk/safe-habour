@@ -52,7 +52,8 @@ const Verification = ({ authentication }: props) => {
                 <VerificationUpload  
                     title='Police Background Check'
                     description='Current police background check report'
-                    approved={authentication.hasIdentificationDocument}
+                    approved={authentication.isIdentityDocumentApproved}
+                    isUploaded={authentication.hasIdentificationDocument}
                     value={policeReport}
                     setValue={setPoliceReport}
                     type={1}
@@ -64,7 +65,8 @@ const Verification = ({ authentication }: props) => {
                     title='Vulnerable Sector Check'
                     description='Child/Adult abuse screening report'
                     value={sectorCheck}
-                    approved={authentication.hasIdentificationDocument}
+                    approved={authentication.isIdentityDocumentApproved}
+                    isUploaded={authentication.hasIdentificationDocument}
                     setValue={setSectorCheck}
                     type={2}
                 />

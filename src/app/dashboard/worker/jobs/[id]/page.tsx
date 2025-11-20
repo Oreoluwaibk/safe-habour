@@ -17,11 +17,13 @@ import ApplyJob from '@/components/wallet/modal/ApplyJob';
 import moment from "moment";
 import { savedPreferredTime } from '../../../../../../utils/savedInfo'
 import { pictureUrl } from '../../../../../../utils/axiosConfig'
+import { useAuthentication } from '@/hooks/useAuthentication'
 
 const Page = () => {
     const router = useRouter();
     const { id } = useParams();
-    const { modal } = App.useApp()
+    const { modal, message } = App.useApp();
+    const { authentication } = useAuthentication();
     const [ loading, setLoading ] = useState(false);
     const [ job, setJob ] = useState<jobs>();
     const { categories } = useServiceCategory();
@@ -53,6 +55,11 @@ const Page = () => {
     useEffect(() => {
         if (id) handleGetJobs(id.toString());
     }, [id, handleGetJobs]);
+
+    const handleApply = () => {
+        if(!authentication?.isVerified) return message.info("You have not been verified, this feature is only available to verified users!");
+        setOpenModal(true)
+    }
         
   return (
     <WorkerContainer active='Jobs'>
@@ -80,7 +87,7 @@ const Page = () => {
             }
             classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
             className='!mt-6'
-            extra={<Button onClick={() => setOpenModal(true)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Apply Now</Button>}
+            extra={<Button onClick={handleApply} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Apply Now</Button>}
             loading={loading}
         />       
         </Col>

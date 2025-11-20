@@ -37,7 +37,7 @@ export default function useApplicationStatus(status: string | number, type: 'job
                 } break;
                 case 2: {
                     setStatusTitle("In Progress");
-                    setColors({bg: "#A1A1A1", color: "#FFDD33"});
+                    setColors({bg: "#FFFBE6", color: "#FFDD33"});
                 } break;
                 case 3: {
                     setStatusTitle("Completed");
@@ -51,7 +51,7 @@ export default function useApplicationStatus(status: string | number, type: 'job
                     setStatusTitle("Disputed");
                     setColors({bg: "#FFF8F9", color: "#670316"});
                 } break;
-                case 5: {
+                case 6: {
                     setStatusTitle("ServiceWorkerCompleted");
                     setColors({bg: "#F3FFF4", color: "#018A06"});
                 } break;

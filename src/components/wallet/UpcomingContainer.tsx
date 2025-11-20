@@ -2,7 +2,7 @@
 import { StarFilled } from '@ant-design/icons'
 import { Icon } from '@iconify/react'
 import { App, Button, Card, Col, Row } from 'antd'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useTransition } from 'react'
 import CardTitle from '../general/CardTitle'
 import UpcomingJobCard from './cards/UpcomingJobCard'
 import { useRouter } from 'next/navigation'
@@ -22,7 +22,8 @@ const UpcomingContainer = ({ metrics }: props) => {
     const [ loading, setLoading ] = useState(false);
     const [ upcomingJobs, setUpcomingJobs ] = useState<IJobApplication[]>([]);
     const [ reviews, setReviews ] = useState([]);
-    const [ rating ] = useState("0.0")
+    const [ rating ] = useState("0.0");
+    const [isPending, startTransition] = useTransition();
 
     const handleGetUpcomingJobs = useCallback(() => {
         setLoading(true);
@@ -80,6 +81,12 @@ const UpcomingContainer = ({ metrics }: props) => {
         if(user?.id) handleGetWorkerReview(user?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
+
+     const handleRedirect = () => {
+        startTransition(() => {
+            router.push("/dashboard/worker/schedule")
+        });
+    }
   return (
 <>
 <Card
@@ -93,7 +100,17 @@ const UpcomingContainer = ({ metrics }: props) => {
         header: "linear"
     }}
     loading={loading}
-    actions={[<div key={1} className='md:px-6'><Button onClick={() => router.push("/dashboard/worker/schedule")} type="default" className='md:!w-full !h-[48px] !border-[#A9A9A9]' style=     {{borderRadius: 50}} icon={<Icon icon="stash:data-date-light" fontSize={16} />}>View Full Schedule</Button></div>]}
+    actions={[<div key={1} className='md:px-6'>
+        <Button 
+            loading={isPending} 
+            onClick={handleRedirect} 
+            type="default" 
+            className='md:!w-full !h-[48px] !border-[#A9A9A9]' 
+            style={{borderRadius: 50}} 
+            icon={<Icon icon="stash:data-date-light" fontSize={16} />}>
+                View Full Schedule
+            </Button>
+        </div>]}
 >
     <Row gutter={[15, 15]}>
         {upcomingJobs.map((job:IJobApplication, i: number) => (

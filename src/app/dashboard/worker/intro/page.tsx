@@ -16,6 +16,7 @@ import { useGeolocation } from '@/hooks/useGeolocation'
 import { onBoardServiceWorker } from '@/redux/action/auth'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
 import { useRouter } from 'next/navigation'
+import { useAuthentication } from '@/hooks/useAuthentication'
 
 const title = [
     "Personal Information", 
@@ -44,6 +45,7 @@ const Option = Select.Option;
 const Page = () => {
     const router = useRouter();
     const { user } = useAppSelector(state => state.auth);
+    const { authentication } = useAuthentication();
     const [form] = Form.useForm();
     const { modal } = App.useApp()
     const [ steps, setSteps ] = useState(1);
@@ -175,6 +177,8 @@ const Page = () => {
                 value={policeReport}
                 setValue={setPoliceReport}
                 type={1}
+                approved={authentication?.isIdentityDocumentApproved || false}
+                isUploaded={authentication?.hasIdentificationDocument || false}
             />
 
             <VerificationUpload 
@@ -184,6 +188,8 @@ const Page = () => {
                 value={sectorCheck}
                 setValue={setSectorCheck}
                 type={2}
+                approved={authentication?.isIdentityDocumentApproved || false}
+                isUploaded={authentication?.hasIdentificationDocument || false}
             />
         </Col>)
         case 5: 

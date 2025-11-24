@@ -21,7 +21,7 @@ const ReadyToStart = () => {
     }
   }
   return (
-    <div className='container'>
+    <div className='containerR'>
       <div className='colorbg'>
         <p>Ready to Get Started?</p>
         <p>Join thousands of Canadian families who trust Safe Harbour for their care needs.</p>

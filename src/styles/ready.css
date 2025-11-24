@@ -1,11 +1,16 @@
-.container {
+.containerR {
     padding: 60px 100px;
     background-color: #fff;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .colorbg {
     background-color: #670316;
     height: 299px;
+    width: 100%;
     border-radius: 12px;
     background: var(--Primary, #670316);
     display: flex;
@@ -25,12 +30,12 @@
 }
 
 .colorbg p:nth-child(2) {
-   color: #FFF;
-font-family: "Open Sans";
-font-size: 24px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
+    color: #FFF;
+    font-family: "Open Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
 
 .button {
@@ -43,7 +48,7 @@ line-height: normal;
         width: 100%;
         height: 48px;
     }
-    .container {
+    .containerR {
         padding: 38px 21px;
     }
     .colorbg {
@@ -57,5 +62,4 @@ line-height: normal;
         font-size: 24px;
         text-align: center;
     }
-    
 }

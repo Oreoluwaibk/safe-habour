@@ -4,7 +4,7 @@ import ClientContainer from '@/components/dashboard/ClientContainer'
 import { LoadingOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Row, Col, Card, Input, Button, App, CardProps, Avatar, Image as AntdesingImg } from 'antd'
 import Image from 'next/image'
-import React, { useCallback, useEffect, useState, Suspense } from 'react';
+import React, { useCallback, useEffect, useState, Suspense, useRef } from 'react';
 import { BsRecordFill } from 'react-icons/bs'
 import Messages from '@/components/client/chats/Messages'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
@@ -13,6 +13,7 @@ import { getAllMessages, getMessageHistory, sendMessage } from '@/redux/action/m
 import { EditSVG } from '../../../../../assets/icons'
 import { pictureUrl } from '../../../../../utils/axiosConfig'
 import { useSearchParams } from 'next/navigation'
+import { useSignalR } from '@/hooks/useSignalR'
 
 const Message = () => {
   const { modal, message: AntDesignMsg } = App.useApp()
@@ -24,7 +25,9 @@ const Message = () => {
   const [fetchLoading, setFetchLoading ] = useState(false);
   const [ message, setMessage ] = useState<string>("");
   const [ chatList, setChatList ] = useState<IConversation[]>([]);
-  const [ activeChat, setActiveChat ] = useState<IConversation | null>(null)
+  const [ activeChat, setActiveChat ] = useState<IConversation | null>(null);
+  const { subscribeToMessages, isConnected } = useSignalR();
+  const containerRef = useRef<HTMLDivElement | null>(null);
   
   const handleGetMessages = useCallback(() => {
     setLoading(true);
@@ -49,6 +52,23 @@ const Message = () => {
     })
   }, [modal, applicationId]);
 
+  const handleSilentGetMessages = useCallback(() => {
+      getAllMessages()
+      .then(res => {
+        if(res.status === 200) {
+          setChatList(res.data.data);
+        }
+      })
+      .catch(err => {
+        modal.error({
+          title: "Unable to get chats",
+          content: err?.response
+            ? createErrorMessage(err.response.data)
+            : err.message,
+        });
+      })
+  }, [modal]);
+
   const handleGetMessageHistory = useCallback((id: string) => {
     setFetchLoading(true);
     getMessageHistory(id)
@@ -68,6 +88,19 @@ const Message = () => {
       });
     })
   }, [modal]);
+
+  useEffect(() => {
+    const unsub = subscribeToMessages((m) => {
+      if (m.applicationId === activeChat?.applicationId) {
+        setMessages((p) => [...p, m]);
+        handleSilentGetMessages();
+        setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" }), 50);
+      }
+    });
+
+    return unsub;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subscribeToMessages, activeChat]);
 
   const handleGetSilent = (id: string) => {
     getMessageHistory(id)
@@ -99,6 +132,7 @@ const Message = () => {
       if(res.status === 200 || res.status ===201) {
         setSendLoading(false);
         handleGetSilent(activeChat?.applicationId || "");
+        handleSilentGetMessages();
         setMessage("");
       }
     })
@@ -128,26 +162,26 @@ const Message = () => {
       {!activeChat && <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>
         No Current chat  
       </p>}
-      {activeChat && <div className='flex items-center gap-3 w-fit'>
-        <div className='relative'>
-        {!activeChat.otherUserProfilePicture && <Avatar 
-          icon={<UserOutlined className='text-2xl' />} 
-          alt={activeChat.otherUserName} 
-          size={40} 
-          className='h-[40px] w-[40px] rounded-full object-cover' 
-        />}
-        {activeChat.otherUserProfilePicture && 
-        <AntdesingImg 
-          className='h-[40px]! w-[40px]! rounded-[100px] object-cover' 
-          src={`${pictureUrl}${activeChat?.otherUserProfilePicture}`} 
-          alt={activeChat.otherUserName} 
-        />}
-        </div>
-      
-        <div className='flex flex-col text-sm'>
-          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} <span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-[16px] flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> online</span></p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
-        </div>
-    </div>}
+       {activeChat && <div className='flex items-center gap-3 w-fit'>
+              <div className='relative'>
+              {!activeChat.otherUserProfilePicture && <Avatar 
+                icon={<UserOutlined className='text-2xl' />} 
+                alt={activeChat.otherUserName} 
+                size={40} 
+                className='h-[40px] w-[40px] rounded-full object-cover' 
+              />}
+              {activeChat.otherUserProfilePicture && 
+              <AntdesingImg 
+                className='h-[40px]! w-[40px]! rounded-[100px] object-cover' 
+                src={`${pictureUrl}${activeChat?.otherUserProfilePicture}`} 
+                alt={activeChat.otherUserName} 
+              />}
+              </div>
+            
+              <div className='flex flex-col text-sm'>
+                <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} {isConnected &&<span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-[16px] flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> connected</span>}</p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
+              </div>
+      </div>}
     </>
   );
 

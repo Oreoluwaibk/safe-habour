@@ -41,7 +41,7 @@ const Page = () => {
     ).then(res => {
       if (res.status === 200 || res.status === 201) {
         setLoading(false);
-        const newList = res.data.data?.list || [];
+        const newList = res.data.data?.notifications || [];
         const totalList =  isLoadMore ? [...notifications, ...newList] : newList;
         setTotalJobs(res.data.data?.totalItems || 0);
         setNotifications((prev) =>

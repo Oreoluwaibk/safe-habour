@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import "@/styles/auth.css";
 import { Button, Checkbox, Form, Input, App } from 'antd';
 import "@/styles/form.css";
@@ -19,6 +19,7 @@ const Login = () => {
     const [ loading, setLoading ] = useState(false);
     const [ rememberMe, setRememberMe ] = useState(false);
     const { modal, message } = App.useApp();
+    const [isPending, startTransition] = useTransition();
     const { lastRoute } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -58,10 +59,18 @@ const Login = () => {
                     router.push(lastRoute);
                     dispatch(setLastRoute(null)); // clear it
                 } 
-                else if (role === "ClientUser") router.push("/dashboard/client");
+                else if (role === "ClientUser")  
+                    startTransition(() => {
+                        router.push("/dashboard/client");
+                    });
                 else if (role === "ServiceWorker") {
-                    if(res.data.data.user?.isServiceWorkerOnboarded) router.push("/dashboard/worker");
-                    else router.push("/dashboard/worker/intro");
+                    if(res.data.data.user?.isServiceWorkerOnboarded)  
+                        startTransition(() => {
+                            router.push("/dashboard/worker");
+                        }); 
+                    else startTransition(() => {
+                            router.push("/dashboard/worker/intro");
+                        });
                 };
                 message.success(res.data.message || "Log in successful"); 
             }
@@ -132,7 +141,7 @@ const Login = () => {
             </div>  
 
             <FormItem label="">
-                <Button className="button_form" type="primary" loading={loading} htmlType="submit">Sign in</Button>
+                <Button className="button_form" type="primary" loading={loading || isPending} htmlType="submit">Sign in</Button>
             </FormItem>
             <div>
                 <Socialbtn 

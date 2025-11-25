@@ -21,8 +21,6 @@ export function NotificationBell() {
 
     useEffect(() => {
         const unsubscribe = subscribeToNotifications((n) => {
-            console.log("the new notification",n);
-            
             setNotifications((prev) => [n, ...prev]);
             setUnread((u) => u + 1);
         });
@@ -82,6 +80,7 @@ export function NotificationBell() {
                     isFixed  
                     notification={n}
                     onClick={() => {
+                        handleClick();
                         if(loginType === "ServiceWorker")
                         router.push("/dashboard/worker/notification")
                         else router.push("/dashboard/notification")

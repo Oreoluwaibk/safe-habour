@@ -7,8 +7,8 @@ import { ArrowLeftOutlined, EnvironmentOutlined, StarOutlined, UserOutlined } fr
 import { App, Avatar, Card, Col, Row, Skeleton, Image } from 'antd';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react';
-import { getAJobApplication } from '@/redux/action/jobs'
-import { IJobApplication, review } from '../../../../../../utils/interface'
+import { getAJob } from '@/redux/action/jobs'
+import { JobDetails, review } from '../../../../../../utils/interface'
 import { createErrorMessage } from '../../../../../../utils/errorInstance'
 import { useServiceCategory } from '@/hooks/useServiceCategory'
 import { handleDisplayServices } from '../../../../../../utils/converters'
@@ -18,7 +18,7 @@ import moment from "moment";
 // import RateModal from '@/components/wallet/modal/RateModal'
 // import Review from '@/components/client/settings/Review'
 import RateCard from '@/components/client/cards/RateCard'
-import { getClientJobReview } from '@/redux/action/review'
+// import { getClientJobReview } from '@/redux/action/review'
 import RoundBtn from '@/components/general/RoundBtn'
 import { useAppSelector } from '@/hook'
 import { pictureUrl } from '../../../../../../utils/axiosConfig'
@@ -30,51 +30,59 @@ const Page = () => {
     const { id } = useParams();
     const { modal } = App.useApp()
     const [ loading, setLoading ] = useState(false);
-    const [ application, setApplication ] = useState<IJobApplication>({
-    "id": "5d4afdc1-3bc0-4992-6545-08de1618ba71",
-    "jobId": "8517cf86-2da6-4d53-3943-08de15311834",
-    "message": "i fill i am capable of ploughing the house and i also have proofs and relevant experiences",
-    "proposedRate": 200.00,
-    "status": 1,
-    "createdAt": "2025-10-28T11:54:49.6739794",
-    "acceptedAt": null,
-    "rejectedAt": null,
-    "rejectionReason": null,
-    "client": null,
-    "jobDetails": {
-        "id": "8517cf86-2da6-4d53-3943-08de15311834",
-        "serviceCategoryId": 2,
-        "createdAt": "2025-10-28T11:33:14.0527071",
-
-        "dateNeeded": "2025-10-29T23:00:00",
-        "jobTitle": "I want to plough my house",
+    const [ application, setApplication ] = useState<JobDetails>({
+        "id": "0cdf71ee-625f-4055-c242-08de28710082",
+        "serviceCategoryId": 3,
+        "createdAt": "2025-11-20T20:11:33.7946891",
+        "dateNeeded": "2025-11-19T23:00:00",
+        "jobTitle": "testing job notification",
         "isReocurringJob": false,
-        "timePreference": 2,
+        "timePreference": 1,
         "location": "Toronto",
         "reoccurringDays": [],
-        "budget": 200.00,
-        "jobDescription": "The house roof",
+        "budget": 100.00,
+        "jobDescription": "I want to test job notification",
         "clientId": "b299795d-7e98-4e7a-9694-1a0e7a3e2241",
-        "status": 1,
-        isHireDirectly: false,
-        applicantCount: 0
-    }
+        "status": 3,
+        "isHireDirectly": false,
+        "applicantCount": 0,
+        "client": {
+            "name": "Frontend Client",
+            "imageUrl": "uploads/profile-pictures/b299795d-7e98-4e7a-9694-1a0e7a3e2241/profile_20251114_172906.png",
+            "createdAt": "2025-10-18T06:37:56.7806163",
+            "isVerified": true,
+            "clientRating": 4,
+            "clientReviewComment": "The job was as described, no hassle or unneccessary negotiation",
+            "serviceWorkerRating": 4,
+            "serviceWorkerReviewComment": "The worker was perfect for the job",
+            "reviews": []
+        }
     });
     const { categories } = useServiceCategory();
     const [ reviews, setReviews ] = useState<review[]>([]);
     const { user } = useAppSelector(state => state.auth);
     const [ openModal, setOpenModal ] = useState(false);
-    const { statusTitle, colors } = useApplicationStatus(application.status, 'application'); 
+    const { statusTitle, colors } = useApplicationStatus(application.status, 'job'); 
 
     const handleGetJobApplication = useCallback(
         (id: string) => {
           setLoading(true);
-          getAJobApplication(id)
+          getAJob(id)
             .then((res) => {
               if (res.status === 200 || res.status === 201) {
                 setLoading(false);
                 setApplication(res.data.data);
-                handleGetClientJobReviews(res.data.data.jobDetails.id);
+                if(res.data.data.client.clientReviewComment) setReviews([
+                    {
+                        jobId: res.data.data.id,
+                        rating: res.data.data.client.clientRating,
+                        comment: res.data.data.client.clientReviewComment,
+                        isPublic: true,
+                        name: res.data.data.client.name,
+                        date: res.data.data.createdAt
+                    }
+                ])
+                // handleGetClientJobReviews(res.data.data.id);
             }
         })
         .catch((err) => {
@@ -91,29 +99,29 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [modal]);
 
-    const handleGetClientJobReviews = useCallback(
-    (id: string) => {
-        setLoading(true);
-        getClientJobReview(id)
-        .then((res) => {
-            if (res.status === 200 || res.status === 201) {
-                setLoading(false);
-                setReviews(res.data.data);
-            }
-        })
-        .catch((err) => {
-            modal.error({
-            title: "Unable to get review for this job",
-            content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
-                onOk: () => setLoading(false),
-            });
-        })
-        .finally(() => setLoading(false));
-    },
-    [modal] // dependencies
-    );
+    // const handleGetClientJobReviews = useCallback(
+    // (id: string) => {
+    //     setLoading(true);
+    //     getClientJobReview(id)
+    //     .then((res) => {
+    //         if (res.status === 200 || res.status === 201) {
+    //             setLoading(false);
+    //             setReviews(res.data.data);
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         modal.error({
+    //         title: "Unable to get review for this job",
+    //         content: err?.response
+    //             ? createErrorMessage(err.response.data)
+    //             : err.message,
+    //             onOk: () => setLoading(false),
+    //         });
+    //     })
+    //     .finally(() => setLoading(false));
+    // },
+    // [modal] // dependencies
+    // );
     
     useEffect(() => {
         if (id) handleGetJobApplication(id.toString());
@@ -159,26 +167,26 @@ const Page = () => {
             title={
                 <div className='flex flex-col gap-1'>
                     <CardTitle 
-                        title={application?.jobDetails.jobTitle || "Hire Service"} 
+                        title={application?.jobTitle || "Hire Service"} 
                         status={<Status title={statusTitle} bg={colors.bg} color={colors.color} />}
                     />
                     <div className='flex items-center gap-3'>
-                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {application?.jobDetails.location}</span>
+                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {application?.location}</span>
                         <Rating />
-                        <p className='text-lg text-[#646464] font-medium'>${application?.jobDetails.budget}</p>
+                        <p className='text-lg text-[#646464] font-medium'>${application?.budget}</p>
                     </div>
                     <div className='flex items-center gap-4'>
-                        <Status size={12} title={application && handleDisplayServices(application.jobDetails.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
+                        <Status size={12} title={application && handleDisplayServices(application.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
                     </div>
                 </div>
             }
             classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
             className='!mt-6'
             extra={
-                <RoundBtn 
+                application?.client && !application?.client.serviceWorkerReviewComment && <RoundBtn 
                     onClick={() => setOpenModal(true)} 
                     icon={<StarOutlined />}
-                    
+                    width={169}
                     title="Rate Experience" 
                 />
             }
@@ -249,7 +257,7 @@ const Page = () => {
                     <RateCard reviewDetails={review} key={i} />
                 ))
             )}
-            {!reviews && <p className='text-[#121212] text-center'>There are no client review for this job yet</p>}
+            {reviews.length === 0 && <p className='text-[#121212] text-center'>There are no client review for this job yet</p>}
         </Card> 
 
       
@@ -259,9 +267,9 @@ const Page = () => {
     
     {openModal && 
     <RateModal 
-        refresh={() => handleGetClientJobReviews(application.jobDetails.id)} 
+        refresh={() => handleGetJobApplication(application.id)} 
         user={user} 
-        job={application.jobDetails} 
+        job={application} 
         isWorker={true} 
         open={openModal} 
         onCancel={() => setOpenModal(false)} 

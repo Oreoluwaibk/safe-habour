@@ -2,7 +2,7 @@
 import CardTitle from '@/components/general/CardTitle'
 import Rating from '@/components/general/Rating'
 import { ClockCircleOutlined, EnvironmentOutlined, EyeOutlined } from '@ant-design/icons'
-import { App, Button, Card } from 'antd'
+import { Button, Card } from 'antd'
 import { useRouter } from 'next/navigation'
 import React, { useState, useTransition } from 'react'
 import { jobs } from '../../../../utils/interface'
@@ -15,14 +15,14 @@ interface props {
   job: jobs;
   verified: boolean;
 }
-const AvailableJobCard = ({ job, verified }: props) => {
+const AvailableJobCard = ({ job }: props) => {
   const router = useRouter();
   const [ openModal, setOpenModal ] = useState(false);
-  const { message } = App.useApp();
+  // const { message } = App.useApp();
   const [isPending, startTransition] = useTransition();
 
   const handleApply = () => {
-    if(!verified) return message.info("You have not been verified, this feature is only available to verified users!");
+    // if(!verified) return message.info("You have not been verified, this feature is only available to verified users!");
     setOpenModal(true)
   }
 

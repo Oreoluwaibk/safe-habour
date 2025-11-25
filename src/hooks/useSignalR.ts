@@ -5,7 +5,7 @@ import signalRService, { Notification } from "@/lib/signalRConnection";
 import { IMessage } from "../../utils/interface";
 
 export function useSignalR() {
-    const { user, token } = useAppSelector(state => state.auth); // user: { id: string, ... }, token: string | null
+    const { user, token } = useAppSelector(state => state.auth); 
 
     useEffect(() => {
         if (!user || !token) return;
@@ -27,8 +27,8 @@ export function useSignalR() {
     }, [user, token]);
 
     const subscribeToNotifications = useCallback((cb: (n: Notification) => void) => {
-    signalRService.onNotification(cb);
-    return () => signalRService.offNotification();
+        signalRService.onNotification(cb);
+        return () => signalRService.offNotification();
     }, []);
 
     const subscribeToMessages = useCallback((cb: (m: IMessage) => void) => {

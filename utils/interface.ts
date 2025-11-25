@@ -222,6 +222,11 @@ export interface jobs {
     imageUrl: string;
     createdAt: string;
     isVerified: boolean;
+    clientRating?: number
+    clientReviewComment?: string;
+    serviceWorkerRating?: number;
+    serviceWorkerReviewComment?: string;
+    reviews?: string[]
   }
   createdAt?: string;
 }
@@ -354,14 +359,35 @@ export interface JobDetails {
   clientId: string;
   status: number;
   isHireDirectly: boolean;
+  jobId?: string;
+  client?: IClient | null
 }
 
+export interface ICompletedJob {
+  clientName: string;
+  completedAt: string;
+  clientRating: number | null;
+  clientReviewComment: string | null;
+  serviceWorkerRating: number;
+  serviceWorkerReviewComment: string;
+  jobName: string | null;
+  jobId: string;
+  id?: string;
+  jobStatus: number;
+  applicationStatus: number;
+  proposedRate: string;
+  applicationId: string
+}
 export interface IClient {
   name: string;
   imageUrl: string;
   createdAt: string;
   isVerified: boolean;
-  reviews: review[]; // You can replace `any` with a proper review type if available
+  reviews: review[]; 
+  clientRating?: number
+  clientReviewComment?: string;
+  serviceWorkerRating?: number;
+  serviceWorkerReviewComment?: string;
 }
 
 export interface IJobApplication {
@@ -420,6 +446,8 @@ export interface review {
   rating: number;
   comment: string;
   isPublic: boolean;
+  name?: string;
+  date?: string;
 }
 
 
@@ -498,6 +526,11 @@ export interface IMessage {
   sentAt: string;
   isRead: boolean;
   readAt: string | null;
+  jobTitle?: string;
+  messageId?: string;
+  senderName?: string;
+  senderProfilePicture?: string;
+  type?: string;
 }
 export interface MessageDto {
   id: string;
@@ -658,6 +691,8 @@ export interface IJobDetails {
   clientId: string;
   status: number;
   isHireDirectly: boolean;
+  applicantCount: number;
+  client: IClient | null
 }
 
 export interface IServiceWorker {

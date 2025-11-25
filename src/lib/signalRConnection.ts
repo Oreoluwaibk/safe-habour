@@ -71,7 +71,7 @@ class SignalRService {
 
       this.setupEventHandlers();
 
-      await this.connection.start();
+      await this.connection?.start();
       console.log("✅ SignalR Connected successfully");
 
       // join user-specific group (Hub must implement)
@@ -80,7 +80,7 @@ class SignalRService {
       this.isConnecting = false;
     } catch (err) {
       this.isConnecting = false;
-      console.error("❌ SignalR Connection Error:", err);
+      console.warn("❌ SignalR Connection Error:", err);
       throw err;
     }
   }
@@ -105,7 +105,7 @@ class SignalRService {
       console.log("✅ SignalR reconnected:", connId)
     );
     this.connection.onclose((err) => {
-      console.error("❌ SignalR closed:", err);
+      console.warn("❌ SignalR closed:", err);
       this.isConnecting = false;
     });
   }
@@ -131,8 +131,6 @@ class SignalRService {
       return;
     }
     this.connection.on("ReceiveMessage", (payload: IMessage) => {
-      console.log("Message recieved", payload);
-      
       callback(payload as IMessage);
     });
   }
@@ -148,7 +146,7 @@ class SignalRService {
       this.connection = null;
       console.log("✅ SignalR Disconnected");
     } catch (err) {
-      console.error("❌ Error stopping SignalR:", err);
+      console.warn("❌ Error stopping SignalR:", err);
     }
   }
 

@@ -14,7 +14,6 @@ export default function NotificationToast() {
 
   useEffect(() => {
     const unsubscribe = subscribeToNotifications((notif) => {
-
       notification.open({
         message: notif.title,
         description: notif.message,

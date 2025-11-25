@@ -47,6 +47,23 @@ const Message = () => {
     })
   }, [modal]);
 
+  const handleSilentGetMessages = useCallback(() => {
+    getAllMessages()
+    .then(res => {
+      if(res.status === 200) {
+        setChatList(res.data.data);
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to get chats",
+        content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+      });
+    })
+  }, [modal]);
+
   const handleGetMessageHistory = useCallback((id: string) => {
     setFetchLoading(true);
     getMessageHistory(id)
@@ -67,21 +84,18 @@ const Message = () => {
     })
   }, [modal]);
 
-  console.log("is connected", isConnected);
-  
-
   useEffect(() => {
     const unsub = subscribeToMessages((m) => {
       if (m.applicationId === activeChat?.applicationId) {
-        console.log("mess", m);
-        
         setMessages((p) => [...p, m]);
+        handleSilentGetMessages();
         setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" }), 50);
       }
     });
 
     return unsub;
-  }, [subscribeToMessages, activeChat?.applicationId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subscribeToMessages, activeChat]);
 
   const handleGetSilent = (id: string) => {
     getMessageHistory(id)
@@ -113,6 +127,7 @@ const Message = () => {
       if(res.status === 200 || res.status ===201) {
         setSendLoading(false);
         handleGetSilent(activeChat?.applicationId || "");
+        handleSilentGetMessages(); 
         setMessage("");
       }
     })

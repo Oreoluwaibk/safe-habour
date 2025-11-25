@@ -1,8 +1,8 @@
 import { App, Avatar, Button, Input, Modal, Rate, Image } from 'antd';
 import React, { useState } from 'react'
 import CardTitle from '@/components/general/CardTitle';
-import { IUser, JobDetails, review } from '../../../../utils/interface';
-import { postWorkerJobReview } from '@/redux/action/review';
+import { ICompletedJob, IUser, JobDetails, review } from '../../../../utils/interface';
+import { postClientJobReview, postWorkerJobReview } from '@/redux/action/review';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { pictureUrl } from '../../../../utils/axiosConfig';
 import { UserOutlined } from '@ant-design/icons';
@@ -12,7 +12,7 @@ interface props {
   onCancel: () => void;
   isWorker?: boolean;
   user: IUser;
-  job: JobDetails;
+  job: JobDetails | ICompletedJob;
   refresh: () => void;
 }
 
@@ -30,15 +30,55 @@ const RateModal = ({ open, onCancel, isWorker, user, job, refresh }: props) => {
       isPublic: true,
       rating,
       comment,
-      jobId: job.id
+      jobId: job?.id || job?.jobId || ""
     }
     setLoading(true);
     postWorkerJobReview(payload)
     .then(res => {
       if(res.status === 200 || res.status === 201) {
         setLoading(false);
-        refresh();
-        onCancel();
+        modal.success({
+          title: res.data.message || "Review has been submitted",
+          onOk: () => {
+            refresh();
+            onCancel();
+          }
+        })
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to save review",
+        content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+        onOk: () => setLoading(false)
+      });
+    })
+  }
+
+  const handleSendJobReview = () => {
+    if(!rating) return message.error("Kindly set the rating to continue!");
+    if(!comment) return message.error("Kindly drop a comment to continue!")
+
+    const payload: review = {
+      isPublic: true,
+      rating,
+      comment,
+      jobId: job?.id || job?.jobId || ""
+    }
+    setLoading(true);
+    postClientJobReview(payload)
+    .then(res => {
+      if(res.status === 200 || res.status === 201) {
+        setLoading(false);
+        modal.success({
+          title: res.data.message || "Review has been submitted",
+          onOk: () => {
+            refresh();
+            onCancel();
+          }
+        })
       }
     })
     .catch(err => {
@@ -54,6 +94,7 @@ const RateModal = ({ open, onCancel, isWorker, user, job, refresh }: props) => {
 
   const handleSubmit = () => {
     if(isWorker) handleSendWorkerReview();
+    else handleSendJobReview();
   }
   return (
     <Modal

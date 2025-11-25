@@ -1,9 +1,8 @@
-import { Card } from 'antd'
+import { Avatar, Card } from 'antd'
 import Image from 'next/image'
 import React from 'react'
-import { Lightening } from '../../../assets/icons'
-import { C1 } from '../../../assets/image'
-import { CloseOutlined, LoadingOutlined } from '@ant-design/icons'
+import { Lightening } from '../../../assets/icons';
+import { CloseOutlined, LoadingOutlined, NotificationOutlined } from '@ant-design/icons'
 import { INotification } from '../../../utils/interface'
 import { timeAgo } from '../../../utils/converters'
 
@@ -33,8 +32,9 @@ const NotificationCard = ({ isFixed, onCancel, notification, loading, onClick }:
     <p className='text-[#101828] text-sm'>{notification.title}</p>
     <p className={`${isFixed ? "text-xs" : "text-sm"} text-[#667085]`}>{notification.message}</p>
     {!isFixed && <div className='flex items-center gap-3 mt-3'>
-      <Image src={C1} alt='image' className='h-[32px] w-[32px] rounded-[100px] object-cover' />
-      <p  className='text-sm text-[#434242]'>{notification.priorityName}</p>
+      {notification.iconUrl && <Image src={`${process.env.NEXT_PUBLIC_PROFILE_URL2}${notification.iconUrl}`} width={32} height={32} alt='image' className='h-[32px] w-[32px] rounded-[100px] object-cover' />}
+      {!notification.iconUrl && <Avatar icon={<NotificationOutlined />} size={32} />}
+      <p  className='text-sm text-[#434242] font-medium'>{notification.typeName}</p>
     </div>}
     {isFixed && <p className='text-right mt-2 text-[#434242] text-xs'>{notification.timestamp && timeAgo(notification?.timestamp)}</p>}
   </div>

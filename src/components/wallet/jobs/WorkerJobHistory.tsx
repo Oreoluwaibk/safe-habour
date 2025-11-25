@@ -4,7 +4,7 @@ import Status from '@/components/general/Status'
 import { App, Card, Col, Row } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import JobHistoryCard from '../cards/JobHistoryCard'
-import { IJobApplication } from '../../../../utils/interface'
+import { ICompletedJob, IJobApplication } from '../../../../utils/interface'
 import { getServiceWorkerJobHistory } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../../utils/errorInstance'
 import axios from 'axios'
@@ -13,7 +13,7 @@ import { useAuthentication } from '@/hooks/useAuthentication'
 const WorkerJobHistory = () => {
     const [ loading, setLoading ] = useState(false);
     const { modal } = App.useApp();
-    const [ jobs, setJobs ] = useState<IJobApplication[]>([]);
+    const [ jobs, setJobs ] = useState<ICompletedJob[]>([]);
     const [filters, setFilters] = useState({
         pageNumber: 1,
         pageSize: 10,
@@ -114,7 +114,7 @@ const WorkerJobHistory = () => {
     loading={loading}
     >
         <Row gutter={[15, 15]} className='pb-6'>
-            {jobs.map((job:IJobApplication, i: number) => (
+            {jobs.map((job:ICompletedJob, i: number) => (
                 <Col lg={24} sm={24} xs={24} key={i}>
                     <JobHistoryCard user={authentication!} refresh={handleGetHistory} job={job} />
                 </Col>

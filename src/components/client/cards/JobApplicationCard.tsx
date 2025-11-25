@@ -2,9 +2,9 @@
 import CardTitle from '@/components/general/CardTitle'
 import RoundBtn from '@/components/general/RoundBtn'
 import Status from '@/components/general/Status'
-import { ClockCircleOutlined, EnvironmentOutlined, EyeOutlined } from '@ant-design/icons'
+import { ClockCircleOutlined, EnvironmentOutlined, EyeOutlined, StarOutlined } from '@ant-design/icons'
 import { App, Card } from 'antd'
-import React, { useState } from 'react'
+import React, { useState, useTransition } from 'react'
 import { completeJob, JobDetails } from '../../../../utils/interface'
 import moment from 'moment'
 import { savedPreferredTime } from '../../../../utils/savedInfo'
@@ -12,6 +12,9 @@ import ApplicationModal from '../modal/ApplicationModal'
 import useApplicationStatus from '@/hooks/useApplicationStatus'
 import { completeJobAsClient } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../../utils/errorInstance'
+import RateModal from '@/components/wallet/modal/RateModal'
+import { useAppSelector } from '@/hook'
+import { useRouter } from 'next/navigation'
 
 interface props {
   jobDetails: JobDetails; 
@@ -19,9 +22,13 @@ interface props {
 }
 const JobApplicationCard = ({ jobDetails, refresh }: props) => {
     const [ openModal, setOpenModal ] = useState(false);
+    const { user } = useAppSelector(state => state.auth);
+    const [ openRateModal, setOpenRateModal ] = useState(false);
     const { statusTitle, colors } = useApplicationStatus(jobDetails.status, 'job');
     const [ loading, setLoading ] = useState(false);
     const { modal } = App.useApp();
+    const router = useRouter();
+    const [ isPending, startTransition ] = useTransition();
 
     const handleMarkAsComplete = () => {
     const payload: completeJob = {
@@ -50,6 +57,13 @@ const JobApplicationCard = ({ jobDetails, refresh }: props) => {
         onOk: () => setLoading(false)
         });
     })
+    }
+
+    const handleNavigate = () => {
+        if (jobDetails.status !== 3) setOpenModal(true)
+        else  startTransition(() => {
+            router.push(`/dashboard/client/job/${jobDetails.id}`);
+        });
     }
 
   return (
@@ -86,14 +100,22 @@ const JobApplicationCard = ({ jobDetails, refresh }: props) => {
             />
             <div style={{height: 30}}></div>
             <div className='flex items-center gap-4'>
-                <RoundBtn icon={<EyeOutlined className='!text-[#670316]' />} title='View Details' onClick={()=> setOpenModal(true)} />
+                {<RoundBtn  loading={isPending} icon={<EyeOutlined className='!text-[#670316]' />} title='View Details' onClick={handleNavigate} />}
+                {jobDetails.status === 3 && !jobDetails.client?.clientReviewComment && 
+                <RoundBtn 
+                    icon={<StarOutlined className={jobDetails.status !== 3 ? '!text-[#670316]' : ""} />} 
+                    title='Rate Experience' 
+                    primary={jobDetails.status === 3}
+                    width={169}
+                    onClick={()=> setOpenRateModal(true)} 
+                />}
                 {jobDetails.status === 6 && (
                     <RoundBtn  
                         title="Confirm"
                         onClick={handleMarkAsComplete}
                         loading={loading}
                         primary
-                        width={89}
+                        width={109}
                     />
                 )}
             </div>
@@ -106,6 +128,14 @@ const JobApplicationCard = ({ jobDetails, refresh }: props) => {
         open={openModal} 
         onCancel={() => setOpenModal(false)} 
         jobDetails={jobDetails} />}
+    
+     {openRateModal && <RateModal
+        open={openRateModal} 
+        onCancel={() => setOpenRateModal(false)} 
+        job={jobDetails}
+        user={user}
+        refresh={refresh}
+    />}
     </> 
     
   )

@@ -1,6 +1,7 @@
 import { Card, Rate } from 'antd'
 import React from 'react'
 import { review } from '../../../../utils/interface'
+import moment from 'moment';
 
 interface props {
   reviewDetails: review;
@@ -13,8 +14,8 @@ const RateCard = ({ reviewDetails }: props) => {
     >
       <div className='flex items-center justify-between'>
       <div>
-          <p className='text-[#1e1e1e] text-lg'>Sarah John</p>
-          <p className='text-[#6a6a6a] text-sm'>20/08/2025</p>
+          <p className='text-[#1e1e1e] text-lg'>{reviewDetails.name || ""}</p>
+          {reviewDetails.date && <p className='text-[#6a6a6a] text-sm'>{moment(reviewDetails.date).format("DD/MM/YYYY")}</p>}
       </div>
       <Rate count={5} value={reviewDetails.rating} className='text-[#ffdd33] !text-lg'  />
       </div>

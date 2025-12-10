@@ -155,3 +155,10 @@ export const changePassword = async (data: { currentPassword: string; newPasswor
 
     return Promise.resolve(response);
 }
+
+export const adminApproveDocument = async (data: { userId: string; documentType: number, isApproved: boolean, rejectionReason: string  }) => {
+    const url = `/Authentication/admin/approve-document`;
+    const response = await axiosInstance.post(url, data);
+
+    return Promise.resolve(response);
+}

@@ -9,7 +9,7 @@ export default function useApplicationStatus(status: string | number, type: 'job
             switch (status) {
                 case 1: {
                     setStatusTitle("Pending");
-                    setColors({bg: "#FFF6F7", color: "#FF0004"});
+                    setColors({bg: "#FFFCEA", color: "#FED500"});
                 } break;
                 case 2: {
                     setStatusTitle("Accepted");
@@ -17,7 +17,7 @@ export default function useApplicationStatus(status: string | number, type: 'job
                 } break;
                 case 3: {
                     setStatusTitle("Rejected");
-                    setColors({bg: "#FFF8F9", color: "#670316"});
+                    setColors({bg: "#FFF6F7", color: "#FF0004"});
                 } break;
                 case 4: {
                     setStatusTitle("Withdrawn");
@@ -37,7 +37,7 @@ export default function useApplicationStatus(status: string | number, type: 'job
                 } break;
                 case 2: {
                     setStatusTitle("In Progress");
-                    setColors({bg: "#FFFBE6", color: "#FFDD33"});
+                    setColors({bg: "#FFFCEA", color: "#FED500"});
                 } break;
                 case 3: {
                     setStatusTitle("Completed");
@@ -60,5 +60,57 @@ export default function useApplicationStatus(status: string | number, type: 'job
         }
     }, [status, type]);
 
-    return { statusTitle, colors };
+    const handleReturnStatus = (status: number) => {
+        switch (status) {
+            case 1: {
+                return {
+                    title: "Open",
+                    bg: "#FFF6F7",
+                    color: "#FF0004"
+                };
+            } break;
+            case 2: {
+                return {
+                    title: "In Progress",
+                    color: "#FED500",
+                    bg: "#FFFCEA"
+                };
+            } break;
+            case 3: {
+                return {
+                    title: "Completed",
+                    bg: "#F3FFF4",
+                    color: "#018A06"
+                };
+            } break;
+            case 4: {
+                return {
+                    title: "Cancelled",
+                    bg: "#FFF6F7",
+                    color: "#FF0004"
+                };
+            } break;
+            case 5: {
+                return {
+                    title: "Disputed",
+                    bg: "#FFF8F9",
+                    color: "#670316"
+                };
+            } break;
+            case 6: {
+                return {
+                    title: "ServiceWorkerCompleted",
+                    bg: "#F3FFF4",
+                    color: "#018A06"
+                };
+            } break;
+            default: return {
+                    title: "Open",
+                    bg: "#FFF6F7",
+                    color: "#FF0004"
+                };;
+        }
+    }
+
+    return { statusTitle, colors, handleReturnStatus };
 }

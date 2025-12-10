@@ -71,7 +71,12 @@ const Login = () => {
                     else startTransition(() => {
                             router.push("/dashboard/worker/intro");
                         });
-                };
+                }
+                else if(role === "SuperAdmin") {
+                    startTransition(() => {
+                        router.push("/dashboard/admin");
+                    });
+                }
                 message.success(res.data.message || "Log in successful"); 
             }
             if(res.status === 202) {

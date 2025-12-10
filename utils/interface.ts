@@ -723,4 +723,213 @@ export interface IClientApplicationDetails {
   serviceWorker: IServiceWorker;
 }
 
+////////////////////////////////////////////////ADMIN INTERFACE ////////////////////////////////
+
+export interface IDashboardMetrics {
+  totalUsers: {
+    value: number;
+    changePercent: number;
+  };
+  activeJobs: {
+    value: number;
+    pendingVerification: number;
+  };
+  totalRevenue: {
+    value: number;
+    changePercent: number;
+  };
+  avgCompletionRate: {
+    value: number;
+    changePercent: number;
+  };
+  pendingKyc: {
+    value: number;
+  };
+  successRate: {
+    value: number;
+    label: string;
+  };
+}
+
+export interface FeeStats {
+  totalFeesCollected: number;
+  totalFeeCount: number;
+  averageFeeAmount: number;
+  totalJobBudgets: number;
+  totalTransferredToWorkers: number;
+  firstFeeDate: string;
+  lastFeeDate: string;
+  recentFees: RecentFee[];
+}
+
+export interface RecentFee {
+  id: string;
+  jobId: string;
+  jobTitle: string;
+  serviceTypeName: string;
+  serviceWorkerId: string;
+  serviceWorkerName: string;
+  clientId: string;
+  clientName: string;
+  paymentId: string;
+  feeAmount: number;
+  feePercentage: number;
+  jobBudget: number;
+  transferAmount: number;
+  currency: string;
+  stripeTransferId: string;
+  description: string;
+  collectedAt: string;
+  createdAt: string;
+  notes: string;
+}
+
+export interface IAdminStat {
+  totalUsers: number;
+  activeUsers: number;
+  inactiveUsers: number;
+  verifiedUsers: number;
+  unverifiedUsers: number;
+  profileCompleteUsers: number;
+  profileIncompleteUsers: number;
+  approvedUsers: number;
+  pendingApprovalUsers: number;
+  clientUsers: number;
+  serviceWorkerUsers: number;
+  superAdminUsers: number;
+  usersRegisteredToday: number;
+  usersRegisteredThisWeek: number;
+  usersRegisteredThisMonth: number;
+}
+
+export interface IAdminUserList {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  dateOfBirth: string | null;
+  gender: string | null;
+  bio: string | null;
+  profilePicturePath: string | null;
+  streetAddress: string | null;
+  city: string | null;
+  country: string | null;
+  postalCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  isProfileComplete: boolean;
+  isVerified: boolean;
+  emailConfirmed: boolean;
+  isActive: boolean;
+  roles: string[];
+  isStripeConnectEnabled: boolean;
+  hasIdentificationDocument: boolean;
+  hasLocationDocument: boolean;
+  isIdentityDocumentApproved: boolean;
+  isLocationDocumentApproved: boolean;
+  isTwoFactorAuthenticationEnabled: boolean;
+  isServiceWorkerOnboarded: boolean | null;
+  services: IServiceDetail[];              
+  languages: ILanguage[];      
+  hourlyRate: number | null;
+  notificationSettings: INotificationSetting[];  
+  dateJoined: string;
+  completedJobsCount: number | null;
+  averageRating: number | null;
+  servicesOffered: string[];     
+}
+
+export interface IAdminJobDetails {
+  jobId: string;
+  jobTitle: string;
+  clientName: string;
+  workerName: string;
+  date: string;            // ISO date string
+  amount: number;
+  durationInHours: number | null;
+  status: number;          // If you want, I can convert this to an enum
+}
+
+export interface IAdminVerificationList {
+  userId: string;
+  fullName: string;
+  service: string;
+  submittedAt: string;               // ISO date string
+  hasIdentificationDocument: boolean;
+  hasLocationDocument: boolean;
+}
+
+export interface IVerificationFullDetails {
+  userId: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  location: string;
+  service: string;
+  submittedAt: string; // ISO date string
+
+  hasIdentificationDocument: boolean;
+  hasLocationDocument: boolean;
+
+  userIdentificationDocumentPath: string;
+  userLocationDocumentPath: string;
+
+  userIdentificationDocumentUrl: string;
+  userLocationDocumentUrl: string;
+}
+
+export interface IPopularService {
+  serviceName: string;
+  bookings: number;
+  percentageChange: number;
+}
+
+export interface IUserSatisfaction {
+  netPromoterScore: number;
+  promoters: number;
+  passives: number;
+  detractors: number;
+}
+
+export interface IAdminReports {
+  growthRate: number;
+  newUsers: number;
+  newUsersPercentageChange: number;
+  bookingFrequency: number | null;
+  averageRating: number;
+  popularServices: IPopularService[];
+  userSatisfaction: IUserSatisfaction | null;
+}
+
+export interface IActivityLog {
+  id: string;
+  userId: string;
+  userName: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  category: string;
+  actionType: number;
+  status: string;
+  message: string;
+  ipAddress: string | null;
+  metadataJson: string | null;
+  createdAt: string; // ISO date string
+}
+
+export interface IAdminWorkerActivity {
+  workerId: string;
+  fullName: string;
+  role: string;
+  serviceCategory: string;
+  isAvailable: boolean;
+  slots: IWorkerSlot[];
+}
+
+export interface IWorkerSlot {
+  startTime: string; // "HH:mm:ss"
+  endTime: string;   // "HH:mm:ss"
+}
 

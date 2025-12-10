@@ -22,7 +22,7 @@ export default function NotificationToast() {
         onClick: () => {
           if(loginType === "ServiceWorker")
             router.push("/dashboard/worker/notification")
-            else router.push("/dashboard/notification")
+            else if(loginType === "ClientUser") router.push("/dashboard/notification")
           }
         });
     });

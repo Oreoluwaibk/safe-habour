@@ -94,14 +94,14 @@ export const getAllJobs = async (
 
 export const getAJob = async (id: string) => {
   const url = `/Jobs/${id}`;
-  const response = await axiosInstance.get(url, { baseURL: "https://safeharbour.azurewebsites.net" });
+  const response = await axiosInstance.get(url, { baseURL: "https://safe-habour-api.azurewebsites.net" });
 
   return Promise.resolve(response);
 }
 
 export const postAJob = async (data: jobs) => {
   const url = `/job`;
-  const response = await axiosInstance.post(url, data, { baseURL: "https://safeharbour.azurewebsites.net" });
+  const response = await axiosInstance.post(url, data, { baseURL: "https://safe-habour-api.azurewebsites.net" });
 
   return Promise.resolve(response);
 }

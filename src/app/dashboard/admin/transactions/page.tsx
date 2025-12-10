@@ -81,6 +81,7 @@ const Page = () => {
 
   useEffect(() => {
     handleGetTransactionLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
   useEffect(() => {

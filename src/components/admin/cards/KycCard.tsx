@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react'
 import { Card } from 'antd'
 import React, { useState } from 'react'
 import ApproveReject from '../modals/ApproveReject'
-import { IAdminVerificationList, IUser } from '../../../../utils/interface'
+import { IAdminVerificationList } from '../../../../utils/interface'
 import KYCReview from '../modals/KYCReview'
 import moment from 'moment'
 

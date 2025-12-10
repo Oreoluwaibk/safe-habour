@@ -1,6 +1,5 @@
 "use client"
 import AdminTable from '@/components/admin/AdminTable'
-import SuspendModal from '@/components/admin/modals/SuspendModal'
 import UserDetails from '@/components/admin/modals/UserDetails'
 import AdminContainer from '@/components/dashboard/AdminContainer'
 import RoundBtn from '@/components/general/RoundBtn'
@@ -57,7 +56,7 @@ const Page = () => {
         : err.message,
       });
     })
-  }, [modal, filters]);
+  }, [modal, filters, active]);
     
   useEffect(() => {
     handleGetUsers();

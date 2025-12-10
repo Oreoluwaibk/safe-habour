@@ -1,8 +1,8 @@
 import CardTitle from '@/components/general/CardTitle';
 import RoundBtn from '@/components/general/RoundBtn';
-import { App, Divider, Form, Input, Modal, Select } from 'antd';
+import { Divider, Form, Input, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react'
-import { createErrorMessage } from '../../../../utils/errorInstance';
+// import { createErrorMessage } from '../../../../utils/errorInstance';
 import { IAdminUserList } from '../../../../utils/interface';
 
 
@@ -15,10 +15,10 @@ interface props {
     isEdit: boolean;
     user?: IAdminUserList
 }
-const AddAdminUser = ({ onCancel, open, refresh, isEdit, user }: props) => {
-    const { modal } = App.useApp();
+const AddAdminUser = ({ onCancel, open, isEdit, user }: props) => {
+    // const { modal } = App.useApp();
     const [form] = Form.useForm();
-    const [ loading, setLoading ] = useState(false);
+    const [ loading ] = useState(false);
 
     useEffect(() => {
         if(user) {
@@ -28,11 +28,12 @@ const AddAdminUser = ({ onCancel, open, refresh, isEdit, user }: props) => {
                 role: user.roles[0]
             })
         }
-    }, [user])
+    }, [user, form])
 
     const handleSubmit = () => {
         form.validateFields()
         .then(value => {
+            console.log(value);
             // setError("");
             // const payload: SuspendUser = {
             //     userId: user.id,
@@ -65,7 +66,8 @@ const AddAdminUser = ({ onCancel, open, refresh, isEdit, user }: props) => {
             //     });
             // })
         })
-        .catch(err => {;
+        .catch(err => {
+            console.log(err)
             // setError(err?.errorFields?.[0]?.errors?.[0] || "Enter reason for suspension");
         })
     }

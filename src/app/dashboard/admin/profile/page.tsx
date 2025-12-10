@@ -15,13 +15,15 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const Page = () => {
   const [form] = Form.useForm();
-  const [ loading, setLoading ] = useState(false);
+  const [ loading ] = useState(false);
   const { authentication } = useAuthentication();
   const [ isEdit, setIsEdit ] = useState(false);
-  const [ uploading, setUploading ] = useState(false);
-  const [ initialCode, setInitialCode ] = useState("ca");
+  const [ uploading ] = useState(false);
+  const [ initialCode ] = useState("ca");
 
   const handleUploadPicture = (file: RcFile) => {
+    console.log(file);
+    
           // const payload = {
           //     ProfilePicture: file,
           //     userId: authentication?.id 
@@ -49,7 +51,7 @@ const Page = () => {
           // })
       }
   
-  const handleFinish = () => {}
+  // const handleFinish = () => {}
 
   const handleSubmit = () => {
     // console.log("Dddd");

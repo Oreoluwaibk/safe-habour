@@ -1,6 +1,6 @@
 "use client"
 import "@/styles/client.css"
-import { MenuOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Image as AntDImage } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -17,7 +17,6 @@ import { useAuthentication } from "@/hooks/useAuthentication";
 import { pictureUrl } from "../../../utils/axiosConfig";
 import { NotificationBell } from "../notification/NotificationBell";
 import NotificationToast from "../notification/NotificationToast";
-import WorkerSearch from "../general/search/WorkerSearch";
 import AdminSideMenu from "./AdminSideMenu";
 import RoundBtn from "../general/RoundBtn";
 

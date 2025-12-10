@@ -1,6 +1,6 @@
 import { Button, Card, Input, Pagination, PaginationProps, Select, Table } from 'antd'
 import React from 'react';
-import type { ColumnsType, TablePaginationConfig, TableProps } from 'antd/es/table';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 import { AlignCenterOutlined, SearchOutlined } from '@ant-design/icons';
 
 

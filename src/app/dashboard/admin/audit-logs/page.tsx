@@ -73,6 +73,7 @@ const Page = () => {
 
   useEffect(() => {
     handleGetAuditLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
   const handlePageChange = (pageNumber: number, pageSize?: number) => {

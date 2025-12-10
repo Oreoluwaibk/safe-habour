@@ -1,12 +1,8 @@
 "use client"
-import { Button, Card, Drawer, Menu, MenuProps } from 'antd';
+import { Menu } from 'antd';
 import React from 'react'
-import { NavItem } from './Container';
-import Image from 'next/image';
-import { Logo } from '../../../assets/logo';
 import { useRouter } from 'next/navigation';
-import { CloseOutlined, DownOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
-import { ItemType, MenuItemType } from 'antd/es/menu/interface';
+import { DownOutlined, RightOutlined } from '@ant-design/icons';
 
 interface props {
     open: boolean;
@@ -15,8 +11,6 @@ interface props {
     // loading: boolean;
 }
 const AdminSideMenu = ({
-    open,
-    onCancel,
     active
     // loading
 }: props) => {
@@ -69,7 +63,7 @@ const AdminSideMenu = ({
         },
     ];
     
-    const handleChangeMenu = (value: any) => {
+    const handleChangeMenu = (value: {key: string}) => {
         if(value?.key === "Overview")  router.push("/dashboard/admin");
         if(value?.key === "Users")  router.push("/dashboard/admin/users");
         if(value?.key === "KYC Verification")  router.push("/dashboard/admin/kyc");

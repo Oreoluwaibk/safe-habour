@@ -2,7 +2,7 @@ import RoundBtn from '@/components/general/RoundBtn';
 import { Icon } from '@iconify/react';
 import { App, Modal } from 'antd';
 import React, { useState } from 'react'
-import { IAdminVerificationList, IUser } from '../../../../utils/interface';
+import { IAdminVerificationList } from '../../../../utils/interface';
 import { adminApproveDocument } from '@/redux/action/auth';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 

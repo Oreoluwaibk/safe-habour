@@ -2,7 +2,7 @@
 import AdminTable from '@/components/admin/AdminTable'
 import AdminContainer from '@/components/dashboard/AdminContainer'
 import { Icon } from '@iconify/react'
-import { App, Card, Dropdown, Input, List, Segmented, Typography } from 'antd'
+import { App, Card, Dropdown, Input, List, Segmented } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ColumnsType, TableProps } from 'antd/es/table';
 import { IAdminUserList } from '../../../../../utils/interface'
@@ -57,10 +57,11 @@ const Page = () => {
         : err.message,
       });
     })
-  }, [modal, filters]);
+  }, [modal, filters, active]);
   
   useEffect(() => {
     handleGetUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
   useEffect(() => {

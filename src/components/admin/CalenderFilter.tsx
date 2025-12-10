@@ -3,7 +3,6 @@ import { Icon } from '@iconify/react'
 import { Button, Calendar, CalendarProps, Dropdown, Flex } from 'antd'
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useState } from 'react'
-import { schedule } from '../../../utils/interface';
 
 interface ICalenderFilterProps {
   onChange: (value: string) => void;

@@ -46,7 +46,7 @@ const Page = () => {
         .then((res) => {
           if (res.status === 200 || res.status === 201) {
             setJob(res.data.data);
-             res.data.data.client.serviceWorkerReviewComment && setReviews([
+             if (res.data.data.client.serviceWorkerReviewComment) setReviews([
                     {
                         jobId: res.data.data.id,
                         rating: res.data.data.client.serviceWorkerRating,

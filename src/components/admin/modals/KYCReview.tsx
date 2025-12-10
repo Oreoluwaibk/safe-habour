@@ -1,11 +1,9 @@
 "use client"
 import React, { useCallback, useEffect, useState } from 'react'
-import { IAdminVerificationList, IUser, IVerificationFullDetails } from '../../../../utils/interface';
+import { IAdminVerificationList, IVerificationFullDetails } from '../../../../utils/interface';
 import { Avatar, Card, Col, Divider, Modal, Row, Image, App } from 'antd';
 import CardTitle from '@/components/general/CardTitle';
 import { EnvironmentOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
-import { pictureUrl } from '../../../../utils/axiosConfig';
-// import Image from 'next/image';
 import Status from '@/components/general/Status';
 import { Icon } from '@iconify/react';
 import RoundBtn from '@/components/general/RoundBtn';
@@ -64,7 +62,7 @@ const KYCReview = ({
                     : err.message,
                 });
             })
-    }, []);
+    }, [modal, verification.userId]);
 
     useEffect(() => {
         handleGetVerification();

@@ -3,12 +3,12 @@ import AdminContainer from '@/components/dashboard/AdminContainer'
 import InfoWalletCards from '@/components/wallet/cards/InfoWalletCards'
 import { App, Card, Col, Row } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
-import { EarningsSummary, IActivityLog, IAdminStat, IDashboardMetrics } from '../../../../utils/interface'
+import { IActivityLog, IDashboardMetrics } from '../../../../utils/interface'
 import { Icon } from '@iconify/react'
-import { UpOutlined, UpSquareFilled } from '@ant-design/icons'
+// import { UpOutlined, UpSquareFilled } from '@ant-design/icons'
 import RecentActivity from '@/components/admin/cards/RecentActivity'
 import { createErrorMessage } from '../../../../utils/errorInstance'
-import { getActivityLogs, getAdminFeesStat, getAdminStats, getDashboardAdminStats } from '@/redux/action/admin'
+import { getActivityLogs, getDashboardAdminStats } from '@/redux/action/admin'
 
 const Page = () => {
   const { modal } = App.useApp();
@@ -91,7 +91,7 @@ const Page = () => {
     <Card classNames={{ body: "bg-[#f6f6f6]!"}} loading={loading}>
       <div>
         <h1 className='t-pri !font-semibold text-[32px]'>Dashboard Overview</h1>
-        <p className='t-pri mb-6'>Monitor your platform's key metrics and activities</p>
+        <p className='t-pri mb-6'>Monitor your platform&apos;s key metrics and activities</p>
       </div>
 
       <Row className='mt-6 mb-4' gutter={[15, 15]}>

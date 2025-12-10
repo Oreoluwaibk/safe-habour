@@ -7,7 +7,7 @@ import { Card, Col, Row } from 'antd';
 import React, { useState } from 'react'
 
 const ServiceCategory = () => {
-    const [ loading, setLoading ] = useState(false);
+    const [ loading ] = useState(false);
     const { categories } = useServiceCategory();
   return (
     <Card 

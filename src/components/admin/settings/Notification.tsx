@@ -1,7 +1,6 @@
 import CheckCard from '@/components/client/cards/CheckCard'
 import CardTitle from '@/components/general/CardTitle'
 import { getNotificationSettings, updateNotificationSetting } from '@/redux/action/extra'
-import { Icon } from '@iconify/react'
 import { App, Card, Col, Row } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../utils/errorInstance'
@@ -18,25 +17,25 @@ const Notification = () => {
     const [ selected, setSelected ] = useState<number | null>(null);
     const [ notifications, setNotifications ] = useState<IUserNotificationPreferences>([]);
 
-    const handleGetNotificationSettings = useCallback(() => {
-        setLoading(true);
-        getNotificationSettings()
-        .then(res => {
-            if(res.status === 200) {
-                setLoading(false);
-                setNotifications(res.data.data);
-            }
-        })
-        .catch(err => {
-            modal.error({
-            title: "Unable to get notification settings",
-            content: err?.response
-            ? createErrorMessage(err.response.data)
-            : err.message,
-            onOk: () => setLoading(false)
-            });
-        })
-    }, [modal]);
+    // const handleGetNotificationSettings = useCallback(() => {
+    //     setLoading(true);
+    //     getNotificationSettings()
+    //     .then(res => {
+    //         if(res.status === 200) {
+    //             setLoading(false);
+    //             setNotifications(res.data.data);
+    //         }
+    //     })
+    //     .catch(err => {
+    //         modal.error({
+    //         title: "Unable to get notification settings",
+    //         content: err?.response
+    //         ? createErrorMessage(err.response.data)
+    //         : err.message,
+    //         onOk: () => setLoading(false)
+    //         });
+    //     })
+    // }, [modal]);
 
     const handleSilentLoad = useCallback(() => {
         getNotificationSettings()
@@ -85,7 +84,7 @@ const Notification = () => {
 
     useEffect(() => {
         // handleGetNotificationSettings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, []);
 
   return (

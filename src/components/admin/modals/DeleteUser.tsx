@@ -13,8 +13,7 @@ interface props {
 const DeleteUser = ({
     onCancel,
     open,
-    user,
-    refresh
+    user
 }: props) => {
   return (
      <Modal 

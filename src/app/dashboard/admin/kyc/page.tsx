@@ -3,9 +3,9 @@ import KycCard from '@/components/admin/cards/KycCard'
 import AdminContainer from '@/components/dashboard/AdminContainer'
 import Status from '@/components/general/Status'
 import { Icon } from '@iconify/react'
-import { App, Card, Col, Input, Row, Segmented } from 'antd'
+import { App, Button, Card, Col, Input, Pagination, PaginationProps, Row, Segmented } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
-import { IAdminVerificationList, IUser } from '../../../../../utils/interface'
+import { IAdminVerificationList } from '../../../../../utils/interface'
 import { getClientPendingVerification, getServiceWOrkerPendingVerification, IAdminParams } from '@/redux/action/admin'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
 
@@ -49,11 +49,22 @@ const Page = () => {
   
   useEffect(() => {
     handleGetVerification();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const handleChange = (value: string) => {
     setActive(value);
     handleGetVerification(value);
+  }
+
+  const itemRender: PaginationProps["itemRender"] = (_, type, originalElement) => {
+    if(type === "prev")return <div className='flex justify-start'><Button disabled={filters.pageNumber === 1} className='!border-[#D0D5DD] !h-8'>Previous</Button></div>
+    if(type === "next")return <div className='flex justify-end'><Button disabled={filters.pageSize! > total} className='!border-[#D0D5DD] !h-8'>Next</Button></div>
+    return originalElement
+  }
+
+  const handlePageChange = (pageNumber: number, pageSize?: number) => {
+    setFilter((prev) => ({...prev, pageNumber, pageSize}))
   }
   return (
   <AdminContainer active='KYC Verification'>
@@ -96,6 +107,20 @@ const Page = () => {
           <p className='text-center my-6 text-[#1e1e1e] text-lg font-medium'>No verification to review</p>
         </Col>}
       </Row>
+        {filters.pageSize! < total && <Pagination 
+        responsive
+        itemRender={itemRender}
+        align="center"
+        current={filters.pageNumber}
+        total={total}
+        pageSize={filters.pageSize}
+        className="border-t border-t-[#eaecf0] !pt-4 !w-full custom"
+        showTotal={(total) =>
+            `Page ${filters.pageNumber} of ${Math.ceil(total / (filters.pageSize || 1))}`
+        }
+        onChange={handlePageChange}
+      />}
+      
     </Card>
   </Card>  
   </AdminContainer>

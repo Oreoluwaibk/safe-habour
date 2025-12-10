@@ -1,5 +1,5 @@
-import { App, Avatar, Card, Col, Divider, List, Modal, Row } from 'antd'
-import React, { useCallback, useEffect, useState } from 'react'
+import { Avatar, Card, Col, Divider, List, Modal, Row } from 'antd'
+import React from 'react'
 import { IAdminUserList } from '../../../../utils/interface';
 import CardTitle from '@/components/general/CardTitle';
 import { PhoneOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
@@ -9,8 +9,6 @@ import { Icon } from '@iconify/react';
 import moment from 'moment';
 import Dot from '@/components/general/Dot';
 import Status from '@/components/general/Status';
-import { getAUsers } from '@/redux/action/admin';
-import { createErrorMessage } from '../../../../utils/errorInstance';
 
 interface props {
     open: boolean;

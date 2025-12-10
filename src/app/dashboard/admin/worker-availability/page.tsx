@@ -47,6 +47,7 @@ const Page = () => {
   
   useEffect(() => {
     handleGetWorkerAvailability();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const itemRender: PaginationProps["itemRender"] = (_, type, originalElement) => {

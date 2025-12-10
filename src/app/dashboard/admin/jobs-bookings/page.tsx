@@ -2,11 +2,11 @@
 import AdminTable from '@/components/admin/AdminTable'
 import AdminContainer from '@/components/dashboard/AdminContainer'
 import { Icon } from '@iconify/react'
-import { App, Button, Card, Dropdown, Input, Segmented, SegmentedProps } from 'antd'
+import { App, Card, Dropdown, Input, Segmented, SegmentedProps } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ColumnsType, TableProps } from 'antd/es/table';
 import CancelJob from '@/components/admin/modals/CancelJob'
-import { IAdminJobDetails, IJobDetails } from '../../../../../utils/interface'
+import { IAdminJobDetails } from '../../../../../utils/interface'
 import { CloseOutlined } from '@ant-design/icons'
 import JobDetailsModal from '@/components/admin/modals/JobDetailsModal'
 import { completeASuperadminJob, getSuperAdminJobs, IAdminParams } from '@/redux/action/admin'
@@ -85,6 +85,7 @@ const Page = () => {
     
   useEffect(() => {
     handleGetJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   useEffect(() => {
@@ -209,7 +210,7 @@ const Page = () => {
       key: "8",
       title: "Action",
       dataIndex: "duration",
-      render(value, record, index) {
+      render(value, record) {
         return (
           <Dropdown
             menu={{ items: dropdownItem, onClick: () => setSelectedJob(record as IAdminJobDetails) }}

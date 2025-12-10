@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { IAdminVerificationList } from '../../../../utils/interface';
 import { adminApproveDocument } from '@/redux/action/auth';
 import { createErrorMessage } from '../../../../utils/errorInstance';
+import axios from 'axios';
 
 
 interface props {
@@ -48,14 +49,27 @@ const ApproveReject = ({ open, onCancel, isReject, verification, refresh }: prop
                     refresh()
                 }
             });
-        } catch (err: any) {
+        } catch (err: unknown) {
             setLoading(false);
-            modal.error({
-            title: "Unable to approve verification documents",
-            content: err?.response
-                ? createErrorMessage(err.response.data)
-                : err.message,
-            });
+            if (axios.isAxiosError(err)) {
+                modal.error({
+                    title: "Unable to approve verification documents",
+                    content: err.response
+                        ? createErrorMessage(err.response.data)
+                        : err.message,
+                });
+            } else if (err instanceof Error) {
+                modal.error({
+                    title: "Unexpected Error",
+                    content: err.message,
+                });
+            } else {
+                modal.error({
+                    title: "Unknown Error",
+                    content: "Something went wrong.",
+                });
+            }
+            
         }
     };
 
@@ -91,14 +105,26 @@ const ApproveReject = ({ open, onCancel, isReject, verification, refresh }: prop
                     onCancel();
                 }
             });
-        } catch (err: any) {
+        } catch (err: unknown) {
             setLoading(false);
-            modal.error({
-                title: "Unable to reject verification documents",
-                content: err?.response
-                    ? createErrorMessage(err.response.data)
-                    : err.message,
-            });
+            if (axios.isAxiosError(err)) {
+                modal.error({
+                    title: "Unable to reject verification documents",
+                    content: err.response
+                        ? createErrorMessage(err.response.data)
+                        : err.message,
+                });
+            } else if (err instanceof Error) {
+                modal.error({
+                    title: "Unexpected Error",
+                    content: err.message,
+                });
+            } else {
+                modal.error({
+                    title: "Unknown Error",
+                    content: "Something went wrong.",
+                });
+            }
         }
     }
 

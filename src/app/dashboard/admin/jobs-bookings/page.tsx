@@ -18,7 +18,7 @@ import useDebounce from '@/hooks/useDebounce'
 
 const title = ["All", "Pending", "Accepted",  "Completed", "Cancelled"]
 const Page = () => {
-  const [ active, setActive ] = useState<any>(0);
+  const [ active, setActive ] = useState<number>(0);
   const [ data, setData ] = useState<TableProps<IAdminJobDetails>["dataSource"]>([]);
   const [ openCancel, setOpenCancel ] = useState(false);
   const [ selectedJob, setSelectedJob ] = useState<IAdminJobDetails>({
@@ -242,7 +242,7 @@ const Page = () => {
         <Segmented 
           options={segmentedItem}
           defaultValue={active}
-          onChange={(value) => handleChange(value)}
+          onChange={(value) => handleChange(Number(value))}
           value={active}
         />
       </div>

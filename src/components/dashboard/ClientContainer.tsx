@@ -84,8 +84,9 @@ const ClientContainer = ({
 
     useEffect(() => {
         if(isAuthenticated && loginType !== "ClientUser") {
-            router.replace("/dashboard/worker")
-        }
+            if(loginType === "SuperAdmin") router.replace("/dashboard/admin");
+            else router.replace("/dashboard/worker")
+        } 
     }, [loginType, isAuthenticated, router]);
 
     const handlePostJob = () => {

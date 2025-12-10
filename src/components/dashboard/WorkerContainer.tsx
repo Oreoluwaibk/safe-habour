@@ -82,8 +82,10 @@ const WorkerContainer = ({
     }, [isAuthenticated, handleLogout]); 
 
     useEffect(() => {
-        if(isAuthenticated && loginType !== "ServiceWorker") 
-            router.replace("/dashboard/client")
+        if(isAuthenticated && loginType !== "ServiceWorker") {
+            if(loginType === "SuperAdmin") router.replace("/dashboard/admin");
+            else router.replace("/dashboard/client")
+        } 
     }, [loginType, isAuthenticated, router])
 
   return (

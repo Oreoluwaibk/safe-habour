@@ -84,7 +84,7 @@ const Page = () => {
   </div>
 
     <Card 
-      title={<p className='text-[#1e1e1e] font-semibold text-lg'>
+      title={<p className='text-[#1e1e1e] font-semibold text-sm md:text-lg'>
         {active} KYC Verification {" "}
         <Status title={`${total} Pending`} bg='#FFECEC' color='#ff0000' />
       </p>}
@@ -104,7 +104,7 @@ const Page = () => {
           </Col>
         ))}
         {verification.length === 0 && <Col lg={24} sm={24} xs={24}>
-          <p className='text-center my-6 text-[#1e1e1e] text-lg font-medium'>No verification to review</p>
+          <p className='text-center my-6 text-[#1e1e1e] md:text-lg font-medium'>No verification to review</p>
         </Col>}
       </Row>
         {filters.pageSize! < total && <Pagination 

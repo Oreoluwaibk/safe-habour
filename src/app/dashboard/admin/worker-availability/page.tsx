@@ -78,7 +78,7 @@ const Page = () => {
     </div>
 
     <Card 
-      title={<p className='text-[#1e1e1e] font-semibold text-lg'>All Workers - Weekly Overview</p>}
+      title={<p className='text-[#1e1e1e] font-semibold md:text-lg'>All Workers - Weekly Overview</p>}
       extra={
         <CalenderFilter 
           onChange={(value: string) => setFilter((prev) => ({...prev, Date: value}))}

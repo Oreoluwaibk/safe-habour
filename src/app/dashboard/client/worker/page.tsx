@@ -11,7 +11,7 @@ const Page = () => {
   const [ active, setIsActive ] = useState("Workers");
   return (
     <ClientContainer active='Worker'>
-      <div className='mb-6'>
+      <div className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
           options={["Workers", "Booking System", "Job Applications"]}
           defaultValue={active}

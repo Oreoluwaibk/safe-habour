@@ -22,7 +22,7 @@ const Page = () => {
 
       </div>
 
-      <div  className='mb-6'>
+      <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
           options={["Profile Info", "Services & Rate", "Verification", "Review"]}
           defaultValue={active}

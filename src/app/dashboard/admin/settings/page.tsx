@@ -18,7 +18,7 @@ const Page = () => {
       <p className='t-pri mb-6'>Configure platform-wide settings and preferences</p>
     </div>
 
-    <div  className='mb-6'>
+    <div  className='mb-6 overflow-x-auto no-scrollbar'>
       <Segmented 
         options={["General", "Financial", "Security","Notifications", "Services"]}
         defaultValue={active}

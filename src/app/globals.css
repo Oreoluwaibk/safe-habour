@@ -153,6 +153,22 @@ body {
     line-height: normal;
 }
 
+.segmented-wrapper {
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.segmented-wrapper::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.segmented-wrapper .ant-segmented {
+    min-width: max-content;
+}
+
 .p_p {
     color: #1E1E1E;
     font-family: "Open Sans";
@@ -242,6 +258,9 @@ body {
 }
 
 @media (max-width:768px) {
+    .ant-menu-item-selected .ant-menu-title-content {
+        color: #fff !important;
+    }
     .col_img {
         border-radius: 12px;
         height: 318px;
@@ -487,5 +506,8 @@ body {
     }
     .visionp {
         font-size: 16px;
+    }
+    .ant-card-body {
+        padding: 10px !important;
     }
 }

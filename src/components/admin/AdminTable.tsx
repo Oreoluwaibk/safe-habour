@@ -67,6 +67,7 @@ const AdminTable: React.FC<props> = ({
             pagination={false}
             bordered={border}
             loading={loading}
+            scroll={{ x: "max-content" }}
         />
         {!hidePagination && <Pagination 
             responsive

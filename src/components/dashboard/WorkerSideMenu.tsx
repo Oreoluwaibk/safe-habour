@@ -11,12 +11,15 @@ interface props {
     open: boolean;
     onCancel: () => void;
     active: string;
+    handleLogout: () => void;
+    loading: boolean;
     // loading: boolean;
 }
 const WorkerSideMenu = ({
     open,
     onCancel,
-    active
+    active,
+    handleLogout, loading
     // loading
 }: props) => {
     const router = useRouter();
@@ -42,11 +45,7 @@ const WorkerSideMenu = ({
         // loading={loading}
     >
         <div style={{display: "flex", flexDirection: "column", gap: 20, height: "100%", alignItems:"flex-start"}}>
-            <div className='flex flex-col items-center gap-4'>
-                <Button type='primary' className='!h-[50px] w-[180px] !rounded-[50px] primary-bg text-white !font-medium' onClick={() => router.push("/auth/choose-auth")}><PlusOutlined className="text-white" /> Post a Job</Button>
-            </div>
-
-
+           
             <div className="bg-white flex flex-col items-start gap-4">
                 <NavItem href="/dashboard/worker" label="Dashboard" active={active === 'Dashboard'} /> 
                 <NavItem href="/dashboard/worker/jobs" label="Jobs" active={active === 'Jobs'} /> 
@@ -54,6 +53,17 @@ const WorkerSideMenu = ({
                 <NavItem href="/dashboard/worker/wallet" label="Wallet" active={active === 'Wallet'} /> 
                 <NavItem href="/dashboard/worker/message" label="Message" active={active === 'Message'} /> 
                 <NavItem href="/dashboard/worker/settings" label="Settings" active={active === 'Settings'} /> 
+            </div>
+
+            <div className="mt-6 w-full">
+                <Button
+                    type="primary"
+                    className="!h-[50px] w-full !rounded-[50px] primary-bg !font-medium"
+                    onClick={handleLogout}
+                    loading={loading}
+                >
+                    Logout
+                </Button>
             </div>
 
         </div>

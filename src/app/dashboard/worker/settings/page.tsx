@@ -18,7 +18,7 @@ const Page = () => {
 
       </div>
 
-      <div  className='mb-6'>
+      <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
           options={["Notification Settings", "Security & Privacy", "Payout Settings", "Account"]}
           defaultValue={active}

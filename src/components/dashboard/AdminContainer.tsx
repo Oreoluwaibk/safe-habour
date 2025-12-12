@@ -102,8 +102,8 @@ const AdminContainer = ({
     }, [loginType, isAuthenticated, router])
 
   return (
-     <Layout >
-        <Layout>
+     <Layout className="bg-[#f6f6f6]!" >
+        <Layout className="bg-[#f6f6f6]!">
            
             <Content className="bg-white min-h-[80vh]">
                 <Header className="client-nav prim-bg bg-white sticky top-5 z-[2]" >
@@ -153,10 +153,27 @@ const AdminContainer = ({
                         {/* <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button> */}
                     </div>
 
-                    <div className='flex md:hidden items-center gap-2'>
-                        {/* <SearchOutlined className="!text-black !text-lg" /> */}
-                        <NotificationBell />
-                        {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
+                    <div className='flex md:hidden items-center gap-3'>
+                        <div className="mt-2">
+                            <NotificationBell />
+                        </div>
+
+                        <div className="relative flex items-center">
+                            {authentication?.profilePicturePath && 
+                            <AntDImage 
+                                src={`${pictureUrl}${authentication.profilePicturePath}`} 
+                                alt={authentication.fullName} 
+                                preview={false}
+                                className="w-8! h-8! rounded-full! cursor-pointer" 
+                                onClick={() => router.push("/dashboard/admin/profile")}
+                            />}
+                            {!authentication?.profilePicturePath && <Avatar icon={<UserOutlined />} onClick={() => router.push("/dashboard/admin/profile")} size={32} className="cursor-pointer !border-[#039855] !border" />}
+                            {authentication?.isProfileComplete && <div className="bg-[#EAFFF5] h-[14px] w-[14px] rounded-[100px] flex items-center justify-center absolute z-[1] right-[-4px] top-2">
+                                <Image src={CheckedCircle} alt="image" className="!text-[#039855] " />
+                            </div>}
+                        </div>
+                        
+                        {<MenuOutlined  className='md:!hidden text-2xl' onClick={() => setOpen(true)} />}
                     </div>
 
                 </Header>
@@ -166,7 +183,13 @@ const AdminContainer = ({
                         className="pl-4! bg-white! rounded-xl! sticky! top-[120px] h-[100vh] hidden md:block"
                         width={313}
                     >
-                        <AdminSideMenu active={active} open={true} onCancel={() => {}} />
+                        {<AdminSideMenu 
+                            loading={loading || isPending} 
+                            handleLogout={handleLogout} 
+                            active={active} 
+                            open={open} 
+                            onCancel={() => setOpen(false)}  
+                        />}
                     </Sider>
                     {showNotification && <div className="fixed md:top-[120px] md:right-[15px] right-[30px] h-[134px] w-[80%] md:w-[400px] z-[2] mt-[-20px] cursor-pointer" onClick={() => router.push("/dashboard/notification")}>
                         <NotificationCard 
@@ -175,11 +198,18 @@ const AdminContainer = ({
                             notification={notification}
                         />
                     </div>}
-                    <div className="md:px-[20px] px-4 w-full!">
+                    <div className="md:px-[20px] px-1 pt-4 md:pt-0 w-full! bg-[#f6f6f6] min-h-[100vh]">
                     {children}
                     </div>   
                 </Layout>
-                {open && <WorkerSideMenu active={active} open={open} onCancel={() => setOpen(false)} />}
+                {open && 
+                    <AdminSideMenu 
+                        loading={loading || isPending} 
+                        handleLogout={handleLogout} 
+                        active={active} 
+                        open={open} 
+                        onCancel={() => setOpen(false)}  
+                    />}
             </Content>
         </Layout>
     </Layout>

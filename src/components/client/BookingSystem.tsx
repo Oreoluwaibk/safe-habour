@@ -105,7 +105,7 @@ const BookingSystem = () => {
     ]
   return (
     <div>
-        <div className='mb-2 mt-0'>
+        <div className='mb-2 mt-0 overflow-x-auto no-scrollbar'>
             <Segmented 
                 options={segmentedItem}
                 defaultValue={active}

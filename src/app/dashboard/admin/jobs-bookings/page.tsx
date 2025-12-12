@@ -238,17 +238,19 @@ const Page = () => {
         <p className='t-pri mb-6'>Monitor and manage all platform bookings</p>
       </div>
 
-      <div  className='mb-6'>
+      <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
           options={segmentedItem}
           defaultValue={active}
           onChange={(value) => handleChange(Number(value))}
           value={active}
+          // scroll={{ x: "max-content" }}
+          className="min-w-max"
         />
       </div>
 
       <Card 
-        title={<p className='text-[#1e1e1e] font-semibold text-lg'>{title[active]} Jobs</p>}
+        title={<p className='text-[#1e1e1e] font-semibold md:text-lg'>{title[active]} Jobs</p>}
         extra={<Input 
           prefix={<Icon icon="ic:round-search" />} 
           placeholder='Search...' 

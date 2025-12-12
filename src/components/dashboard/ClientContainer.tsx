@@ -4,7 +4,7 @@ import { BellFilled, MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-des
 import { App, Button, Layout } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState, useTransition } from 'react'
 import ClientSidemenu from './ClientSideMenu';
 import { Logo } from '../../../assets/logo';
 import Image from 'next/image';
@@ -43,6 +43,8 @@ const ClientContainer = ({
     const [ showNotification, setShowNotification ] = useState(false);
     const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const { authentication } = useAuthentication();
+    const [ isPending, startTransition ] = useTransition();
+    const [ loading, setLoading ] = useState(false);
     const [ notification ] = useState<INotification>({
     "id": "string",
     "title": "string",
@@ -66,17 +68,25 @@ const ClientContainer = ({
     });
 
     const handleLogout = useCallback(() => {
-    logoutUser()
-      .then((res) => {
-        if (res.status === 200) {
-          router.push("/auth/login");
-        }
-      })
-      .catch((err) => {
-        router.push("/auth/login");
-        console.log("err:", err)
-      });
-    }, [router]); // ✅ stable dependency
+        setLoading(true);
+        logoutUser()
+            .then((res) => {
+            if (res.status === 200) {
+                    setLoading(false);
+                    startTransition(() => {
+                        router.push("/auth/login");
+                    })
+                
+            }
+        })
+        .catch((err) => {
+            setLoading(false);
+            startTransition(() => {
+                router.push("/auth/login");
+            })
+            console.log("err:", err)
+        });
+    }, [router]); 
 
     useEffect(() => {
         if (!isAuthenticated) handleLogout();
@@ -144,9 +154,9 @@ const ClientContainer = ({
                     </div>
 
                     <div className='flex md:hidden items-center gap-2'>
-                        <SearchOutlined className="!text-black !text-lg" />
-                        <div className="icon-div icon-bg" style={{backgroundColor: "#BF021F"}}>
-                            <BellFilled className="!text-white !text-lg" onClick={() => setShowNotification(!showNotification)} />
+                        {/* <SearchOutlined className="!text-black !text-lg" /> */}
+                        <div className="mt-2">
+                            <NotificationBell />
                         </div>
                         {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
                     </div>
@@ -164,7 +174,8 @@ const ClientContainer = ({
                     {children}
                     </div>   
                 </Layout>
-                {open && <ClientSidemenu active={active} open={open} onCancel={() => setOpen(false)} />}
+                {open && <ClientSidemenu loading={loading || isPending} 
+                        handleLogout={handleLogout} openJob={() => setOpenJobModal(true)} active={active} open={open} onCancel={() => setOpen(false)} />}
                 {openJobModal && <PostJob open={openJobModal} onCancel={() => setOpenJobModal(false)} />}
             </Content>
         </Layout>

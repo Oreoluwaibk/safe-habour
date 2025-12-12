@@ -4,7 +4,7 @@ import { MenuOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Image as AntDImage } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState, useTransition } from 'react'
 import { Logo } from '../../../assets/logo';
 import Image from 'next/image';
 import NotificationCard from "../general/NotificationCard";
@@ -63,18 +63,28 @@ const WorkerContainer = ({
         "deliveredAt": "2025-01-01T00:00:00Z"
     });
     const { authentication } = useAuthentication();
+    const [ isPending, startTransition ] = useTransition();
+    const [ loading, setLoading ] = useState(false);
 
-   const handleLogout = useCallback(() => {
-    logoutUser()
-      .then((res) => {
-        if (res.status === 200) {
-          router.push("/auth/login");
-        }
-      })
-      .catch((err) => {
-        router.push("/auth/login");
-        console.log("err:", err)
-      });
+    const handleLogout = useCallback(() => {
+        setLoading(true);
+        logoutUser()
+            .then((res) => {
+            if (res.status === 200) {
+                    setLoading(false);
+                    startTransition(() => {
+                        router.push("/auth/login");
+                    })
+                
+            }
+        })
+        .catch((err) => {
+            setLoading(false);
+            startTransition(() => {
+                router.push("/auth/login");
+            })
+            console.log("err:", err)
+        });
     }, [router]); 
 
     useEffect(() => {
@@ -121,35 +131,52 @@ const WorkerContainer = ({
                     
 
                     <div className='hidden md:flex items-center gap-4'>
-                        <WorkerSearch width={300} />
-                        <NotificationToast />
-                        <div className="mt-2">
-                            <NotificationBell />
-                        </div>
-                          {/* <NotificationBell /> */}
-                        <div className="relative flex items-center">
-                            {authentication?.profilePicturePath && 
-                            <AntDImage 
-                                src={`${pictureUrl}${authentication.profilePicturePath}`} 
-                                alt={authentication.fullName} 
-                                preview={false}
-                                className="w-12! h-12! rounded-full! cursor-pointer" 
-                                onClick={() => router.push("/dashboard/worker/profile")}
-                            />}
-                            {!authentication?.profilePicturePath && <Avatar icon={<UserOutlined />} onClick={() => router.push("/dashboard/worker/profile")} size={48} className="cursor-pointer !border-[#039855] !border" />}
-                            {authentication?.isProfileComplete && <div className="bg-[#EAFFF5] h-[14px] w-[14px] rounded-[100px] flex items-center justify-center absolute z-[1] right-[-4px] top-2">
-                                <Image src={CheckedCircle} alt="image" className="!text-[#039855] " />
-                            </div>}
-                        </div>
-                       
-                        {/* <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button> */}
-                    </div>
-
-                    <div className='flex md:hidden items-center gap-2'>
-                        <SearchOutlined className="!text-black !text-lg" />
+                    <WorkerSearch width={300} />
+                    <NotificationToast />
+                    <div className="mt-2">
                         <NotificationBell />
-                        {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
                     </div>
+                        {/* <NotificationBell /> */}
+                    <div className="relative flex items-center">
+                        {authentication?.profilePicturePath && 
+                        <AntDImage 
+                            src={`${pictureUrl}${authentication.profilePicturePath}`} 
+                            alt={authentication.fullName} 
+                            preview={false}
+                            className="w-12! h-12! rounded-full! cursor-pointer" 
+                            onClick={() => router.push("/dashboard/worker/profile")}
+                        />}
+                        {!authentication?.profilePicturePath && <Avatar icon={<UserOutlined />} onClick={() => router.push("/dashboard/worker/profile")} size={48} className="cursor-pointer !border-[#039855] !border" />}
+                        {authentication?.isProfileComplete && <div className="bg-[#EAFFF5] h-[14px] w-[14px] rounded-[100px] flex items-center justify-center absolute z-[1] right-[-4px] top-2">
+                            <Image src={CheckedCircle} alt="image" className="!text-[#039855] " />
+                        </div>}
+                    </div>
+                    
+                    {/* <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button> */}
+                </div>
+
+                <div className='flex md:hidden items-center gap-2'>
+                    {/* <SearchOutlined className="!text-black !text-lg" /> */}
+                    <div className="mt-2">
+                        <NotificationBell />
+                    </div>
+                    
+                    <div className="relative flex items-center">
+                        {authentication?.profilePicturePath && 
+                        <AntDImage 
+                            src={`${pictureUrl}${authentication.profilePicturePath}`} 
+                            alt={authentication.fullName} 
+                            preview={false}
+                            className="w-8! h-8! rounded-full! cursor-pointer" 
+                            onClick={() => router.push("/dashboard/worker/profile")}
+                        />}
+                        {!authentication?.profilePicturePath && <Avatar icon={<UserOutlined />} onClick={() => router.push("/dashboard/worker/profile")} size={32} className="cursor-pointer !border-[#039855] !border" />}
+                        {authentication?.isProfileComplete && <div className="bg-[#EAFFF5] h-[14px] w-[14px] rounded-[100px] flex items-center justify-center absolute z-[1] right-[-4px] top-2">
+                            <Image src={CheckedCircle} alt="image" className="!text-[#039855] " />
+                        </div>}
+                    </div>
+                    {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
+                </div>
 
                 </Header>
                 <Layout className='!bg-white '>
@@ -160,11 +187,12 @@ const WorkerContainer = ({
                             notification={notification}
                         />
                     </div>}
-                    <div className="md:px-[50px] px-4">
+                    <div className="md:px-[50px] px-1 pt-8 md:pt-0 w-full! bg-[#f6f6f6] min-h-[100vh]">
                     {children}
                     </div>   
                 </Layout>
-                {open && <WorkerSideMenu active={active} open={open} onCancel={() => setOpen(false)} />}
+                {open && <WorkerSideMenu loading={loading || isPending} 
+                        handleLogout={handleLogout}  active={active} open={open} onCancel={() => setOpen(false)} />}
             </Content>
         </Layout>
     </Layout>

@@ -11,12 +11,17 @@ interface props {
     open: boolean;
     onCancel: () => void;
     active: string;
+    openJob: () => void;
+    handleLogout: () => void;
+    loading: boolean;
     // loading: boolean;
 }
 const ClientSidemenu = ({
     open,
     onCancel,
-    active
+    active,
+    openJob,
+    handleLogout, loading
     // loading
 }: props) => {
     const router = useRouter();
@@ -43,7 +48,7 @@ const ClientSidemenu = ({
     >
         <div style={{display: "flex", flexDirection: "column", gap: 20, height: "100%", alignItems:"flex-start"}}>
             <div className='flex flex-col items-center gap-4'>
-                <Button type='primary' className='!h-[50px] w-[180px] !rounded-[50px] primary-bg text-white !font-medium' onClick={() => router.push("/auth/choose-auth")}><PlusOutlined className="text-white" /> Post a Job</Button>
+                <Button type='primary' className='!h-[50px] w-[180px] !rounded-[50px] primary-bg text-white !font-medium' onClick={openJob}><PlusOutlined className="text-white" /> Post a Job</Button>
             </div>
 
 
@@ -55,6 +60,16 @@ const ClientSidemenu = ({
                 <NavItem href="/dashboard/client/profile" label="Profile" active={active === 'Profile'} /> 
             </div>
 
+            <div className="mt-6 w-full">
+                <Button
+                    type="primary"
+                    className="!h-[50px] w-full !rounded-[50px] primary-bg !font-medium"
+                    onClick={handleLogout}
+                    loading={loading}
+                >
+                    Logout
+                </Button>
+            </div>
         </div>
     </Drawer>
   )

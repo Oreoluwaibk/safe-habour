@@ -341,7 +341,7 @@ const WorkerComponent = ({ isDashboard }: props) => {
                         </div> */}
                     </Sider>
                     <Content className=" bg-white">
-                        {collasped && <div className="flex items-center w-full bg-white gap-4">
+                        {collasped && <div className="flex items-center w-full bg-white gap-4 overflow-x-auto no-scrollbar">
                             {serviceLoading ? <LoadingOutlined spin /> : <Image src={Filter} alt="filter" className="cursor-pointer" onClick={() => setCollapsed(false)} />}
                             <Tabs 
                                 activeKey={active}

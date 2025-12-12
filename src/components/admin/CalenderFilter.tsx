@@ -75,14 +75,14 @@ const CalenderFilter: React.FC<ICalenderFilterProps> = ({ onChange, reset }) => 
         <Button 
             icon={<Icon icon="lets-icons:date-today-duotone-line" 
             fontSize={18} />}
-            className='w-[123px]! h-9! rounded-[5px]! text-[#484848]! border border-[#767676]!'
+            className='text-xs! md:text-base w-[100px] md:w-[123px]! h-9! rounded-[5px]! text-[#484848]! border border-[#767676]!'
         >
             Filter Date
         </Button>
     </Dropdown>
 
     <Button 
-    className='w-[83px]! h-9! rounded-[5px]!  border border-[#767676]!'
+    className='w-[50px] md:w-[83px]! h-9! rounded-[5px]!  border border-[#767676]!'
     type='primary' onClick={reset}>Reset</Button>
     </div>
   )

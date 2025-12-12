@@ -18,6 +18,20 @@ export function NotificationBell() {
     const router = useRouter();
     const { subscribeToNotifications } = useSignalR();
     const [ loading, setLoading ] = useState(false);
+    const [overlayWidth, setOverlayWidth] = useState(400);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            if (window.innerWidth < 500) setOverlayWidth(250);
+            else if (window.innerWidth < 768) setOverlayWidth(320);
+            else setOverlayWidth(400);
+        };
+
+        updateWidth();
+        window.addEventListener("resize", updateWidth);
+
+        return () => window.removeEventListener("resize", updateWidth);
+    }, []);
 
     useEffect(() => {
         const unsubscribe = subscribeToNotifications((n) => {
@@ -107,7 +121,7 @@ export function NotificationBell() {
       menu={{ items }}
       trigger={["click"]}
       placement="bottomRight"
-      overlayStyle={{ width: "400px" }}
+      overlayStyle={{ width: overlayWidth }}
     >
       <div className="cursor-pointer">
         <Badge count={unread}>

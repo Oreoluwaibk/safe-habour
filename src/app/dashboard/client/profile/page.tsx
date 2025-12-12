@@ -19,7 +19,7 @@ const Page = () => {
    <ClientContainer active='Profile'>
     <Card variant="borderless" style={{padding: 0, border: "none", backgroundColor: "#F9FAFB", minHeight: "85vh"}}>
         <Row className='' gutter={[15, 15]}>
-          <Col lg={24} sm={24} xs={24} className='mb-6'>
+          <Col lg={24} sm={24} xs={24} className='mb-6 overflow-x-auto no-scrollbar'>
             <Segmented 
               options={["Profile Settings", "Notification Settings", "Password", "Payment Methods", "Verification Settings", "Two Factor Authentication", "Review"]}
               defaultValue={selected}

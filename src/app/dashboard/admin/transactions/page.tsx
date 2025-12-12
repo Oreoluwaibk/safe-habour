@@ -200,7 +200,7 @@ const Page = () => {
   </Row>
 
     <Card 
-      title={<p className='text-[#1e1e1e] font-semibold text-lg'>All Transactions</p>}
+      title={<p className='text-[#1e1e1e] font-semibold md:text-lg'>All Transactions</p>}
       extra={<Input 
         prefix={<Icon icon="ic:round-search" />} 
         placeholder='Search...' 

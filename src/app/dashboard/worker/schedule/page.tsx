@@ -16,7 +16,7 @@ const Page = () => {
 
       </div>
 
-      <div  className='mb-6'>
+      <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
           options={["Calendar", "Upcoming Jobs", "Weekly Template"]}
           defaultValue='Calendar'

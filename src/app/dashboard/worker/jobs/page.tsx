@@ -16,7 +16,7 @@ const Page = () => {
         <p className='t-pri mb-6'>Find and apply to jobs that match your skills</p>
       </div>
 
-      <div  className='mb-6'>
+      <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
           options={["Browse Jobs", "Job History", "My Applications"]}
           defaultValue={active}

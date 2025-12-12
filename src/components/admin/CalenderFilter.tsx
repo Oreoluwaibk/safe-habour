@@ -6,8 +6,9 @@ import React, { useState } from 'react'
 
 interface ICalenderFilterProps {
   onChange: (value: string) => void;
+  reset: () => void;
 }
-const CalenderFilter: React.FC<ICalenderFilterProps> = ({ onChange }) => {
+const CalenderFilter: React.FC<ICalenderFilterProps> = ({ onChange, reset }) => {
     const [selectedDays, setSelectedDays] = useState<Dayjs[]>([]);
     const onDateChange: CalendarProps<Dayjs>['onChange'] = (date) => {
         
@@ -66,7 +67,7 @@ const CalenderFilter: React.FC<ICalenderFilterProps> = ({ onChange }) => {
     }
     ];
   return (
-    <div>
+    <div className='flex gap-3'>
     <Dropdown
         menu={{ items: dropdownItem, style: {width: 500 } }} 
         trigger={["click"]}
@@ -79,6 +80,10 @@ const CalenderFilter: React.FC<ICalenderFilterProps> = ({ onChange }) => {
             Filter Date
         </Button>
     </Dropdown>
+
+    <Button 
+    className='w-[83px]! h-9! rounded-[5px]!  border border-[#767676]!'
+    type='primary' onClick={reset}>Reset</Button>
     </div>
   )
 }

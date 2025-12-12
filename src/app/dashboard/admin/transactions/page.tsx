@@ -10,9 +10,11 @@ import { ColumnsType } from 'antd/es/table'
 import React, { useCallback, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
 import useDebounce from '@/hooks/useDebounce'
+import { ITransactionLogItemResponse } from '../../../../../utils/interface'
+import Status from '@/components/general/Status'
 
 const Page = () => {
-  const [ data, setData ] = useState<TableProps["dataSource"]>([]);
+  const [ data, setData ] = useState<TableProps<ITransactionLogItemResponse[]>["dataSource"]>([]);
   const { modal } = App.useApp();
   const [ loading, setLoading ] = useState(false);
   const [ metrics, setMetrics ] = useState({
@@ -93,42 +95,48 @@ const Page = () => {
     {
       key: "1",
       title: "Transaction ID",
-      dataIndex: "name",
+      dataIndex: "transactionId",
     },
     {
       key: "2",
       title: "Type",
-      dataIndex: "price",
+      dataIndex: "type",
     },
     {
       key: "2",
       title: "From",
-      dataIndex: "price"
+      dataIndex: "from"
     },
     {
       key: "3",
       title: "To",
-      dataIndex: "instructor",
+      dataIndex: "to",
     },
     {
       key: "4",
       title: "Amount",
-      dataIndex: "ratings"
+      dataIndex: "amount",
+      render(value){
+        return<span>${Number(value).toFixed(2)}</span>
+      }
     },
     {
       key: "5",
       title: "Commission",
-      dataIndex: "createdAt"
+      dataIndex: "commission"
     },
     {
       key: "6",
       title: "Date & Time",
-      dataIndex: "createdAt"
+      dataIndex: "dateTime"
     },
     {
       key: "7",
       title: "Status",
-      dataIndex: "duration"
+      dataIndex: "status",
+      render(value) {
+        return <Status title={value} />
+      }
     }
   ]
 

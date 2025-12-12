@@ -300,7 +300,7 @@ const Page = () => {
               <Status title={item} color='#3E3E3E' bg='#F7F7F7' />
             </List.Item>
           )}
-          itemLayout="vertical"
+          itemLayout="horizontal"
         />
         )
       }

@@ -940,3 +940,35 @@ export interface IAdminPermissions {
   description: string;
   createdAt: string;
 }
+
+export interface IEscrowEntryResponse {
+  jobId: string;
+  clientName: string;
+  serviceWorkerName: string;
+  serviceCategory: string;
+  amount: number;
+  statusLabel: string;
+}
+
+export interface IRevenueBreakdownSlice {
+  serviceCategory: string;
+  amount: number;
+  percentage: number;
+}
+
+export interface IFinancialBreakdownResponse {
+  escrowEntries: IEscrowEntryResponse[];
+  revenueBreakdown: IRevenueBreakdownSlice[];
+}
+
+export interface ITransactionLogItemResponse {
+  transactionId: string;
+  type: string;
+  from: string;
+  to: string;
+  amount: number;
+  commission: number;
+  dateTime: string;
+  status: string;
+}
+

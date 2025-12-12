@@ -82,6 +82,7 @@ const Page = () => {
       extra={
         <CalenderFilter 
           onChange={(value: string) => setFilter((prev) => ({...prev, Date: value}))}
+          reset={() => setFilter(prev => ({ ...prev, Date: ""}))}
         />
       }
       classNames={{ body: ""}}

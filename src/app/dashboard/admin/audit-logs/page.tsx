@@ -9,11 +9,14 @@ import { App, Card, Col, Input, Row, TableProps } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import React, { useCallback, useEffect, useState } from 'react'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
+import moment from 'moment'
+import { useAppSelector } from '@/hook'
 
 const Page = () => {
   const [ data, setData ] = useState<TableProps["dataSource"]>([]);
   const { modal } = App.useApp();
   const [ loading, setLoading ] = useState(false);
+  const { user } = useAppSelector(state => state.auth);
   const [ filters, setFilter ] = useState<IAdminParams>({
     pageNumber: 1,
     pageSize: 10,
@@ -93,6 +96,9 @@ const Page = () => {
       key: "1",
       title: "Admin User",
       dataIndex: "userName",
+      render() {
+        return <span>{user.fullName}</span>
+      }
     },
     {
       key: "2",
@@ -154,7 +160,7 @@ const Page = () => {
     <Col lg={8} sm={12} xs={24}>
       <InfoWalletCards 
         title='Last Active'
-        amount={metrics.lastActivity || "N/A"}
+        amount={metrics.lastActivity && moment(metrics.lastActivity).format("ddd, MMM YY") || "N/A"}
         icon={<Icon icon="mingcute:time-line" color='#670316' />}
         isWallet
       />

@@ -1,12 +1,15 @@
 "use client"
+import Financial from '@/components/admin/settings/Financial'
+import General from '@/components/admin/settings/General'
 import Notification from '@/components/admin/settings/Notification'
 import ServiceCategory from '@/components/admin/settings/ServiceCategory'
+import ResetPassword from '@/components/client/settings/ResetPassword'
 import AdminContainer from '@/components/dashboard/AdminContainer'
 import { Card, Segmented } from 'antd'
 import React, { useState } from 'react'
 
 const Page = () => {
-  const [ active, setActive ] = useState("Notifications");
+  const [ active, setActive ] = useState("General");
   return (
   <AdminContainer active='Settings'>
   <Card classNames={{ body: "bg-[#f6f6f6]!"}}>
@@ -17,7 +20,7 @@ const Page = () => {
 
     <div  className='mb-6'>
       <Segmented 
-        options={["General", "Financial", "Notifications", "Services"]}
+        options={["General", "Financial", "Security","Notifications", "Services"]}
         defaultValue={active}
         onChange={(value) => setActive(value)}
         value={active}
@@ -25,6 +28,9 @@ const Page = () => {
     </div>
 
     {active === "Notifications" && <Notification />}
+    {active === "General" && <General />}
+    {active === "Financial" && <Financial />}
+    {active === "Security" && <ResetPassword />}
     {active === "Services" && <ServiceCategory />}
   </Card>
   </AdminContainer>

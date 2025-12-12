@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useState, useTransition } from 'react';
 import { App, Button, Col, Layout, Row } from 'antd';
 import Image from 'next/image';
 import { LinkedinFilled, MenuOutlined, TwitterOutlined } from '@ant-design/icons';
@@ -41,6 +41,7 @@ const Container = ({
     const [open, setOpen] = useState(false);
     const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const [ loading, setLoading ] = useState(false);
+    const [ isPending, startTransition ] = useTransition();
     const dispatch = useAppDispatch();      
 
     const handleLogout = useCallback(() => {
@@ -62,8 +63,11 @@ const Container = ({
     }, [message, dispatch]); 
 
     const handleGoDashboard = () => {
-        if(loginType === "ServiceWorker") router.push("/dashboard/worker/");
-        if(loginType === "ClientUser") router.push("/dashboard/client")
+        startTransition(() => {
+            if(loginType === "ServiceWorker") router.push("/dashboard/worker/");
+            if(loginType === "ClientUser") router.push("/dashboard/client");
+            if(loginType === "SuperAdmin") router.push("/dashboard/admin");
+        })
     }
     
   return (
@@ -100,7 +104,7 @@ const Container = ({
 
                     {!hide && isAuthenticated && <div className='hidden md:flex items-center gap-4'>
                         <Button type="text" loading={loading} className='!text-[#667085] !h-[44px] w-[94px] !text-base' onClick={handleLogout}>Logout</Button>
-                        <Button type='primary' className='!h-[44px] w-[124px] !rounded-[8px]' onClick={handleGoDashboard}>Dashboard</Button>
+                        <Button type='primary' className='!h-[44px] w-[124px] !rounded-[8px]' loading={isPending} onClick={handleGoDashboard}>Dashboard</Button>
                     </div>}
 
                     {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
@@ -154,7 +158,7 @@ const Container = ({
                     </Row>
                 </Footer>
 
-                {open && <Sidemenu handleGoDashboard={handleGoDashboard} handleLogout={handleLogout} loading={loading} active={active} isAuthenticated={isAuthenticated} open={open} onCancel={() => setOpen(false)} />}
+                {open && <Sidemenu handleGoDashboard={handleGoDashboard} isPending={isPending} handleLogout={handleLogout} loading={loading} active={active} isAuthenticated={isAuthenticated} open={open} onCancel={() => setOpen(false)} />}
             </Content>
         </Layout>
     </Layout>

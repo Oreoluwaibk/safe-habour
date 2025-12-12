@@ -1,9 +1,11 @@
 import CardTitle from '@/components/general/CardTitle';
 import RoundBtn from '@/components/general/RoundBtn';
-import { Divider, Form, Input, Modal, Select } from 'antd';
+import { App, Divider, Form, Input, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react'
 // import { createErrorMessage } from '../../../../utils/errorInstance';
 import { IAdminUserList } from '../../../../utils/interface';
+import { createAdminUser, editAnAdminUser, IAdminCreateUser, IRoles } from '@/redux/action/admin';
+import { createErrorMessage } from '../../../../utils/errorInstance';
 
 
 const FormItem = Form.Item;
@@ -13,62 +15,102 @@ interface props {
     onCancel: () => void;
     refresh: () => void;
     isEdit: boolean;
-    user?: IAdminUserList
+    user?: IAdminUserList;
+    roles: IRoles[]
 }
-const AddAdminUser = ({ onCancel, open, isEdit, user }: props) => {
-    // const { modal } = App.useApp();
+const AddAdminUser = ({ onCancel, open, isEdit, user, refresh, roles }: props) => {
+    const { modal } = App.useApp();
     const [form] = Form.useForm();
-    const [ loading ] = useState(false);
+    const [ loading, setLoading ] = useState(false);
 
     useEffect(() => {
         if(user) {
             form.setFieldsValue({
-                name: user.fullName,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email,
-                role: user.roles[0]
+                roles: user.roles[0]
             })
         }
-    }, [user, form])
+    }, [user, form]);
+
+    const handleCreate = (value: IAdminCreateUser) => {
+        const payload: IAdminCreateUser = {
+            firstName: value.firstName,
+            lastName: value.lastName,
+            email: value.email,
+            roleId: value.roleId
+        }
+        setLoading(true);
+        createAdminUser(payload)
+         .then(res => {
+                if(res.status === 200) {
+                    setLoading(false);
+                    modal.success({
+                        title: res.data.message || "User created successfully",
+                        onOk: () => {
+                            form.resetFields();
+                            onCancel();
+                            refresh();
+                        }
+                    })
+                }
+            })
+            .catch(err => {
+                setLoading(false);
+                modal.error({
+                    title: `Unable to create admin user`,
+                    content: err?.response
+                        ? createErrorMessage(err.response.data)
+                        : err.message,
+                });
+            })
+    }
+
+    const handleEdit = (value: IAdminCreateUser) => {
+        const payload: IAdminCreateUser = {
+            firstName: value.firstName,
+            lastName: value.lastName,
+            email: value.email,
+            roleId: value.roleId,
+            userId: user?.id!,
+            isActive: true
+        }
+
+        setLoading(true);
+        editAnAdminUser(user?.id!, payload)
+         .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                modal.success({
+                    title: res.data.message || "User edited successfully",
+                    onOk: () => {
+                        form.resetFields();
+                        onCancel();
+                        refresh();
+                    }
+                })
+            }
+        })
+        .catch(err => {
+            setLoading(false);
+            modal.error({
+                title: `Unable to edit admin user`,
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+            });
+        })
+    }
 
     const handleSubmit = () => {
         form.validateFields()
         .then(value => {
-            console.log(value);
-            // setError("");
-            // const payload: SuspendUser = {
-            //     userId: user.id,
-            //     suspensionReason: value.message
-            // }
-            
-            // setLoading(true);
-            // suspendAUser(payload)
-            // .then(res => {
-            //     if(res.status === 200) {
-            //         setLoading(false);
-            //         console.log(res.data);
-            //         modal.success({
-            //             title: res.data.message || "User suspended successfully",
-            //             onOk: () => {
-            //                 form.resetFields();
-            //                 onCancel();
-            //                 refresh();
-            //             }
-            //         })
-            //     }
-            // })
-            // .catch(err => {
-            //     setLoading(false);
-            //     modal.error({
-            //         title: `Unable to suspend user`,
-            //         content: err?.response
-            //             ? createErrorMessage(err.response.data)
-            //             : err.message,
-            //     });
-            // })
+            if(isEdit) handleEdit(value);
+            else handleCreate(value);
         })
         .catch(err => {
             console.log(err)
-            // setError(err?.errorFields?.[0]?.errors?.[0] || "Enter reason for suspension");
         })
     }
   return (
@@ -89,10 +131,20 @@ const AddAdminUser = ({ onCancel, open, isEdit, user }: props) => {
         <Divider size="small" />
         <Form layout='vertical' form={form}>
             <FormItem 
-                name="name" 
+                name="firstName" 
                 // validateStatus={error ? 'error' : ''} 
                 // help={error || ''} 
-                label="Name*" rules={[{required: true}]}>
+                label="First Name*" rules={[{required: true}]}>
+                <Input 
+                    placeholder='Enter name' 
+                />
+            </FormItem>
+
+            <FormItem 
+                name="lastName" 
+                // validateStatus={error ? 'error' : ''} 
+                // help={error || ''} 
+                label="Last Name*" rules={[{required: true}]}>
                 <Input 
                     placeholder='Enter name' 
                 />
@@ -108,14 +160,14 @@ const AddAdminUser = ({ onCancel, open, isEdit, user }: props) => {
             </FormItem>
 
             <FormItem 
-                name="role" 
+                name="roleId" 
                 label="Role*" 
                 rules={[{required: true}]}
             >
                 <Select placeholder="Select Role">
-                    <Option>Super Admin</Option>
-                    <Option>Support</Option>
-                    <Option>Finance</Option>
+                    {roles.map((role, i) => (
+                        <Option key={i} value={role.id || role}>{role.name}</Option>
+                    ))}
                 </Select>
             </FormItem>
         </Form>

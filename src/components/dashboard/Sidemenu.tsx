@@ -14,6 +14,7 @@ interface props {
     loading: boolean;
     handleGoDashboard: () => void;
     handleLogout: () => void;
+    isPending?: boolean;
 }
 const Sidemenu = ({
     open,
@@ -22,7 +23,8 @@ const Sidemenu = ({
     isAuthenticated,
     loading,
     handleLogout,
-    handleGoDashboard
+    handleGoDashboard,
+    isPending
 }: props) => {
     const router = useRouter();
   return (
@@ -62,7 +64,7 @@ const Sidemenu = ({
             </div>}
             {isAuthenticated && <div className='flex flex-col items-center gap-4'>
                 <Button loading={loading} className='!text-[#667085] !text-base !h-[54px] !w-full' onClick={handleLogout}>Logout</Button>
-                <Button type='primary' className='!h-[54px] !w-full !rounded-[8px]' onClick={handleGoDashboard}>Dashboard</Button>
+                <Button type='primary' className='!h-[54px] !w-full !rounded-[8px]' loading={isPending} onClick={handleGoDashboard}>Dashboard</Button>
             </div>}
 
         </div>

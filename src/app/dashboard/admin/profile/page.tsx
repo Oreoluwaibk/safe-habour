@@ -3,7 +3,7 @@ import AdminContainer from '@/components/dashboard/AdminContainer'
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { LoadingOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Card, Col, DatePicker, Form, Image, Input, Row, Select, Upload } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { pictureUrl } from '../../../../../utils/axiosConfig'
 import { RcFile } from 'antd/es/upload'
 import { Icon } from '@iconify/react'
@@ -20,6 +20,20 @@ const Page = () => {
   const [ isEdit, setIsEdit ] = useState(false);
   const [ uploading ] = useState(false);
   const [ initialCode ] = useState("ca");
+
+  useEffect(() => {
+    if(authentication) {
+      form.setFieldsValue({
+        firstName: authentication?.firstName,
+        lastName: authentication?.lastName,
+        email: authentication.email,
+        phoneNumber: authentication.phoneNumber,
+        gender: authentication.gender,
+        dateOfBirth: authentication.dateOfBirth ? moment(authentication.dateOfBirth).format("DD-MM-YYYY") : "",
+        role: authentication.roles[0]
+      })
+    }
+  }, [authentication])
 
   const handleUploadPicture = (file: RcFile) => {
     console.log(file);
@@ -55,7 +69,6 @@ const Page = () => {
 
   const handleSubmit = () => {
     // console.log("Dddd");
-    
   }
   return (
   <AdminContainer active='Profile'>
@@ -226,7 +239,7 @@ const Page = () => {
             
           </Col>
         </Row>
-        </Form>     
+      </Form>     
       </Card> 
     </Card>
   </Card>

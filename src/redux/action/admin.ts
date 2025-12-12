@@ -16,6 +16,7 @@ export interface IAdminParams {
   NeededFrom?: string;
   NeededTo?: string;
   Date?: string;
+  IsAdminAction?: boolean;
 //   status?: string;
 //   minHourlyRate?: number | null;
 //   maxHourlyRate?: number | null;
@@ -90,12 +91,70 @@ export const getActivityLogs = async () => {
   return Promise.resolve(response);
 }
 
-export const getAdminAuditLogs = async (pageNumber: number =1, pageSize:number = 10, search?: string) => {
+export const getAdminPermissions = async () => {
+  const url = `/SuperAdmin/permissions`;
+  const response = await axiosInstance.get(url);
+
+  return Promise.resolve(response);
+}
+
+export const getAdminRoles = async (searchTerm?: string) => {
+
+  console.log("Sss", searchTerm);
+  
+  const params: IAdminParams = {}
+  if(searchTerm) params.searchTerm = searchTerm;
+  const url = `/SuperAdmin/roles`;
+  const response = await axiosInstance.get(url, { params });
+
+  return Promise.resolve(response);
+}
+
+export interface IRoles {
+  name: string;
+  description: string;
+  permissionIds: string[];
+  roleId?: string;
+  isActive?: boolean;
+  createdAt?: string;
+  id?: string;
+  isAdminRole?: boolean;
+}
+export const createAdminRoles = async (data: IRoles) => {
+  const url = `/SuperAdmin/roles`;
+  const response = await axiosInstance.post(url, data);
+
+  return Promise.resolve(response);
+}
+
+export const getAnAdminRoles = async (role_id: string) => {
+  const url = `/SuperAdmin/roles/${role_id}`;
+  const response = await axiosInstance.get(url);
+
+  return Promise.resolve(response);
+}
+
+export const updateAnAdminRoles = async (role_id: string, data:IRoles) => {
+  const url = `/SuperAdmin/roles/${role_id}`;
+  const response = await axiosInstance.put(url, data);
+
+  return Promise.resolve(response);
+}
+
+export const getAdminAuditLogMetrics = async () => {
+  const url = `/SuperAdmin/audit-logs/metrics`;
+  const response = await axiosInstance.get(url);
+
+  return Promise.resolve(response);
+}
+
+export const getAdminAuditLogs = async (pageNumber: number =1, pageSize:number = 10, search?: string, isAdminAction?: boolean) => {
   const params: IAdminParams = {
     pageNumber,
     pageSize
   }
   if(search) params.searchTerm = search;
+  if(isAdminAction) params.IsAdminAction = isAdminAction;
   const url = `/SuperAdmin/audit-logs`;
   const response = await axiosInstance.get(url, { params });
 
@@ -332,6 +391,43 @@ export const getAdminUsers = async (
   if(CreatedTo) params.CreatedTo = CreatedTo;
   const url = `/SuperAdmin/admin-users`;
   const response = await axiosInstance.get(url, { params });
+
+  return Promise.resolve(response);
+}
+
+export interface IAdminCreateUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  roleId: string;
+  userId?: string;
+  isActive?: boolean;
+}
+
+export const createAdminUser = async (data: IAdminCreateUser) => {
+  const url = `/SuperAdmin/admin-users`;
+  const response = await axiosInstance.post(url, data);
+
+  return Promise.resolve(response);
+}
+
+export const editAnAdminUser = async (user_id:string, data: IAdminCreateUser) => {
+  const url = `/SuperAdmin/admin-users/${user_id}`;
+  const response = await axiosInstance.put(url, data);
+
+  return Promise.resolve(response);
+}
+
+export const disableAnAdminUser = async (user_id: string) => {
+  const url = `/SuperAdmin/admin-users/${user_id}/disable`;
+  const response = await axiosInstance.post(url, {});
+
+  return Promise.resolve(response);
+}
+
+export const enableAnAdminUser = async (user_id: string) => {
+  const url = `/SuperAdmin/admin-users/${user_id}/enable`;
+  const response = await axiosInstance.post(url, {});
 
   return Promise.resolve(response);
 }

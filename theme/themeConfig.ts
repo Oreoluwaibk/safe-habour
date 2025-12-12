@@ -68,6 +68,9 @@ export const theme: ThemeConfig = {
       colorTextDisabled: "rgba(0, 0, 0, 0.25)",
       // : "#f9f5ff"
       // colorText: "#670316"
+    },
+    Checkbox: {
+      colorTextDisabled: "#670316",
     }
   }
 };

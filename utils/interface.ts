@@ -933,3 +933,10 @@ export interface IWorkerSlot {
   endTime: string;   // "HH:mm:ss"
 }
 
+export interface IAdminPermissions {
+  id: string;
+  key: string;
+  group: string;
+  description: string;
+  createdAt: string;
+}

@@ -3,7 +3,7 @@ import AdminTable from '@/components/admin/AdminTable'
 import AdminContainer from '@/components/dashboard/AdminContainer'
 import InfoWalletCards from '@/components/wallet/cards/InfoWalletCards'
 import useDebounce from '@/hooks/useDebounce'
-import { getAdminAuditLogs, IAdminParams } from '@/redux/action/admin'
+import { getAdminAuditLogMetrics, getAdminAuditLogs, IAdminParams } from '@/redux/action/admin'
 import { Icon } from '@iconify/react'
 import { App, Card, Col, Input, Row, TableProps } from 'antd'
 import { ColumnsType } from 'antd/es/table'
@@ -13,45 +13,52 @@ import { createErrorMessage } from '../../../../../utils/errorInstance'
 const Page = () => {
   const [ data, setData ] = useState<TableProps["dataSource"]>([]);
   const { modal } = App.useApp();
-    const [ loading, setLoading ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const [ filters, setFilter ] = useState<IAdminParams>({
     pageNumber: 1,
     pageSize: 10,
-    searchTerm: ""
+    searchTerm: "",
+    IsAdminAction: true
   });
+  const [ metrics, setMetrics ] = useState( {
+    totalActions: 0,
+    adminUsersActive: 2,
+    lastActivity: null
+  })
   const [ total, setTotal ] = useState(0);
   const [ search, setSearch ] = useState("");
   const debounceSearch = useDebounce(search, 500);
 
   useEffect(() => {
-      setFilter((prev) => ({...prev, searchTerm: debounceSearch as string}))
-    }, [debounceSearch])
-  
-    // const handleGetTransactionMetrics = useCallback(() => {
-    //   setLoading(true);
-    //   getAdminTransactionSummary()
-    //   .then(res => {
-    //     if(res.status === 200) {
-    //       setLoading(false);
-    //       setMetrics(res.data.data);
-    //     }
-    //   })
-    //   .catch(err => {
-    //     modal.error({
-    //       title: "Unable to get financial stats",
-    //       content: err?.response
-    //       ? createErrorMessage(err.response.data)
-    //       : err.message,
-    //     });
-    //   })
-    // }, [modal]);
+    setFilter((prev) => ({...prev, searchTerm: debounceSearch as string}))
+  }, [debounceSearch])
+
+  const handleGetAuditMetrics = useCallback(() => {
+    setLoading(true);
+    getAdminAuditLogMetrics()
+    .then(res => {
+      if(res.status === 200) {
+        setLoading(false);
+        setMetrics(res.data.data);
+      }
+    })
+    .catch(err => {
+      modal.error({
+        title: "Unable to get audit stats",
+        content: err?.response
+        ? createErrorMessage(err.response.data)
+        : err.message,
+      });
+    })
+  }, [modal]);
   
   const handleGetAuditLogs = useCallback(() => {
     setLoading(true);
     getAdminAuditLogs(
       filters.pageNumber,
       filters.pageSize,
-      filters.searchTerm
+      filters.searchTerm,
+      filters.IsAdminAction
     )
     .then(res => {
       if(res.status === 200) {
@@ -73,6 +80,7 @@ const Page = () => {
 
   useEffect(() => {
     handleGetAuditLogs();
+    handleGetAuditMetrics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
@@ -130,7 +138,7 @@ const Page = () => {
     <Col lg={8} sm={12} xs={24}>
       <InfoWalletCards 
         title='Total Actions'
-        amount={total}
+        amount={metrics.totalActions}
         isWallet
         icon={<Icon icon="bx:dollar" color='#670316' />}
       />
@@ -138,7 +146,7 @@ const Page = () => {
     <Col lg={8} sm={12} xs={24}>
       <InfoWalletCards 
         title='Admin Users Active'
-        amount={`3`}
+        amount={metrics.adminUsersActive}
         isWallet
         icon={<Icon icon="iconoir:piggy-bank"  color='#670316' />}
       />
@@ -146,7 +154,7 @@ const Page = () => {
     <Col lg={8} sm={12} xs={24}>
       <InfoWalletCards 
         title='Last Active'
-        amount={`Today`}
+        amount={metrics.lastActivity || "N/A"}
         icon={<Icon icon="mingcute:time-line" color='#670316' />}
         isWallet
       />

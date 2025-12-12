@@ -33,7 +33,7 @@ const Page = () => {
         role: authentication.roles[0]
       })
     }
-  }, [authentication])
+  }, [authentication, form])
 
   const handleUploadPicture = (file: RcFile) => {
     console.log(file);

@@ -1,14 +1,10 @@
 import CardTitle from '@/components/general/CardTitle'
-import { Card, Col, Form, Input, InputNumber, Row, Select, Switch } from 'antd'
+import { Card, Form, InputNumber, Switch } from 'antd'
 import React, { useState } from 'react';
-import PhoneInput from "react-phone-input-2";
-import { savedCurrency, savedTimeZone } from '../../../../utils/savedInfo';
-import { useLanguage } from '@/hooks/useLAnguage';
 import RoundBtn from '@/components/general/RoundBtn';
 import { useServiceCategory } from '@/hooks/useServiceCategory';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
 const Financial = () => {
     const [form] = Form.useForm();
     const { categories } = useServiceCategory();
@@ -16,7 +12,7 @@ const Financial = () => {
   return (
     <Card
         actions={[
-            <div className='flex items-center justify-end gap-2 mr-6'>
+            <div key={1} className='flex items-center justify-end gap-2 mr-6'>
                 <RoundBtn primary={!isEdit} width={100} onClick={() => setIsEdit(!isEdit)} title={isEdit ? "Cancel" : 'Edit'} />
                 {isEdit && <RoundBtn primary onClick={() => setIsEdit(!isEdit)} title="Save Changes" />}
             </div>
@@ -35,7 +31,7 @@ const Financial = () => {
 
                 <Card title="Service Categories">
                     {categories.map((savedCategory, i) => (
-                        <FormItem  className="finance_form" label={savedCategory.name} layout="horizontal"  style={{ justifyContent: "space-between "}}>
+                        <FormItem key={i} className="finance_form" label={savedCategory.name} layout="horizontal"  style={{ justifyContent: "space-between "}}>
                             <InputNumber disabled={!isEdit} style={{ width: 95, height: 40, justifySelf: "end" }}  />
                         </FormItem>
                     ))}

@@ -3,7 +3,7 @@ import EscrowFunds from '@/components/admin/cards/EscrowFunds'
 import AdminContainer from '@/components/dashboard/AdminContainer'
 import Dot from '@/components/general/Dot'
 import InfoWalletCards from '@/components/wallet/cards/InfoWalletCards'
-import { getAdminEscrowFunds, getAdminFinanceStats, getAdminFinancialBreakdown, getAdminRevenueBreakdown } from '@/redux/action/admin'
+import { getAdminEscrowFunds, getAdminFinanceStats,  getAdminRevenueBreakdown } from '@/redux/action/admin'
 import { Icon } from '@iconify/react'
 import { App, Card, Col, Progress, Row } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react';
@@ -12,13 +12,12 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  Legend,
   Tooltip,
   PieLabelRenderProps,
   PieProps
 } from "recharts";
 import { createErrorMessage } from '../../../../../utils/errorInstance'
-import { IEscrowEntryResponse, IRevenueBreakdownSlice, ITransactionLogItemResponse } from '../../../../../utils/interface'
+import { IEscrowEntryResponse, IRevenueBreakdownSlice } from '../../../../../utils/interface'
 
 const COLORS = ["#FED500", "#039855", "#2860D8", "#8A38F5"];
 

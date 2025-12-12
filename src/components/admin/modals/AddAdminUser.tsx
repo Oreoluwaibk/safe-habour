@@ -73,12 +73,12 @@ const AddAdminUser = ({ onCancel, open, isEdit, user, refresh, roles }: props) =
             lastName: value.lastName,
             email: value.email,
             roleId: value.roleId,
-            userId: user?.id!,
+            userId: user?.id || "",
             isActive: true
         }
 
         setLoading(true);
-        editAnAdminUser(user?.id!, payload)
+        editAnAdminUser(user?.id || "", payload)
          .then(res => {
             if(res.status === 200) {
                 setLoading(false);

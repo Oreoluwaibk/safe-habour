@@ -76,7 +76,7 @@ const CreateRole = ({ onCancel, open, type, user, permissions, refresh }: props)
         }
 
         setLoading(true);
-        updateAnAdminRoles(user?.id!, payload)
+        updateAnAdminRoles(user!.id || "", payload)
             .then(res => {
             if(res.status === 200) {
                 setLoading(false);

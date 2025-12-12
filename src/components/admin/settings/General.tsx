@@ -16,7 +16,7 @@ const General = () => {
   return (
     <Card 
         actions={[
-            <div className='flex items-center justify-end gap-2 mr-6'>
+            <div key={1} className='flex items-center justify-end gap-2 mr-6'>
                 <RoundBtn primary={!isEdit} width={100} onClick={() => setIsEdit(!isEdit)} title={isEdit ? "Cancel" : 'Edit'} />
                 {isEdit && <RoundBtn primary onClick={() => setIsEdit(!isEdit)} title="Save Changes" />}
             </div>

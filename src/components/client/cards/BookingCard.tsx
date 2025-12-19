@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
 import { ClockCircleOutlined, EnvironmentFilled, StarFilled, UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Row, App } from 'antd'
 import { useRouter } from 'next/navigation'
@@ -26,6 +26,13 @@ const BookingCard = ({ worker, onRefresh }: props) => {
     const [ loading, setLoading ] = useState(false);
     const [ openModal, setOpenModal ] = useState(false);
     const { user } = useAppSelector(state => state.auth);
+    const [ isPending, startTransition ] = useTransition();
+    
+        const handleNavigate = () => {
+            startTransition(() => {
+                router.push(`/dashboard/client/hire/${worker?.serviceWorkerId}?status=${worker?.status}&application=${worker?.applicationId}`)
+            })
+        }
 
 
     useEffect(() => {
@@ -145,7 +152,7 @@ const BookingCard = ({ worker, onRefresh }: props) => {
                 <div className='flex items-center gap-4 justify-between'>
                     {worker?.status === 1 && <Button type="default" className='!h-[40px] w-[90px] !rounded-[50px] !font-medium !text-[#670316]' onClick={() => setOpenModal(true)}>Cancel</Button>}
                     {worker?.status === 2 && <Button loading={loading} type="default" className='!h-[40px] w-[120px] !rounded-[50px] !font-medium !text-[#670316]' onClick={handleCheckHistory}>Message</Button>}
-                    <Button type='primary' className='!h-[40px] w-[128px] !rounded-[50px] primary-bg text-white !font-medium' onClick={() => router.push(`/dashboard/client/hire/${worker?.serviceWorkerId}?status=${worker?.status}&application=${worker?.applicationId}`)}>View More</Button>
+                    <Button type='primary' className='!h-[40px] w-[128px] !rounded-[50px] primary-bg text-white !font-medium' onClick={handleNavigate} loading={isPending}>View More</Button>
                 </div>
             </div>
 

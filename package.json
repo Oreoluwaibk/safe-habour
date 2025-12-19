@@ -13,6 +13,8 @@
     "@iconify/react": "^6.0.2",
     "@microsoft/signalr": "^10.0.0",
     "@reduxjs/toolkit": "^2.9.0",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.0",
     "antd": "^5.27.3",
     "axios": "^1.12.1",
     "dayjs": "^1.11.18",

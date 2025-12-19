@@ -105,6 +105,34 @@ export const createStripeAccount = async () => {
   return Promise.resolve(response);
 }
 
+export const createPaymentIntent = async () => {
+  const url = `/Payment/setup-intent`;
+  const response = await axiosInstance.post(url);
+
+  return Promise.resolve(response);
+}
+
+export const savePaymentMethods = async (data: { paymentMethodId: string; setAsDefault?: boolean }) => {
+  const url = `/Payment/payment-methods`;
+  const response = await axiosInstance.post(url, data);
+
+  return Promise.resolve(response);
+}
+
+export const getPaymentMethods = async () => {
+  const url = `/Payment/payment-methods`;
+  const response = await axiosInstance.get(url);
+
+  return Promise.resolve(response);
+}
+
+export const setAsDefault = async (paymentMethodId: string) => {
+  const url = `/Payment/payment-methods/${paymentMethodId}/set-default`;
+  const response = await axiosInstance.put(url, { paymentMethodId });
+
+  return Promise.resolve(response);
+}
+
 export const onBoardWorkerOnStripe = async () => {
   const url = `/StripeConnect/onboarding-link`;
   const response = await axiosInstance.get(url);

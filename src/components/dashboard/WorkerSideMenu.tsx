@@ -4,8 +4,7 @@ import React from 'react'
 import { NavItem } from './Container';
 import Image from 'next/image';
 import { Logo } from '../../../assets/logo';
-import { useRouter } from 'next/navigation';
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 
 interface props {
     open: boolean;
@@ -22,7 +21,6 @@ const WorkerSideMenu = ({
     handleLogout, loading
     // loading
 }: props) => {
-    const router = useRouter();
   return (
     <Drawer
         open={open}

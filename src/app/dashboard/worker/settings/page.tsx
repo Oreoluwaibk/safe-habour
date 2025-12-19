@@ -6,10 +6,14 @@ import Account from '@/components/wallet/settings/Account';
 import Notification from '@/components/wallet/settings/Notification';
 import Payout from '@/components/wallet/settings/Payout';
 import { Col, Row, Segmented } from 'antd';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Page = () => {
     const [ active, setActive ] = useState("Notification Settings");
+
+    useEffect(() => {
+      if(window && window.location.hash === "#payout") setActive("Payout Settings");
+    }, [])
   return (
     <WorkerContainer active='Settings'>
       <div >

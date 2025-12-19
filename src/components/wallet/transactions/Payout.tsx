@@ -3,21 +3,37 @@ import CardTitle from '@/components/general/CardTitle';
 import { getWorkerBankInfo, getWorkerPayouts } from '@/redux/action/transaction';
 // import { PlusOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
-import { App, Button, Card, Col, Form, Row, Select } from 'antd'
-import React, { useCallback, useEffect, useState } from 'react'
-import { PaymentTransaction } from '../../../../utils/interface';
+import { App, Button, Card, Col, Row, Select } from 'antd'
+import React, { useCallback, useEffect, useState, useTransition } from 'react'
+import { IBankInfoDetails, PaymentTransaction } from '../../../../utils/interface';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { useRouter } from 'next/navigation';
+import moment from 'moment';
 
-const FormItem = Form.Item;
 const Option = Select.Option;
 const Payout = () => {
-  const [form] = Form.useForm();
   const router = useRouter();
   const { modal } = App.useApp();
   const [ loading, setLoading ] = useState(false); 
   const [ transactions, setTransactions ] = useState<PaymentTransaction[]>([]);
-  const [ bankInfo, setBankInfo ] = useState({});
+  const [ bankInfo, setBankInfo ] = useState<IBankInfoDetails>({
+    bankAccount: null,
+    payoutSchedule: {
+      interval: "daily",
+      intervalDescription: "Daily automatic payouts",
+      weeklyAnchor: null,
+      monthlyAnchor: 0,
+      delayDays: 7,
+      nextPayoutDate: "2025-12-24T16:00:00Z",
+      payoutTime: "11:00 AM EST",
+    },
+    additionalInfo: {
+      instantPayoutsAvailable: true,
+      statementDescriptor: null,
+      debitNegativeBalances: true,
+    },
+  });
+  const [ isPending, startTransition ] = useTransition();
 
   const handleGetPayouts = useCallback(() => {
     setLoading(true);
@@ -64,6 +80,12 @@ const Payout = () => {
     handleGetBankInfo();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleNavigate = () => {
+    startTransition(() => {
+      router.push("/dashboard/worker/settings#payout")
+    })
+  }
     
   return (
     <Row className='my-6' gutter={[15, 15]}>
@@ -72,25 +94,26 @@ const Payout = () => {
           title={<p className='text-lg text-[#1e1e1e]'>Payout Settings</p>}
           styles={{body: {display: "flex", flexDirection: "column", gap: 10}}}
           actions={[<div key={1} className='flex items-center justify-between px-6 font-medium'>
-            <Button type="primary" onClick={() => router.push("/dashboard/worker/settings")} className='md:!w-full !h-[48px]' style={{borderRadius: 50}}>Update Settings</Button>
+            <Button type="primary" onClick={handleNavigate} loading={isPending} className='md:!w-full !h-[48px]' style={{borderRadius: 50}}>Update Settings</Button>
         </div>]}
         >
-        <Form form={form} layout="vertical">
-        <FormItem label="Payout Schedule" name="schdule">
-          <Select placeholder="Weekly (friday)"></Select>
-        </FormItem>
-
-        <FormItem label="Payout Method" name="paymentMethod" initialValue="bank">
-          <Select disabled defaultValue="bank" placeholder="Bank">
-            <Option value="bank">Bank</Option>
+        {bankInfo.payoutSchedule && <div className='flex flex-col gap-4 pb-3'>
+          <Select disabled value={`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}>
+            <Option value={`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}>{`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}</Option>
           </Select>
-        </FormItem>
-        </Form>
 
-        {bankInfo && <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
+          <Select defaultValue="Weekly (Friday)" disabled value={bankInfo.payoutSchedule.interval}>
+            <Option value="daily">Daily</Option>
+            <Option value="weekly">Weekly</Option>
+            <Option value="bi-weekly">Bi-Weekly</Option>
+            <Option value="monthly">Monthly</Option>
+          </Select>
+      </div>}
+
+        {bankInfo.bankAccount && <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
           <CardTitle 
-            title='Connected Account' 
-            description="RBC Royal Bank - Account ending in 4567" 
+            title={bankInfo.bankAccount.accountHolderName} 
+            description={`${bankInfo.bankAccount.bankName} - Account ending in ${bankInfo.bankAccount.last4}`} 
             icon={<Icon icon="fluent:payment-48-regular" fontSize={18} />}
           />
 

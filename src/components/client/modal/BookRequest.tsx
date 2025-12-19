@@ -1,5 +1,5 @@
 "use client"
-import { App, Button, DatePicker, Form, Modal, Select } from 'antd'
+import { App, Button, DatePicker, Form, Input, Modal, Select, TimePicker } from 'antd'
 import React, { useState } from 'react';
 import "@/styles/modal.css";
 import { IJobHireRequest, UserWorkerProfile } from '../../../../utils/interface';
@@ -20,17 +20,32 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
   const [form] = Form.useForm();
   const { modal } = App.useApp();
   const [ loading, setLoading ] = useState(false);
+  const [ date, setDate ] = useState({
+    start: "",
+    end: ""
+  })
+  const [ time, setTime ] = useState({
+    start: "",
+    end: "",
+    duration: 0,
+    amount: ""
+  })
+  const [ noOfHours, setNoOfHours ] = useState("");
   
   const handleHire = () => {
     form.validateFields()
     .then(value => {
       const payload: IJobHireRequest = {
         timePreference: value.timePreference,
-        preferredStartDate: new Date(value.preferredStartDate).toISOString(),
+        preferredStartDate:date.start,
         serviceWorkerId: worker.userId,
-        proposedRate: Number(worker.hourlyRate)*4,
-        budget: Number(worker.hourlyRate)*4,
+        proposedRate: parseFloat(time.amount),
+        budget: parseFloat(time.amount),
         hireType: type,
+        preferredEndDate: date.end,
+        description: value.description,
+        timePreferenceEnd: time.end,
+        timePreferenceStart:time.start
       }
 
       if(worker.services) payload.serviceCategoryId = worker.services[worker.services.length - 1].serviceCategoryId
@@ -72,19 +87,69 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
   >
     <Form layout="vertical" form={form} className='' onFinish={handleHire}>
       <FormItem label="Day" name="preferredStartDate" rules={[{required: true}]}>
-        <DatePicker 
-          style={{width: "100%", height: 52}} 
-          placeholder="Select Date" 
+        <DatePicker.RangePicker 
+          style={{width: "100%", height: 42}} 
+          // placeholder="Select Date"
+          onChange={(date, dateString) => {
+            setDate({
+              start: dateString[0],
+              end: dateString[1]
+            })
+          }}
 
         />
       </FormItem>
 
-      <FormItem label="Duration(hours)" name="timePreference" rules={[{required: true}]}>
+      {/* <FormItem label="Duration(hours)" name="timePreference" rules={[{required: true}]}>
         <Select placeholder="Select TIme">
           {savedPreferredTime.map((preference: {id: number, title: string}, i: number) => (
             <Option key={i} value={preference.id}>{preference.title}</Option>
           ))}
         </Select>
+      </FormItem> */}
+
+      <FormItem label="Time" name="preferredEndDate" rules={[{required: true}]}>
+        <TimePicker.RangePicker 
+          style={{width: "100%", height: 42}} 
+          // format="HH:mm A"
+          onChange={(dates, dateStrings) => {
+            // setTime({
+            //   start: dateString[0],
+            //   end: dateString[1]
+            // })
+            if (!dates) return;
+
+            const [start, end] = dates;
+
+            let diffInMinutes = end?.diff(start, "minutes") || 0;
+
+            // handle overnight time (e.g. 10pm → 2am)
+            if (diffInMinutes < 0) {
+              diffInMinutes += 24 * 60;
+            }
+
+            const hoursDecimal = diffInMinutes / 60;
+            const totalAmount = hoursDecimal * Number(worker.hourlyRate);
+            const hours = Math.floor(diffInMinutes / 60);
+            const minutes = diffInMinutes % 60;
+
+            setTime({
+              start: dateStrings[0],
+              end: dateStrings[1],
+              duration: diffInMinutes,
+              amount: totalAmount.toFixed(2)
+            });
+
+            setNoOfHours(`${hours}h ${minutes}m`)
+          }}
+          // placeholder="Select Date"
+         
+
+        />
+      </FormItem>
+
+       <FormItem label="Description" name="description" rules={[{required: true}]}>
+        <Input placeholder="Descrption" />
       </FormItem>
 
       <div className='rate-calculator mt-8'>
@@ -95,12 +160,12 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
 
         <div className='flex items-center justify-between text-lg'>
           <p>Duration:</p>
-          <p>4 hours</p>
+          <p>{noOfHours}</p>
         </div>
 
         <div className='flex items-center justify-between text-lg font-semibold border-t border-t-[#e8e8e8] pt-3'>
           <p>Estimated Total:</p>
-          <p>${(Number(worker.hourlyRate)*4).toFixed(2)}</p>
+          <p>${time.amount}</p>
         </div>
       </div>
 

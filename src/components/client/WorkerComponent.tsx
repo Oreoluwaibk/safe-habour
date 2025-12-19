@@ -16,6 +16,7 @@ import { getServiceWorkerByCategory, IClientParams } from "@/redux/action/client
 import { createErrorMessage } from "../../../utils/errorInstance";
 import useDebounce from "@/hooks/useDebounce";
 import { useGeolocation } from "@/hooks/useGeolocation";
+import { useAuthentication } from "@/hooks/useAuthentication";
 interface props {
     isDashboard?: boolean;
 }
@@ -31,6 +32,7 @@ const icons = [
 ]
 const WorkerComponent = ({ isDashboard }: props) => {
     const { modal } = App.useApp();
+    const { authentication } = useAuthentication();
     const [ showSearch, setShowSearch ] = useState(false);
     const [ collasped, setCollapsed ] = useState(true);
     const [ loading, setLoading ] = useState(false)
@@ -124,18 +126,14 @@ const WorkerComponent = ({ isDashboard }: props) => {
     }, []);
     
     useEffect(() => {
-        if (debouncedSearch) {
-            handleGetWorker(undefined, 1, 8, debouncedSearch.toString())
-            setFilters(prev => ({...prev, searchTerm: debouncedSearch.toString()}))
-        }
+        handleGetWorker(undefined, 1, 8, debouncedSearch.toString())
+        setFilters(prev => ({...prev, searchTerm: debouncedSearch.toString()}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearch]);
 
     useEffect(() => {
-        if (debouncedLocation) {
-            handleGetWorker()
-            setFilters(prev => ({...prev, location: debouncedLocation.toString()}))
-        }
+        handleGetWorker()
+        setFilters(prev => ({...prev, location: debouncedLocation.toString()}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedLocation]);
 
@@ -276,12 +274,12 @@ const WorkerComponent = ({ isDashboard }: props) => {
 
                         <div className="filter-container">
                             <p className="t-pri text-base">Location</p>
-                            <Radio.Group >
-                                <Radio value="totronto" checked={false}>
+                            <Radio.Group className="flex flex-col" onChange={(e) => setFilters(prev => ({...prev, location: e.target.value}))}>
+                                <Radio value="Toronto" checked={filters.location === "Toronto"}>
                                     Toronto
                                 </Radio>
-                                <Radio onChange={() => handleNearMeChange(!nearMe)}>
-                                    Around Me
+                                <Radio value="Manitoba" checked={filters.location === "Manitoba"}>
+                                    Manitoba
                                 </Radio>
                             </Radio.Group>
                         </div>
@@ -357,7 +355,7 @@ const WorkerComponent = ({ isDashboard }: props) => {
                             <Row gutter={[15,15]} className="min-h-2/5">
                                 {workers.map((worker:UserWorkerProfile,i:number) => (
                                     <Col lg={collasped ? 6 : 8} sm={12} xs={24} key={i}>
-                                        <WorkersCard worker={worker} />
+                                        <WorkersCard worker={worker} authentication={authentication!} />
                                     </Col>
                                 ))}
 

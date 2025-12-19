@@ -1,6 +1,6 @@
 "use client"
 import "@/styles/client.css"
-import { BellFilled, MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { App, Button, Layout } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -100,6 +100,8 @@ const ClientContainer = ({
     }, [loginType, isAuthenticated, router]);
 
     const handlePostJob = () => {
+        if(!authentication?.isProfileComplete) 
+            return message.info("You have not completed your profile, complete your profile to perform this function!");
         if(!authentication?.isVerified) 
             return message.info("You have not been verified, this feature is only available to verified users!");
         setOpenJobModal(true);
@@ -137,9 +139,9 @@ const ClientContainer = ({
                     
 
                     <div className='hidden md:flex items-center gap-4'>
-                        <div className="icon-div icon-bg">
+                        {/* <div className="icon-div icon-bg">
                             <SearchOutlined className="!text-white !text-lg" />
-                        </div>
+                        </div> */}
                         <NotificationToast />
                         <div className="mt-2">
                             <NotificationBell />

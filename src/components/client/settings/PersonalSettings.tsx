@@ -131,6 +131,12 @@ const PersonalSettings = ({
     <Card 
         title="Personal Information" 
         variant="borderless"
+        classNames={{ extra: "pt-4 pr-4" }}
+        extra={(
+            <FormItem className='flex items-center justify-end'>
+                <Button loading={loading} type="primary" onClick={handleSubmit} className='!w-[81px] !h-[40px] !rounded-[100px]'>{isEdit ? "Save" : "Edit"}</Button>              
+            </FormItem>
+        )}
     >
         <div className='flex items-center gap-6 mt-3 mb-8'>
             <div className='relative'>
@@ -400,9 +406,7 @@ const PersonalSettings = ({
                         disabled={!isEdit}
                     />
                 </FormItem>
-                <FormItem className='flex items-center justify-end'>
-                    <Button loading={loading} type="primary" onClick={handleSubmit} className='!w-[81px] !h-[40px] !rounded-[100px]'>{isEdit ? "Save" : "Edit"}</Button>              
-                </FormItem>
+                
             </Col>
            
             

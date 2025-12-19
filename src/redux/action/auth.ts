@@ -86,6 +86,13 @@ export const verifyMe = async () => {
     return Promise.resolve(response);
 }
 
+export const getVerificationDocument = async () => {
+    const url = `/Authentication/me/verification-documents`;
+    const response = await axiosInstance.get(url);
+
+    return Promise.resolve(response);
+}
+
 export const onBoardServiceWorker = async (data: WorkerProfile) => {
     const url = `/Authentication/onboard-service-worker`;
     const response = await axiosInstance.post(url, data);

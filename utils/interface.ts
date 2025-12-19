@@ -259,6 +259,10 @@ export interface IJobHireRequest {
   reoccurringDays?: number[];
   proposedRate: number;
   paymentMethodId?: string;
+  "preferredEndDate": string;
+  "timePreferenceStart": string;
+  "timePreferenceEnd": string;
+  "description"?: string;
 }
 
 export interface acceptInvite {
@@ -722,6 +726,52 @@ export interface IClientApplicationDetails {
   jobDetails: IJobDetails;
   serviceWorker: IServiceWorker;
 }
+
+/////////////////////////////////////////BANK INFO////////////////////////////////////////
+export interface IBankInfoDetails {
+  bankAccount: IBankAccount | null;
+  payoutSchedule: IPayoutSchedule;
+  additionalInfo: IAdditionalBankInfo;
+}
+
+export interface IBankAccount {
+  bankName: string;
+  last4: string;
+  country: string;
+  currency: string;
+  accountHolderName: string;
+  accountType: "individual" | "company" | string;
+  isVerified: boolean;
+  isDefault: boolean;
+}
+
+export interface IPayoutSchedule {
+  interval: "daily" | "weekly" | "monthly" | string;
+  intervalDescription: string;
+  weeklyAnchor: number | null;
+  monthlyAnchor: number | null;
+  delayDays: number;
+  nextPayoutDate: string; // ISO date
+  payoutTime: string;     // e.g. "11:00 AM EST"
+}
+
+export interface IAdditionalBankInfo {
+  instantPayoutsAvailable: boolean;
+  statementDescriptor: string | null;
+  debitNegativeBalances: boolean;
+}
+
+export interface ICardDetails {
+  id: string;
+  type: "card" | string;
+  cardBrand: string;
+  cardLast4: string;
+  cardExpMonth: number;
+  cardExpYear: number;
+  isDefault: boolean;
+  createdAt: string; // ISO date string
+}
+
 
 ////////////////////////////////////////////////ADMIN INTERFACE ////////////////////////////////
 

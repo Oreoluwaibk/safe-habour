@@ -1,21 +1,100 @@
 "use client"
 import { CheckCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 // import { Icon } from '@iconify/react'
-import { Button, Card, Col, Row } from 'antd'
-import React, { useState } from 'react'
+import { App, Button, Card, Col, Row } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
 import AddCard from '../modal/AddCard'
 import PayCard from '../cards/PayCard'
+import { IBankInfoDetails, ICardDetails } from '../../../../utils/interface'
+import { createStripeAccount, getPaymentMethods, getWorkerBankInfo, onBoardWorkerOnStripe } from '@/redux/action/transaction'
+import { createErrorMessage } from '../../../../utils/errorInstance'
+import AddPaymentMethod from '@/components/general/AddCardElement'
 
 
 const PaymentSchedule = () => {
+    const { modal } = App.useApp();
+    const [ loading, setLoading ] = useState(false);
     const [ openAdd, setOpenAdd ] = useState(false);
     const [ selected, setSelected ] = useState("");
-    const [ isCardSet, setIsCardSet ] = useState(false);
+    const [ isCardSet, setIsCardSet ] = useState(true);
+    const [ cards, setCards ] = useState<ICardDetails[]>([]);
+
+    const handleGetPaymentMethods = useCallback(() => {
+        setLoading(true);
+        getPaymentMethods()
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                setCards(res.data.data);
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to get card details",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, [modal]);
+
+    const handleCreateStripeAccount = useCallback(() => {
+        setLoading(true);
+        createStripeAccount()
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                window.open(res.data.data, "_blank");
+                // setBankInfo(res.data.data);
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to create stripe account",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, [modal]);
+
+    const handleOnboardStripeAccount = useCallback(() => {
+        setLoading(true);
+        onBoardWorkerOnStripe()
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                window.open(res.data.data, "_blank");
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to onboard stripe account",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, [modal]);
+
+    useEffect(() => {
+        handleGetPaymentMethods();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleSelection = () => {
+        // if(bankInfo) handleOnboardStripeAccount();
+        // else handleCreateStripeAccount();
+    }
   return (
     <Card 
         title="Payment Methods" 
         variant="borderless"
         styles={{body: {padding: "0 20px"}}}
+        loading={loading}
     >
         <Row gutter={[5, 5]}  className='py-6'>
             {!isCardSet && <Col lg={24} sm={24} xs={24} className='!flex !flex-col !items-center gap-4 w-full'>
@@ -24,54 +103,25 @@ const PaymentSchedule = () => {
                 </div>
                 <p className='text-[#101828] text-lg'>No Payment Method</p>
                 <p className='text-[#667085] text-sm'>Add a payment method to start booking services</p>
-                <Button type="primary" onClick={() => {
-                    setSelected("")
-                    setOpenAdd(true)
-                }} className='!w-full !h-[40px] !rounded-[100px]'>Add Payment Method</Button> 
+                <Button type="primary" onClick={handleSelection} className='!w-full !h-[40px] !rounded-[100px]'>Add Payment Method</Button> 
             </Col>}
             
             {isCardSet && <Col lg={24} sm={24} xs={24} className='!flex !flex-col !items-center gap-4 w-full'>
                 
                 <Row className='!w-full' gutter={[15, 15]}>
-                    <Col lg={12} sm={24} xs={24} className='W-full'>
-                        <PayCard isMaster />
-                    </Col>
-                    <Col lg={12} sm={24} xs={24} className='W-full'>
-                        <PayCard isChecked />
-                    </Col>
-                    <p className='text-[#1e1e1e] text-lg font-semibold my-3'>Accounts</p>
-                    <Col lg={24} sm={24} xs={24} className='W-full'>
-                        <Card variant="borderless" style={{width: "100%"}} styles={{ body: { display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%"}}}>
-                            <div className='flex items-start gap-2 w-full'>
-                                <PlusCircleOutlined className='mt-1' />
-                                <div>
-                                    <p className='font-medium text-[#1e1e1e]'>Link Debit Card</p>
-                                    <p className='font-light text-[#525252] text-sm'>You can link your debit card to Safeharbour directly</p>
-                                </div>
-                            </div>
-                            <Button onClick={() => {
-                                setSelected("Card");
-                                setOpenAdd(true)
-                            }} type="primary" className='md:!w-[69px] !h-[34px]' style={{borderRadius: 50}}>Link</Button>
-                        </Card>
-                        
-                    </Col>
+                    {cards.map((card, i) => (
+                        <Col lg={12} key={i} sm={24} xs={24} className='W-full'>
+                            <PayCard 
+                                isChecked={card.isDefault} 
+                                isMaster={card.cardBrand === "mastercard"} 
+                                card={card} 
+                                refresh={handleGetPaymentMethods}
+                            />
+                        </Col>
+                    ))}
 
                     <Col lg={24} sm={24} xs={24} className='W-full'>
-                        <Card variant="borderless" style={{width: "100%"}} styles={{ body: { display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%"}}}>
-                            <div className='flex items-start gap-2 w-full'>
-                                <PlusCircleOutlined className='mt-1' />
-                                <div>
-                                    <p className='font-medium text-[#1e1e1e]'>Link Bank Account</p>
-                                    <p className='font-light text-[#525252] text-sm'>You can link your Safeharbour directly to any of your bank accounts</p>
-                                </div>
-                            </div>
-                            <Button onClick={() => {
-                                setSelected("Bank Account");
-                                setOpenAdd(true)
-                            }} type="primary" className='md:!w-[69px] !h-[34px]' style={{borderRadius: 50}}>Link</Button>
-                        </Card>
-                        
+                       <AddPaymentMethod refresh={handleGetPaymentMethods} />
                     </Col>
                 </Row> 
             </Col>}

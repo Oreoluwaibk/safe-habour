@@ -1,19 +1,29 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import "@/styles/client.css";
 import { ClockCircleOutlined, EnvironmentFilled, StarFilled, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Image } from 'antd';
+import { Avatar, Button, Image, Tooltip } from 'antd';
 import { useRouter } from 'next/navigation';
-import { UserWorkerProfile } from '../../../../utils/interface';
+import { IUser, UserWorkerProfile } from '../../../../utils/interface';
 import moment from 'moment';
 import HireType from '../modal/HireType';
 
 interface props {
-    worker: UserWorkerProfile
+    worker: UserWorkerProfile;
+    authentication: IUser;
 }
-const WorkersCard = ({ worker }: props) => {
+const WorkersCard = ({ worker, authentication }: props) => {
     const [ openHireModal, setOpenHireModal ] = useState(false);
     const router = useRouter();
+    const [ isPending, startTransition ] = useTransition();
+
+    const handleNavigate = () => {
+        startTransition(() => {
+            router.push(`/dashboard/client/hire/${worker.userId}`)
+        })
+    }
+
+    const isConfirmed = !authentication?.isVerified || !authentication?.isProfileComplete;
   return (
     <div className='workers-card'>
         <div className='absolute top-8 right-8 text-[#6c4500] bg-[#ffeac0] rounded-[12px] px-2 py-3 flex items-center text-[8px] gap-1 !h-[10px] !w-fit'>
@@ -25,7 +35,7 @@ const WorkersCard = ({ worker }: props) => {
             <Avatar icon={<UserOutlined size={80} className='text-4xl' />} alt='Worker image' shape="square" className='md:!h-[169px] object-cover w-full!' />
         )}
         <div className='flex items-center justify-between'>
-            <p className="t-pri text-[20px] font-semibold">{worker.firstName} {worker.lastName}</p>
+            <p className="t-pri text-[20px] font-semibold">{worker.firstName}</p>
             <div className='text-[#018a06] bg-[#f2fff2] rounded-[12px] p-4 flex items-center text-[8px] gap-1 !h-[15px] !w-fit'>
                 <ClockCircleOutlined />
                 <p className=''>{worker.isVerified ? "Verified" : "UnVerified"}</p>
@@ -50,8 +60,17 @@ const WorkersCard = ({ worker }: props) => {
         </div>
 
         <div className='flex items-center gap-4 justify-between'>
-            <Button onClick={() => router.push(`/dashboard/client/hire/${worker.userId}`)} type="default" className='!h-[50px] w-[180px] !rounded-[50px] !font-medium !text-[#670316]'>View More</Button>
-            <Button onClick={() => setOpenHireModal(true)} type='primary' className='!h-[50px] w-[180px] !rounded-[50px] primary-bg text-white !font-medium'>Hire Me</Button>
+            <Button onClick={handleNavigate} loading={isPending} type="default" className='!h-[50px] w-[180px] !rounded-[50px] !font-medium !text-[#670316]'>View More</Button>
+            <Tooltip title={isConfirmed ? "You have not completed your profile, complete your profile to perform this function" : ""}>
+                <Button 
+                    disabled={isConfirmed} 
+                    onClick={() => setOpenHireModal(true)} 
+                    type='primary' 
+                    className='!h-[50px] w-[180px] !rounded-[50px] primary-bg text-white !font-medium'
+                >
+                    Hire Me
+                </Button>
+            </Tooltip>
         </div>
 
         {openHireModal && 

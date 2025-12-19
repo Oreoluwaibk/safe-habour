@@ -4,7 +4,6 @@ import React from 'react'
 import { NavItem } from './Container';
 import Image from 'next/image';
 import { Logo } from '../../../assets/logo';
-import { useRouter } from 'next/navigation';
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 
 interface props {
@@ -24,7 +23,6 @@ const ClientSidemenu = ({
     handleLogout, loading
     // loading
 }: props) => {
-    const router = useRouter();
   return (
     <Drawer
         open={open}

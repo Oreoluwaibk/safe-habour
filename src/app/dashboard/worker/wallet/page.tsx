@@ -8,12 +8,13 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import { App, Button, Card, Col, Row, Segmented } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
-import { EarningsSummary, PaymentTransaction } from '../../../../../utils/interface';
+import { EarningsSummary, IBankInfoDetails, PaymentTransaction } from '../../../../../utils/interface';
 import { getServiceWorkerMetrics } from '@/redux/action/serviceWorker';
 import { createErrorMessage } from '../../../../../utils/errorInstance';
 import Payout from '@/components/wallet/transactions/Payout';
 import Transactions from '@/components/wallet/transactions/Transactions';
-import { getWorkerPayments } from '@/redux/action/transaction';
+import { getWorkerBankInfo, getWorkerPayments } from '@/redux/action/transaction';
+import moment from 'moment';
 
 const Page = () => {
   const { modal } = App.useApp();
@@ -55,6 +56,24 @@ const Page = () => {
       monthName: "October 2025",
     },
   });
+  const [ bankInfo, setBankInfo ] = useState<IBankInfoDetails>({
+    bankAccount: null,
+    payoutSchedule: {
+      interval: "daily",
+      intervalDescription: "Daily automatic payouts",
+      weeklyAnchor: null,
+      monthlyAnchor: 0,
+      delayDays: 7,
+      nextPayoutDate: "2025-12-24T16:00:00Z",
+      payoutTime: "11:00 AM EST",
+    },
+    additionalInfo: {
+      instantPayoutsAvailable: true,
+      statementDescriptor: null,
+      debitNegativeBalances: true,
+    },
+  });
+  
   const [ transactions, setTransactions ] = useState<PaymentTransaction[]>([]);
   const [ loading, setLoading ] = useState(false);
 
@@ -96,10 +115,31 @@ const Page = () => {
     })
   }, [modal]);
   
+  const handleGetBankInfo = useCallback(() => {
+    setLoading(true);
+    getWorkerBankInfo()
+    .then(res => {
+      if(res.status === 200) {
+        setLoading(false);
+        setBankInfo(res.data.data);
+      }
+    })
+    .catch(err => {
+      modal.error({
+      title: "Unable to get bank info",
+      content: err?.response
+        ? createErrorMessage(err.response.data)
+        : err.message,
+        onOk: () => setLoading(false)
+      });
+    })
+  }, [modal]);
+
   useEffect(() => {
     if(active === "Overview"){
       handleGetMetrics();
       handleGetTransactions();
+      handleGetBankInfo();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
@@ -162,54 +202,56 @@ const Page = () => {
 
   {active === "Overview"&& <Row className='mt-6' gutter={[15, 15]}>
     <Col lg={14} sm={24} xs={24} className='mb-6'>
-        <Card
-            title={<CardTitle title='Next Scheduled Payout' icon={<Icon icon="fluent:payment-48-regular" fontSize={18} />}/>}
-            classNames={{
-                header: "",
-                body: "flex flex-col gap-2"
-            }}
-            actions={[<div key={1} className='flex items-center justify-between px-6 font-medium'>
-                <Button type="primary" className='md:!w-full !h-[48px]' style={{borderRadius: 50}} icon={<Icon icon="fluent:payment-48-regular" />}>Instant Payment ($2.99 fee)</Button>
-            </div>]}
-        >
-            <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
-                <div className='flex flex-col gap-0'>
-                    <p className='text-sm text-[#343433]'>Available for payout</p>
-                    <p className='text-lg text-[#101828] font-medium'>$1,432.00</p>
-                </div>
+      <Card
+        title={<CardTitle title='Next Scheduled Payout' icon={<Icon icon="fluent:payment-48-regular" fontSize={18} />}/>}
+        classNames={{
+          header: "",
+          body: "flex flex-col gap-2"
+        }}
+        actions={[<div key={1} className='flex items-center justify-between px-6 font-medium'>
+          <Button type="primary" className='md:!w-full !h-[48px]' style={{borderRadius: 50}} icon={<Icon icon="fluent:payment-48-regular" />}>Instant Payment ($2.99 fee)</Button>
+        </div>]}
+      >
+        <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
+          <div className='flex flex-col gap-0'>
+            <p className='text-sm text-[#343433]'>Available for payout</p>
+            <p className='text-lg text-[#101828] font-medium'>$1,432.00</p>
+          </div>
 
-                <div className='flex flex-col gap-0'>
-                    <p className='text-sm text-[#343433]'>Next payout</p>
-                    <p className='text-lg text-[#101828] font-medium'>Sat, Sept 20</p>
-                </div>
-            </div>
+          <div className='flex flex-col gap-0'>
+            <p className='text-sm text-[#343433]'>Next payout</p>
+            <p className='text-lg text-[#101828] font-medium'>{moment(bankInfo.payoutSchedule.nextPayoutDate).format("ddd, MMM YY")}</p>
+          </div>
+        </div>
 
-            <p className='text-[#343434] text-sm'>Automatic weekly payouts are processed every Friday</p>
-        </Card>
+        <p className='text-[#343434] text-sm'>Automatic weekly payouts are processed every Friday</p>
+      </Card>
     </Col>
+    
     <Col lg={10} sm={24} xs={24} className='mb-6'>
-        <Card
-            title={<CardTitle title='Earnings Breakdown'/>}
-            classNames={{
-                header: "linear",
-                body: "flex flex-col gap-4"
-            }}
-            actions={[<div key={1} className='flex items-center justify-between px-6 font-medium'>
-                <p className='text-lg text-[#191919]'>Net Earnings</p>
-                <p className='text-lg text-[#191919] font-medium'>${metrics.totalEarnings.toFixed(2)}</p>
-            </div>]}
-        >
-            <div className='flex items-center justify-between'>
-                <p className='text-lg text-[#343433]'>Gross Earnings</p>
-                <p className='text-lg text-[#323232] font-medium'>${metrics.totalGrossEarnings.toFixed(2)}</p>
-            </div>
+      <Card
+        title={<CardTitle title='Earnings Breakdown'/>}
+        classNames={{
+          header: "linear",
+          body: "flex flex-col gap-4"
+        }}
+        actions={[<div key={1} className='flex items-center justify-between px-6 font-medium'>
+          <p className='text-lg text-[#191919]'>Net Earnings</p>
+          <p className='text-lg text-[#191919] font-medium'>${metrics.totalEarnings.toFixed(2)}</p>
+        </div>]}
+      >
+        <div className='flex items-center justify-between'>
+          <p className='text-lg text-[#343433]'>Gross Earnings</p>
+          <p className='text-lg text-[#323232] font-medium'>${metrics.totalGrossEarnings.toFixed(2)}</p>
+        </div>
 
-            <div className='flex items-center justify-between'>
-                <p className='text-lg text-[#343433]'>Platform Fees (10%)</p>
-                <p className='text-lg text-[#ff0044] font-medium'>-${metrics.totalPlatformFees.toFixed(2)}</p>
-            </div>
-        </Card>
+        <div className='flex items-center justify-between'>
+          <p className='text-lg text-[#343433]'>Platform Fees (10%)</p>
+          <p className='text-lg text-[#ff0044] font-medium'>-${metrics.totalPlatformFees.toFixed(2)}</p>
+        </div>
+      </Card>
     </Col>
+
     <Col lg={24} sm={24} xs={24} className='mb-6'>
       <Card 
         variant="borderless" 

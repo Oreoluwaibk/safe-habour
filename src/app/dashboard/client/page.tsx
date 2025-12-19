@@ -2,7 +2,7 @@
 import ClientContainer from '@/components/dashboard/ClientContainer'
 import CompleteInfo from '@/components/general/CompleteInfo'
 import { ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons'
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useTransition } from 'react';
 import "@/styles/client.css"
 import Link from 'next/link';
 import { Col, Row, App } from 'antd';
@@ -15,9 +15,10 @@ import { useAuthentication } from '@/hooks/useAuthentication';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { getClientMetrics } from '@/redux/action/client';
 import { IClientDashboardMetrics } from '../../../../utils/interface';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const { modal } = App.useApp();
   const [ closeInfo, setCloseInfo ] = useState(false);
   const { user } = useAppSelector(state => state.auth);
@@ -59,8 +60,9 @@ const Page = () => {
        "October 2025" 
       }, 
       "activeJobsList": [] 
-    });
+  });
   const [ loading, setLoading ] = useState(false);
+  const [ isPending, startTransition ] = useTransition();
 
   useEffect(() => {
     if(user) setCloseInfo(!user.isProfileComplete)
@@ -111,6 +113,12 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleNavigate = () => {
+    startTransition(() => {
+      router.push("/dashboard/client/profile");
+    })
+  }
+
   // useEffect(() => {
   //   handleGetClientJobs();
   // }, [handleGetClientJobs]);
@@ -118,13 +126,21 @@ const Page = () => {
   return (
     <ClientContainer active='Dashboard'>
       <div >
-        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.lastName}! {loading && <LoadingOutlined spin/>}</h1>
+        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.firstName}! {loading && <LoadingOutlined spin/>}</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
         {closeInfo && <CompleteInfo 
           title='Complete your profile settings'
-          description='Ensure that all required details are filled out to complete your profile.'
-          nav={<Link href="/dashboard/client/profile"><p className='color-bg font-medium cursor-pointer'>Get Started <ArrowRightOutlined className='color-bg ml-2' /></p></Link>}
+          description={
+            <div className='flex flex-col gap-1'>
+              <span>Ensure that all required details are filled out to complete your profile:</span>
+              <div className='font-semibold'>
+                <p>-Verification Settings</p>
+                <p>-Profile Settings</p>
+                <p>-Payment Method</p>
+              </div>
+            </div>}
+          nav={<p className='color-bg font-medium cursor-pointer text-end' onClick={handleNavigate}>Get Started {isPending ? <LoadingOutlined spin className='color-bg ml-2' /> : <ArrowRightOutlined className='color-bg ml-2' />}</p>}
           onCancel={() => setCloseInfo(false)}
         />}
       </div>

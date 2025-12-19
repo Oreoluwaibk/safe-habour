@@ -92,16 +92,26 @@ export const getServiceWorkerByCategory = async (
     //   isAvailable,
     };
 
-    if (minHourlyRate) params.minHourlyRate = minHourlyRate;
-    if (maxHourlyRate) params.maxHourlyRate = maxHourlyRate;
-    if (latitude) params.latitude = latitude;
-    if (longitude) params.longitude = longitude;
-    if(searchTerm) params.searchTerm = searchTerm;
-    if(location) params.location = location;
+    const payload = {
+        ...data,
+        page: pageNumber,
+        pageSize,
+        maxHourlyRate,
+        minHourlyRate,
+        searchTerm,
+        location
+    }
+
+    // if (minHourlyRate) params.minHourlyRate = minHourlyRate;
+    // if (maxHourlyRate) params.maxHourlyRate = maxHourlyRate;
+    // if (latitude) params.latitude = latitude;
+    // if (longitude) params.longitude = longitude;
+    // if(searchTerm) params.searchTerm = searchTerm;
+    // if(location) params.location = location;
     
     // if(isAvailable) params.isAvailable = is
     const url = `/ServiceWorker/search`;
-    const response = await axiosInstance.post(url, data, { params });
+    const response = await axiosInstance.post(url, payload, { params });
 
     return Promise.resolve(response);
 }

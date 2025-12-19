@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { store } from "../store";
 import { Inter, Open_Sans } from "next/font/google";
 import "react-phone-input-2/lib/style.css";
+import StripeProvider from "@/components/general/StripeProvider";
 
 // Fonts
 const inter = Inter({
@@ -36,11 +37,13 @@ export default function RootLayout({
         <title>Safe Harbour</title>
       </head>
       <body className="font-sans antialiased">
-        <Provider store={store}>
-          <ConfigProvider theme={theme}>
-            <AntApp>{children}</AntApp>
-          </ConfigProvider>
-        </Provider>
+        <StripeProvider>
+          <Provider store={store}>
+            <ConfigProvider theme={theme}>
+              <AntApp>{children}</AntApp>
+            </ConfigProvider>
+          </Provider>
+        </StripeProvider>
       </body>
     </html>
   );

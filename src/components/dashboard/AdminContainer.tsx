@@ -9,7 +9,6 @@ import { Logo } from '../../../assets/logo';
 import Image from 'next/image';
 import NotificationCard from "../general/NotificationCard";
 import { CheckedCircle, MaskedLogo } from "../../../assets/icons";
-import WorkerSideMenu from "./WorkerSideMenu";
 import { useAppSelector } from "@/hook";
 import { logoutUser } from "@/redux/action/auth";
 import { INotification } from "../../../utils/interface";

@@ -17,43 +17,42 @@ const Page = () => {
   const [ transactions, setTransactions ] = useState<PaymentTransaction[]>([]);
   const [ loading, setLoading ] = useState(false);
   const [ metrics, setMetrics ] = useState<IClientDashboardMetrics>({ 
-      "activeJobs": 0, 
-      "totalSpent": 0, 
-      "refundsIssued": 0, 
-      "pendingTransactions": 0, 
-      "totalTransactions": 0, 
-      "totalTransactionAmount": 0, 
-      "thisMonthTransactions": 0, 
-      "thisMonthAmount": 0, 
-      "lastMonthTransactions": 0, 
-      "lastMonthAmount": 0, 
-      "percentageChangeFromLastMonth": 0, 
-      "changeDescription": "No transactions yet", 
-      "totalCompletedJobs": 0, 
-      "averageJobCost": 0, 
-      "currentMonth": { 
-        "jobsCompleted": 0, 
-        "jobsPosted": 0, 
-        "transactionCount": 0, 
-        "totalSpent": 0, 
-        "averageJobCost": 0, 
-        "year": 2025, "month": 11, 
-        "monthName": "November 2025"
-       }, 
-       "previousMonth": { 
-        "jobsCompleted": 0, 
-        "jobsPosted": 11, 
-        "transactionCount": 0, 
-        "totalSpent": 0, 
-        "averageJobCost": 0,
-         "year": 2025, 
-         "month": 10, 
-         "monthName": 
-         "October 2025" 
-        }, 
-        "activeJobsList": [] 
+  "activeJobs": 0, 
+  "totalSpent": 0, 
+  "refundsIssued": 0, 
+  "pendingTransactions": 0, 
+  "totalTransactions": 0, 
+  "totalTransactionAmount": 0, 
+  "thisMonthTransactions": 0, 
+  "thisMonthAmount": 0, 
+  "lastMonthTransactions": 0, 
+  "lastMonthAmount": 0, 
+  "percentageChangeFromLastMonth": 0, 
+  "changeDescription": "No transactions yet", 
+  "totalCompletedJobs": 0, 
+  "averageJobCost": 0, 
+  "currentMonth": { 
+    "jobsCompleted": 0, 
+    "jobsPosted": 0, 
+    "transactionCount": 0, 
+    "totalSpent": 0, 
+    "averageJobCost": 0, 
+    "year": 2025, "month": 11, 
+    "monthName": "November 2025"
+    }, 
+    "previousMonth": { 
+    "jobsCompleted": 0, 
+    "jobsPosted": 11, 
+    "transactionCount": 0, 
+    "totalSpent": 0, 
+    "averageJobCost": 0,
+      "year": 2025, 
+      "month": 10, 
+      "monthName": 
+      "October 2025" 
+    }, 
+    "activeJobsList": [] 
   });
-
 
   const handleGetMetrics = useCallback(() => {
     setLoading(true);

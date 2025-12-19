@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/hook';
 import { verifyDocuments } from '@/redux/action/auth';
-import { App, Card, Upload } from 'antd'
+import { App, Card, Upload, Image } from 'antd'
 import { RcFile } from 'antd/es/upload';
 import { toFormData } from 'axios';
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -8,6 +8,7 @@ import { createErrorMessage } from '../../../../utils/errorInstance';
 import CompleteInfo from '@/components/general/CompleteInfo';
 import { Icon } from '@iconify/react';
 import { LoadingOutlined } from '@ant-design/icons';
+// import Image from 'next/image';
 
 interface props {
   title: string;
@@ -16,10 +17,11 @@ interface props {
   isUploaded?: boolean;
   type?: number;
   value?: RcFile | null;
-  setValue?: React.Dispatch<React.SetStateAction<RcFile | null>>
+  setValue?: React.Dispatch<React.SetStateAction<RcFile | null>>;
+  url?: string;
 }
 const maxFileSize = 10000000;
-const UploadCard = ({ title, description, icon, isUploaded, value, type, setValue }: props) => {
+const UploadCard = ({ title, description, icon, isUploaded, value, type, setValue, url }: props) => {
   const { user } = useAppSelector(state => state.auth);
   const { message, modal } = App.useApp();
   const [ loading, setLoading ] = useState(false);
@@ -105,6 +107,26 @@ const UploadCard = ({ title, description, icon, isUploaded, value, type, setValu
       onCancel={() => setFile(null)}
       icon={<Icon icon="basil:document-outline" fontSize={20} className='mt-1' />}
       />}
+      {url && !file &&( url.split(".").includes("pdf") ? (
+        <iframe
+          src={url}
+          width="100%"
+          height="100%"
+          allowFullScreen
+          title={url}
+        />
+      ) : (
+      <Image 
+          src={url}
+          alt="Perp"
+          preview={false} // optional: disable AntD preview
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover", // fills container, crops if necessary
+            display: "block",  // prevents inline spacing issues
+          }} 
+      />))}
     </Card>
    
   )

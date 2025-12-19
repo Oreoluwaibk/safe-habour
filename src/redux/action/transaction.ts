@@ -133,6 +133,13 @@ export const setAsDefault = async (paymentMethodId: string) => {
   return Promise.resolve(response);
 }
 
+export const deletePaymentMethod = async (paymentMethodId: string) => {
+  const url = `/Payment/payment-methods/${paymentMethodId}`;
+  const response = await axiosInstance.delete(url);
+
+  return Promise.resolve(response);
+}
+
 export const onBoardWorkerOnStripe = async () => {
   const url = `/StripeConnect/onboarding-link`;
   const response = await axiosInstance.get(url);

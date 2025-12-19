@@ -17,6 +17,7 @@ import { INotification } from "../../../utils/interface";
 import NotificationToast from "../notification/NotificationToast";
 import { NotificationBell } from "../notification/NotificationBell";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import RoundBtn from "../general/RoundBtn";
 
 const { Content, Header } = Layout;
 
@@ -153,6 +154,8 @@ const ClientContainer = ({
                                 <PlusOutlined className="" /> 
                                 Post a Job
                             </Button>
+                        
+                        <Button type='text' className="text-white! text-xs!" loading={loading} onClick={handleLogout}>Logout</Button>
                     </div>
 
                     <div className='flex md:hidden items-center gap-2'>

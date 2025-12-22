@@ -138,6 +138,9 @@ const ProfileInfo = ({
             header: "linear",
             body: "flex flex-col gap-6"
         }}
+        extra={<FormItem className='flex items-center justify-center m-0! p-0!'>
+            <Button onClick={handleSubmit} loading={loading} htmlType="submit" type="primary" className='!w-[81px] !h-[40px] !rounded-[100px]'>{isEdit ? "Save" : "Edit"}</Button>              
+        </FormItem>}
         className='!mt-6'
         loading={authLoading}
     >
@@ -454,12 +457,10 @@ const ProfileInfo = ({
                 </FormItem>
             </Col> */}
 
-            
+{/*             
             <Col lg={24} sm={24} xs={24}>
-                <FormItem className='flex items-center justify-end'>
-                    <Button loading={loading} htmlType="submit" type="primary" className='!w-[81px] !h-[40px] !rounded-[100px]'>{isEdit ? "Save" : "Edit"}</Button>              
-                </FormItem>
-            </Col>
+              
+            </Col> */}
         </Row>
         </Form>    
         </Card>    

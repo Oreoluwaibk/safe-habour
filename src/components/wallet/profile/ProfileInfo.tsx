@@ -333,7 +333,7 @@ const ProfileInfo = ({
 
             <Col lg={12} sm={24} xs={24}>
                 <FormItem 
-                    label="Street Address" 
+                    label="Location" 
                     className="font-semibold" 
                     name="streetAddress"
                 >
@@ -360,7 +360,7 @@ const ProfileInfo = ({
                         defaultValue="Canada"
                         onChange={(val) => handleCountrySelect(val)}
                         name='registration'
-                        disabled={!isEdit}
+                        disabled
                         style={{ 
                             height: 50, 
                             width: "100%", 
@@ -377,7 +377,7 @@ const ProfileInfo = ({
 
             <Col lg={12} sm={24} xs={24}>
                 <FormItem 
-                    label="City" 
+                    label="Province" 
                     className="font-semibold" 
                     name="city"
                 >

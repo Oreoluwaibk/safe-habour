@@ -137,7 +137,7 @@ const Container = ({
                             <Link href="/how-it-works">How It Works</Link>
                             <Link href="/trust-and-safety">Trust & Safety</Link>
                             <Link href="/contact-us">Contact</Link>
-                            <Link href="/blog">Blog</Link>
+                            <Link href="/blogs">Blog</Link>
                         </Col>
                         <Col lg={3} sm={12} xs={12} className="footer-menu mt-5 md:mt-0">
                             <p className="text-[#98A2B3] font-bold">Support</p>

@@ -145,7 +145,7 @@ const Page = () => {
                     <div>
                         <CardTitle title='Client Information' />
                         <div className='flex items-center gap-3'>
-                            {job?.client?.imageUrl && <Image preview={false} src={`${pictureUrl}${job?.client?.imageUrl}`} alt='title' className='rounded-full h-[56px] w-[56px] object-cover' />}
+                            {job?.client?.imageUrl && <Image preview={false} src={`${pictureUrl}${job?.client?.imageUrl}`} style={{ height: 56, width: 56}} alt='title' className='rounded-full h-[56px] w-[56px] object-cover' />}
                             {!job?.client?.imageUrl && 
                                 <Avatar 
                                     icon={<UserOutlined className='text-2xl' />} 

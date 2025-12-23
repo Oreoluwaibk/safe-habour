@@ -117,7 +117,7 @@ const Payout = () => {
         </div>]}
     >
         <Card className='!mt-4' classNames={{ body: "py-2!", actions: "border-t-0! "}}>
-            {bankInfo.bankAccount && <div className='pb-6 pt-3 flex flex-col gap-4'>
+            {bankInfo && bankInfo.bankAccount && <div className='pb-6 pt-3 flex flex-col gap-4'>
                 <Card 
                     title={
                     <CardTitle 
@@ -132,7 +132,7 @@ const Payout = () => {
                 {/* <Button onClick={() => setOpenAdd(true)} type="default" className='!w-full !h-[48px]' style={{borderRadius: 50}} icon={<PlusOutlined />} >{"Add Payment Method"}</Button> */}
             </div>}
 
-            {bankInfo.payoutSchedule && <div className='flex flex-col gap-4 pb-3'>
+            {bankInfo && bankInfo.payoutSchedule && <div className='flex flex-col gap-4 pb-3'>
                 <Select disabled value={`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}>
                     <Option value={`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}>{`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}</Option>
                 </Select>

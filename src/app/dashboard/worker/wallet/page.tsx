@@ -214,13 +214,13 @@ const Page = () => {
       >
         <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
           <div className='flex flex-col gap-0'>
-            <p className='text-sm text-[#343433]'>Available for payout</p>
-            <p className='text-lg text-[#101828] font-medium'>$1,432.00</p>
+            <p className='text-sm text-[#343433]'>{bankInfo ? "Available for payout" : "Payout not set"}</p>
+            {/* <p className='text-lg text-[#101828] font-medium'>$1,432.00</p> */}
           </div>
 
           <div className='flex flex-col gap-0'>
             <p className='text-sm text-[#343433]'>Next payout</p>
-            <p className='text-lg text-[#101828] font-medium'>{moment(bankInfo.payoutSchedule.nextPayoutDate).format("ddd, MMM YY")}</p>
+            {bankInfo &&  <p className='text-lg text-[#101828] font-medium'>{moment(bankInfo.payoutSchedule.nextPayoutDate).format("ddd, MMM YY")}</p>}
           </div>
         </div>
 

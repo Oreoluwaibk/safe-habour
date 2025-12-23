@@ -97,7 +97,7 @@ const Payout = () => {
             <Button type="primary" onClick={handleNavigate} loading={isPending} className='md:!w-full !h-[48px]' style={{borderRadius: 50}}>Update Settings</Button>
         </div>]}
         >
-        {bankInfo.payoutSchedule && <div className='flex flex-col gap-4 pb-3'>
+        {bankInfo && bankInfo.payoutSchedule && <div className='flex flex-col gap-4 pb-3'>
           <Select disabled value={`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}>
             <Option value={`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}>{`${moment(bankInfo.payoutSchedule.nextPayoutDate).format("YYYY-MM-DD")} at ${bankInfo.payoutSchedule.payoutTime}`}</Option>
           </Select>
@@ -110,7 +110,7 @@ const Payout = () => {
           </Select>
       </div>}
 
-        {bankInfo.bankAccount && <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
+        {bankInfo && bankInfo.bankAccount && <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
           <CardTitle 
             title={bankInfo.bankAccount.accountHolderName} 
             description={`${bankInfo.bankAccount.bankName} - Account ending in ${bankInfo.bankAccount.last4}`} 

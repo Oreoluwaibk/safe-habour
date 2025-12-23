@@ -95,18 +95,21 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isDocumentUploaded = authentication?.hasIdentificationDocument && authentication.hasLocationDocument
 
   return (
     <WorkerContainer active='Dashboard'>
       <div >
-        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.lastName}! {loading && <LoadingOutlined spin/>}</h1>
+        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.firstName}! {loading && <LoadingOutlined spin/>}</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
         {closeInfo && <CompleteInfo 
-          title='Your Documents are under review'
-          description='Profile will be completed and verified after the documents are reviewed by our team.'
+          title={isDocumentUploaded ? 'Your Documents are under review' : "You are yet to upload any document"}
+          description={isDocumentUploaded ? 'Profile will be completed and verified after the documents are reviewed by our team.' : "You have not uploaded any document, kindly upload a document to be verified"}
           nav=""
-          onCancel={() => setCloseInfo(false)}
+          onCancel={() => {
+            message.info(isDocumentUploaded ? 'Profile will be completed and verified after the documents are reviewed by our team.' : "You have not uploaded any document, kindly upload a document to be verified")
+          }}
         />}
       </div>
 

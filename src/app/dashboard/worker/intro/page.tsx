@@ -121,7 +121,7 @@ const Page = () => {
                     placeholder='Enter your phone number'
                     country="ca"
                     inputStyle={{width: "100%", height:50, backgroundColor: "transparent"}}
-                    disabled
+                    // disabled
                 />
             </FormItem>
         </Col>

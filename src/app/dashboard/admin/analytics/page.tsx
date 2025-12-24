@@ -40,6 +40,7 @@ const Page = () => {
       }
     })
     .catch(err => {
+      setLoading(false);
       modal.error({
         title: "Unable to get admin reports",
         content: err?.response
@@ -59,6 +60,7 @@ const Page = () => {
       }
     })
     .catch(err => {
+      setLoading(false);
       modal.error({
         title: "Unable to get admin reports",
         content: err?.response

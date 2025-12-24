@@ -1,43 +1,62 @@
 import CardTitle from '@/components/general/CardTitle';
-import { useAppDispatch, useAppSelector } from '@/hook';
+import { useAppDispatch } from '@/hook';
 import { useLanguage } from '@/hooks/useLAnguage';
-import { logoutUser as LogoutEndpoint } from '@/redux/action/auth';
+import { deActviateAccount, logoutUser as LogoutEndpoint } from '@/redux/action/auth';
 import { logoutUser } from '@/redux/reducer/auth/auth';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import { App, Button, Card, Form, Select } from 'antd';
 import React, { useEffect, useState } from 'react'
-import { languageType } from '../../../../utils/interface';
+import { ILanguage } from '../../../../utils/interface';
 import { updateGeneralSettings } from '@/redux/action/settings';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { savedCurrency, savedTimeZone } from '../../../../utils/savedInfo';
+import { useAuthentication } from '@/hooks/useAuthentication';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Account = () => {
     const [form] = Form.useForm();
     const { modal, message } = App.useApp();
-    const { user } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
     const [ loading, setLoading ] = useState(false);
     const [ generalLoad, setGeneralLoad ] = useState(false);
     const { languages, loading: languageLoading } = useLanguage();
     const [ selectedLang, setSelectedLang ] = useState<string[]>([]);
+    const { authentication, handleGetAuthentication } = useAuthentication();
+    const [ deactivateLoading, setDeActivateLoading ] = useState(false);
 
     useEffect(() => {
-        if(user) {
+        if(authentication) {
             const setLang: string[] = [];
-            const lang = languages.filter((a1: languageType) => user.languages.some((a2: languageType) => a2.name === a1.name));
-            lang.map(la => setLang.push(la.longCode))
+            const lang = languages.filter((a1: ILanguage) => authentication?.languages.some((a2: ILanguage) => a2.name === a1.name));
+            lang.map(la => setLang.push(la.longCode || ""))
             form.setFieldsValue({ 
-                ...user, 
+                ...authentication, 
                 languages: setLang,
-                currency: user.currency || "CAD",
-                timeZone: user.timeZone || 1 
+                currency: authentication.currency || "CAD",
+                timeZone: authentication.timeZone || 1 
             });
             setSelectedLang(setLang);        
         }
-    }, [form, user, languages])
+    }, [form, authentication, languages]);
+
+    
+    const handleAskLogout = () => {
+        modal.info({
+            title: "Are you sure you want to logout?",
+            onOk: ()=> handleLogout(),
+            closable: true
+        })
+    }
+
+    const handleAskDeactive = () => {
+        modal.info({
+            title: "Are you sure you want to deactivate your account?",
+            onOk: ()=> handleDeactivateAccount(),
+            closable: true
+        })
+    }
 
     const handleLogout = () => {
         setLoading(true);
@@ -62,14 +81,17 @@ const Account = () => {
         .then(value => {
             const payload = {
                 ...value,
-                languages: handleDisplayLanguage(selectedLang),
+                languages: handleDisplayLanguage(value.languages),
             }
+
+             console.log("payload", payload, value.languages, handleDisplayLanguage(value.languages))
             setGeneralLoad(true)
             updateGeneralSettings(payload)
             .then(res => {
                 if(res.status === 200) {
                     setGeneralLoad(false);
                     message.success(res.data.message || "Account settings updated!");
+                    handleGetAuthentication();
                 }
             })
             .catch(err => {
@@ -84,20 +106,39 @@ const Account = () => {
         })
     }
 
-    const handleDisplayLanguage = (languageCode: string[]): {
-        name: string; 
-        code: string; 
-        proficiencyLevel: string; 
-        isNative: boolean;
-    }[] => {
+    const handleDeactivateAccount = () => {
+        setDeActivateLoading(true)
+        deActviateAccount()
+        .then(res => {
+            if(res.status === 200) {
+                setDeActivateLoading(false);
+                message.success(res.data.message || "Account settings updated!");
+                dispatch(logoutUser());
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to deactivate account",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setDeActivateLoading(false)
+            });
+        })
+    }
+
+
+
+    const handleDisplayLanguage = (languageCode: string[]): ILanguage[] => {
         const selectedLanguages = languages
-        .filter(language => languageCode.includes(language.longCode))
+        .filter(language => languageCode.includes(language.longCode || ""))
         .map(language => {
             return { 
-                ...language,
-                code: language.longCode,
+                code: language.longCode || "",
+                longCode: language.longCode,
                 proficiencyLevel: "",
-                isNative: true
+                isNative: true,
+                name: language.name
             }
         });
         return selectedLanguages;
@@ -122,7 +163,7 @@ const Account = () => {
                         onChange={(value) => console.log("Dd", value)}
                         value={selectedLang}
                     >
-                        {languages.map((language: languageType, i: number) => <Option value={language.longCode} key={i}>{language.name}</Option>)}
+                        {languages.map((language: ILanguage, i: number) => <Option value={language.longCode} key={i}>{language.name}</Option>)}
                     </Select>
                 </FormItem>
 
@@ -204,7 +245,7 @@ const Account = () => {
     >
         <Card className='!my-4' classNames={{body: "flex flex-col gap-4"}}>
             <Card 
-                onClick={handleLogout}
+                onClick={handleAskLogout}
                 title={
                 <CardTitle 
                     title='Sign out' 
@@ -220,8 +261,10 @@ const Account = () => {
                 <CardTitle 
                     isColorWhite
                     title='Deactivate Account' 
-                    icon={<Icon icon="mingcute:time-line" color='#fff' fontSize={22} className='mr-1' />}  
+                    icon={deactivateLoading ? <LoadingOutlined spin /> :<Icon icon="mingcute:time-line" color='#fff' fontSize={22} className='mr-1' />}  
                 />}
+                
+                onClick={handleAskDeactive}
                 classNames={{body: "!p-0 !h-0", header: "!h-[42px] !py-1"}}
                 className=' !p-0 !border-[#C3C3C3] !bg-[#FF0004] cursor-pointer'
             />

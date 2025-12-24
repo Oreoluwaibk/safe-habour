@@ -74,6 +74,7 @@ export const signinSlice = createSlice({
       state.success = false;
       state.error = null;
       state.loginType = null;
+      state.lastRoute = null;
 
       if (isBrowser) {
         localStorage.removeItem("safehabour_user");

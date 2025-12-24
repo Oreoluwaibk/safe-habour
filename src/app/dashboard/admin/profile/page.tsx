@@ -1,74 +1,145 @@
 "use client"
 import AdminContainer from '@/components/dashboard/AdminContainer'
-import { useAuthentication } from '@/hooks/useAuthentication'
-import { LoadingOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Card, Col, DatePicker, Form, Image, Input, Row, Select, Upload } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { UserOutlined } from '@ant-design/icons'
+import { App, Avatar, Button, Card, Col, DatePicker, Form, Image, Input, Row, Select, Upload } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
 import { pictureUrl } from '../../../../../utils/axiosConfig'
 import { RcFile } from 'antd/es/upload'
-import { Icon } from '@iconify/react'
 import RoundBtn from '@/components/general/RoundBtn'
 import PhoneInput from 'react-phone-input-2'
 import moment from 'moment'
+import { getAdminProfile, updateAdminProfile, updateAdminProfilePic } from '@/redux/action/superAdmin'
+import { createErrorMessage } from '../../../../../utils/errorInstance'
+import { getAdminRoles, IRoles } from '@/redux/action/admin'
+import { toFormData } from '../../../../../utils/converters'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Page = () => {
+  const { modal, message } = App.useApp();
+  const [roles, setRoles ] = useState<IRoles[]>([]);
   const [form] = Form.useForm();
-  const [ loading ] = useState(false);
-  const { authentication } = useAuthentication();
+  const [ loading, setLoading ] = useState(false);
   const [ isEdit, setIsEdit ] = useState(false);
-  const [ uploading ] = useState(false);
+  const [ updateLoading, setUpdateLoading ] = useState(false);
+  const [ uploading, setUploading ] = useState(false);
+  const [ profileDetails, setProfileDetails ] = useState({
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "dateOfBirth": "",
+    "gender": "",
+    "phoneNumber": "",
+    "role": "",
+    "profilePicturePath": ""
+  })
   const [ initialCode ] = useState("ca");
 
   useEffect(() => {
-    if(authentication) {
-      form.setFieldsValue({
-        firstName: authentication?.firstName,
-        lastName: authentication?.lastName,
-        email: authentication.email,
-        phoneNumber: authentication.phoneNumber,
-        gender: authentication.gender,
-        dateOfBirth: authentication.dateOfBirth ? moment(authentication.dateOfBirth).format("DD-MM-YYYY") : "",
-        role: authentication.roles[0]
+    handleGetProfile();
+    handleGetRoles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleGetProfile = useCallback(() => {
+    setLoading(true);
+    getAdminProfile()
+    .then(res => {
+      if(res.status === 200) {
+        setLoading(false);
+        const data = res.data.data;
+        setProfileDetails(data);
+        form.setFieldsValue({
+          firstName: data?.firstName,
+          lastName: data?.lastName,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          gender: data.gender,
+          // dateOfBirth: data.dateOfBirth || "",
+          role: data.role
+        })
+      }
+    })
+    .catch(err => {
+      setLoading(false);
+      modal.error({
+        title: `Unable to get admin user profile`,
+        content: err?.response
+        ? createErrorMessage(err.response.data)
+        : err.message,
+      });
+    })
+  }, [modal, form]);
+
+  const handleGetRoles = useCallback(() => {
+      setLoading(true);
+      getAdminRoles()
+      .then(res => {
+        if(res.status === 200) {
+          setLoading(false);
+          setRoles(res.data.data);
+        }
       })
-    }
-  }, [authentication, form])
+      .catch(err => {
+        modal.error({
+          title: "Unable to get admin roles",
+          content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+        });
+      })
+  }, [modal]);
 
   const handleUploadPicture = (file: RcFile) => {
-    console.log(file);
-    
-          // const payload = {
-          //     ProfilePicture: file,
-          //     userId: authentication?.id 
-          // }
-  
-          // const formData = toFormData(payload) as FormData;
-          // setUploading(true);
-          // updateServiceWorkerProfile(formData)
-          // .then(res => {
-          //     if(res.status === 200) {
-          //         message.success("Profile picture uploaded successfully!")
-          //         setUploading(false);
-          //         handleGetAuthentication();
-          //         setIsEdit(false);
-          //     }
-          // })
-          // .catch(err => {
-          //     modal.error({
-          //         title: "Unable to update profile picture",
-          //         content: err?.response
-          //             ? createErrorMessage(err.response.data)
-          //             : err.message,
-          //         onOk: () => setUploading(false)
-          //     });
-          // })
-      }
-  
-  // const handleFinish = () => {}
+    const payload = { ProfilePicture: file }
+    const formData = toFormData(payload) as FormData;
+    setUploading(true);
+    updateAdminProfilePic(formData)
+    .then(res => {
+        if(res.status === 200) {
+            message.success("Profile picture uploaded successfully!")
+            setUploading(false);
+            handleGetProfile();
+            setIsEdit(false);
+        }
+    })
+    .catch(err => {
+        modal.error({
+            title: "Unable to update profile picture",
+            content: err?.response
+                ? createErrorMessage(err.response.data)
+                : err.message,
+            onOk: () => setUploading(false)
+        });
+    })
+  }
 
   const handleSubmit = () => {
-    // console.log("Dddd");
+    form.validateFields()
+    .then(values => {
+      setUpdateLoading(true);
+      updateAdminProfile(values)
+      .then(res => {
+        if(res.status === 200) {
+          setUpdateLoading(false);
+          modal.success({ 
+            title: res.data.message || "Profile updated successfully!",
+            onOk: () => {
+              setIsEdit(false);
+              handleGetProfile()}
+          })
+        }
+      })
+      .catch(err => {
+        setUpdateLoading(false);
+        modal.error({
+          title: `Unable to update admin user profile`,
+          content: err?.response
+          ? createErrorMessage(err.response.data)
+          : err.message,
+        });
+      })
+    })
   }
   return (
   <AdminContainer active='Profile'>
@@ -90,15 +161,15 @@ const Page = () => {
         title={
         <div className='flex items-center gap-2'>
           <div className='relative'>
-            {authentication?.profilePicturePath && <Image src={`${pictureUrl}${authentication?.profilePicturePath}`} height={84} width={84} alt='' className='h-[84px] w-[84px] rounded-full object-cover' />}
-            {!authentication?.profilePicturePath && 
+            {profileDetails?.profilePicturePath && <Image src={`${pictureUrl}${profileDetails?.profilePicturePath}`} height={84} width={84} alt='' className='h-[84px] w-[84px] rounded-full object-cover' />}
+            {!profileDetails?.profilePicturePath && 
               <Avatar 
                 icon={<UserOutlined className='text-2xl' />} 
                 alt=''
                 size={84} 
                 className='h-[84px] w-[84px] rounded-full object-cover' 
               />}
-            {isEdit && (uploading ? <LoadingOutlined spin /> :<Upload
+            {/* {isEdit && (uploading ? <LoadingOutlined spin /> :<Upload
               className='absolute bottom-2 right-0'
               accept=".jpg, .png, .jpeg"
               beforeUpload={handleUploadPicture}
@@ -107,7 +178,8 @@ const Page = () => {
             <div className='cursor-pointer bg-[#003E8F] w-[27px] h-[27px] rounded-full flex items-center justify-center'>
               <Icon icon="mdi:edit" color='#fff' />
             </div>
-            </Upload>)}
+            </Upload>
+          )} */}
           </div>
         </div>
         }
@@ -173,7 +245,7 @@ const Page = () => {
               <DatePicker 
                 size="large"
                 className='w-full border-none'
-                placeholder={authentication?.dateOfBirth ? moment(authentication.dateOfBirth).format("DD/MM/YYYY") : 'Select Date of Birth'}
+                placeholder={profileDetails.dateOfBirth || "Enter your birthday"}
                 style={{width: "100%", border: "none", height:50, backgroundColor: "#f6f6f6"}}
                 disabled={!isEdit}
               /> 
@@ -218,13 +290,12 @@ const Page = () => {
               className="font-semibold" 
               name="role"
             >
-              <Input 
-                placeholder='Super Admin' 
-                size='large' 
-                style={{fontWeight: 400}}
-                className='border-none'
-                disabled={!isEdit}
-              />
+              <Select placeholder="Select Role" disabled={!isEdit}>
+                {roles.length > 0 && roles.map((role) => (
+                  <Option value={role.name} key={role.id}>{role.name}</Option>
+                ))}
+              </Select>
+              
             </FormItem>
           </Col>
 
@@ -233,7 +304,7 @@ const Page = () => {
             <div key={1} className='flex items-center gap-4 justify-end'>
               <RoundBtn title={isEdit ? "Cancel" : "Edit"} primary={!isEdit} width={87} onClick={() => setIsEdit(!isEdit)} />
               {isEdit && <FormItem className='flex items-center justify-end m-0! p-0!'>
-                <Button loading={loading} htmlType="submit" type="primary" className='!w-[150px] !h-[40px] !rounded-[100px]'>Save Changes</Button>              
+                <Button loading={updateLoading} htmlType="submit" type="primary" className='!w-[150px] !h-[40px] !rounded-[100px]'>Save Changes</Button>              
               </FormItem>}
             </div>
             

@@ -1,11 +1,10 @@
 "use client"
-import { App, Button, DatePicker, Form, Input, Modal, Select, TimePicker } from 'antd'
+import { App, Button, DatePicker, Form, Input, Modal, TimePicker } from 'antd'
 import React, { useState } from 'react';
 import "@/styles/modal.css";
 import { IJobHireRequest, UserWorkerProfile } from '../../../../utils/interface';
 import { hireServiceWorker } from '@/redux/action/jobs';
 import { createErrorMessage } from '../../../../utils/errorInstance';
-import { savedPreferredTime } from '../../../../utils/savedInfo';
 
 interface props {
   open: boolean;
@@ -14,7 +13,6 @@ interface props {
   type: number;
 }
 
-const Option = Select.Option;
 const FormItem = Form.Item;
 const BookRequest = ({ open, onCancel, worker, type }: props) => {
   const [form] = Form.useForm();

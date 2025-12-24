@@ -161,6 +161,9 @@ const Page = () => {
       key: "1",
       title: "Job Title",
       dataIndex: "jobTitle",
+      render (value) {
+        return <span className='w-1/2'>{value}</span>
+      }
     },
     {
       key: "2",
@@ -259,21 +262,24 @@ const Page = () => {
           onChange={(e) => setSearch(e.target.value)}
           style={{backgroundColor: "#F4F4F4", height: 36, width: 146}} 
         />}
-        classNames={{ body: "p-0!"}}
+        classNames={{ body: "p-0! "}}
         
       >
-      <AdminTable 
-        title=""
-        data={data}
-        column={column}
-        total={total}
-        filter={{
-          pageNumber: filters.pageNumber!,
-          pageSize: filters.pageSize!
-        }}
-        handlePageChange={handlePageChange}
-        loading={loading}
-      />
+        <div className='overflow-x-auto! w-full! overflow-hidden!'>
+        <AdminTable 
+          title=""
+          data={data}
+          column={column}
+          total={total}
+          filter={{
+            pageNumber: filters.pageNumber!,
+            pageSize: filters.pageSize!
+          }}
+          handlePageChange={handlePageChange}
+          loading={loading}
+        />
+        </div>
+      
       </Card>
     </Card>
     {openCancel && selectedJob && <CancelJob refresh={handleGetJobs} open={openCancel} onCancel={() => setOpenCancel(false)} job={selectedJob!} />}

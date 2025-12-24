@@ -52,7 +52,7 @@ const WeeklyTemplate = () => {
         header: "",
       }}
       extra={<RoundBtn title='Apply Template' onClick={() => setOpenTemplate(true)} height={40} />}
-      actions={[<div key={1} className='flex items-center justify-end gap-4'>
+      actions={[<div key={1} className='flex items-center justify-end gap-4 mr-5'>
         {/* <RoundBtn title='Save Template' primary onClick={() => {}} height={40} /> */}
         <RoundBtn title='Add Exception' icon={<PlusOutlined />} onClick={() => setOpenException(true)} height={40} />
       </div>]}

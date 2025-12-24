@@ -54,26 +54,26 @@ const Page = ({ params }: {params: Promise<{ id: string }> }) => {
             {
                 "name": "English",
                 "code": "en",
-                "proficiencyLevel": null,
-                "isNative": null
+                "proficiencyLevel": "",
+                "isNative": true
             },
             {
                 "name": "English (US)",
                 "code": "en",
-                "proficiencyLevel": null,
-                "isNative": null
+                "proficiencyLevel": "",
+                "isNative": false
             },
             {
                 "name": "English (GB)",
                 "code": "en",
-                "proficiencyLevel": null,
-                "isNative": null
+                "proficiencyLevel": "",
+                "isNative": false
             },
             {
                 "name": "Spanish",
                 "code": "es",
-                "proficiencyLevel": null,
-                "isNative": null
+                "proficiencyLevel": "",
+                "isNative": false
             }
         ],
         "hourlyRate": 30.00,

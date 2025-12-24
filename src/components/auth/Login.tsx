@@ -47,12 +47,12 @@ const Login = () => {
         .then(async (res) => {
             if (res.status === 200) {
                 setLoading(false);
+                const isActive = res.data.data.isActive;
 
                 if (rememberMe)  localStorage.setItem("safehabour_credentials", JSON.stringify({ email, password }));
                 else  localStorage.removeItem("safehabour_credentials");
 
                 const result = await dispatch(loginAction(res.data.data));
-                console.log("result:", result);
                 
                 const role = res.data.data?.roles?.[0];
                 if (lastRoute) {
@@ -64,6 +64,11 @@ const Login = () => {
                         router.push("/dashboard/client");
                     });
                 else if (role === "ServiceWorker") {
+                    if(!isActive) {
+                        startTransition(() => router.push("/dashboard/worker/deactivated")); 
+                        return;
+                    }
+
                     if(res.data.data.user?.isServiceWorkerOnboarded)  
                         startTransition(() => {
                             router.push("/dashboard/worker");

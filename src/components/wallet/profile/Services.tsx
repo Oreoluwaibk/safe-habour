@@ -38,7 +38,7 @@ const ServicesInfo = ({
                 {authentication?.services.map((service,i:number) => (
                     <Col lg={24} sm={24} xs={24} key={i}>
                         <ServiceInfoCard  
-                            title={categories[service?.serviceCategoryId]?.name}
+                            title={categories.find(category => category.id === service.serviceCategoryId)?.name || ""}
                             description={`${service.yearsOfExperience || 0} years experience`}
                             rate={`$${service.hourlyRate || 0}/hour`}
                             service={service}

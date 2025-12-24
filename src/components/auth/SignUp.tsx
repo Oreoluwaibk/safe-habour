@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import "@/styles/auth.css";
 import { App, Button, Col, Form, Input, Row } from 'antd';
 import "@/styles/form.css";
@@ -21,6 +21,7 @@ const SignUp = ({ type }: { type: string | null }) => {
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);
     const { location, getLocation } = useGeolocation();
+    const [ isPending, startTransition ] = useTransition();
 
     useEffect(() => {
         const getLocal = async () => {
@@ -69,7 +70,9 @@ const SignUp = ({ type }: { type: string | null }) => {
                         content: "",
                         onOk: async () => {
                             localStorage.setItem("emailToVerify", JSON.stringify(email));
-                            router.push("/auth/confirm-email?verify=true");
+                            startTransition(() => {
+                                router.push("/auth/confirm-email?verify=true");
+                            })
                         },
                     });  
                 }
@@ -250,7 +253,7 @@ const SignUp = ({ type }: { type: string | null }) => {
             </div>   */}
 
             <FormItem label="" name="btn">
-                <Button loading={loading} className="button_form" type="primary" onClick={() => handleRegister()}>Create account</Button>
+                <Button loading={loading || isPending} className="button_form" type="primary" onClick={() => handleRegister()}>Create account</Button>
             </FormItem>
             <FormItem label="" name="">
                 <Socialbtn 

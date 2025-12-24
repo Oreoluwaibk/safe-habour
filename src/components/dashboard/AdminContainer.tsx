@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/client.css"
 import { MenuOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Image as AntDImage } from 'antd';
+import { Avatar, Layout, Image as AntDImage, App } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState, useTransition } from 'react'
@@ -9,8 +9,8 @@ import { Logo } from '../../../assets/logo';
 import Image from 'next/image';
 import NotificationCard from "../general/NotificationCard";
 import { CheckedCircle, MaskedLogo } from "../../../assets/icons";
-import { useAppSelector } from "@/hook";
-import { logoutUser } from "@/redux/action/auth";
+import { useAppDispatch, useAppSelector } from "@/hook";
+import { logoutUser as logoutEndpoint } from "@/redux/action/auth";
 import { INotification } from "../../../utils/interface";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { pictureUrl } from "../../../utils/axiosConfig";
@@ -18,6 +18,7 @@ import { NotificationBell } from "../notification/NotificationBell";
 import NotificationToast from "../notification/NotificationToast";
 import AdminSideMenu from "./AdminSideMenu";
 import RoundBtn from "../general/RoundBtn";
+import { logoutUser } from "@/redux/reducer/auth/auth";
 
 const { Content, Header, Sider } = Layout;
 
@@ -37,7 +38,9 @@ const AdminContainer = ({
     children,
     active
 }:Props) => {
+    const { modal } = App.useApp();
     const router = useRouter();
+    const dispatch = useAppDispatch();
     const [ loading, setLoading ] = useState(false);
     const [open, setOpen] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
@@ -68,10 +71,11 @@ const AdminContainer = ({
 
    const handleLogout = useCallback(() => {
     setLoading(true);
-    logoutUser()
+    logoutEndpoint()
       .then((res) => {
         if (res.status === 200) {
             setLoading(false);
+            dispatch(logoutUser())
             startTransition(() => {
                 router.push("/auth/login");
             })
@@ -80,12 +84,21 @@ const AdminContainer = ({
       })
       .catch((err) => {
         setLoading(false);
+        dispatch(logoutUser())
         startTransition(() => {
             router.push("/auth/login");
         })
         console.log("err:", err)
       });
-    }, [router]); 
+    }, [router, dispatch]); 
+
+    const handleAskLogout = () => {
+        modal.info({
+            title: "Are you sure you want to logout",
+            onOk: ()=> handleLogout(),
+            closable: true
+        })
+    }
 
     useEffect(() => {
         if (!isAuthenticated) handleLogout();
@@ -147,7 +160,7 @@ const AdminContainer = ({
                             </div>}
                         </div>
 
-                        <RoundBtn  title="Logout" onClick={handleLogout} loading={loading || isPending } width={87} />
+                        <RoundBtn  title="Logout" onClick={handleAskLogout} loading={loading || isPending } width={87} />
                        
                         {/* <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button> */}
                     </div>
@@ -184,7 +197,7 @@ const AdminContainer = ({
                     >
                         {<AdminSideMenu 
                             loading={loading || isPending} 
-                            handleLogout={handleLogout} 
+                            handleLogout={handleAskLogout} 
                             active={active} 
                             open={open} 
                             onCancel={() => setOpen(false)}  
@@ -197,14 +210,14 @@ const AdminContainer = ({
                             notification={notification}
                         />
                     </div>}
-                    <div className="md:px-[20px] px-1 pt-4 md:pt-0 w-full! bg-[#f6f6f6] min-h-[100vh]">
+                    <div className="md:px-[20px] px-1 pt-4 md:pt-0 bg-[#f6f6f6] min-h-[100vh] w-screen! overflow-hidden!">
                     {children}
                     </div>   
                 </Layout>
                 {open && 
                     <AdminSideMenu 
                         loading={loading || isPending} 
-                        handleLogout={handleLogout} 
+                        handleLogout={handleAskLogout} 
                         active={active} 
                         open={open} 
                         onCancel={() => setOpen(false)}  

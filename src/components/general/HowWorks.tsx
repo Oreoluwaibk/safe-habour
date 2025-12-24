@@ -52,10 +52,10 @@ const HowWorks = () => {
             </Col>
             <Col lg={24} sm={24} xs={24} className='mt-6'>
                 <div className='flex items-center gap-4 justify-center cursor-pointer' onClick={() => setShowWorker(!showWorker)}>
-                    <span>Client</span>
+                    <span className='text-base'>Client</span>
                     
                     <div className='arrow'>
-                        <ArrowRightOutlined className='!text-[10px]' /> 
+                        <ArrowRightOutlined className='text-base!' /> 
                     </div>
                 </div>
             </Col>
@@ -96,9 +96,9 @@ const HowWorks = () => {
             <Col lg={24} sm={24} xs={24} className='mt-6'>
                 <div className='flex items-center gap-4 justify-center cursor-pointer' onClick={() => setShowWorker(!showWorker)}>
                     <div className='arrow'>
-                        <ArrowLeftOutlined className='!text-[10px]' /> 
+                        <ArrowLeftOutlined className='text-base!' /> 
                     </div>
-                    <span>Worker</span>
+                    <span className='text-base'>Worker</span>
                 </div>
             </Col>
        </Row>}

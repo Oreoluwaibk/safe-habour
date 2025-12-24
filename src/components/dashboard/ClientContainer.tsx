@@ -11,13 +11,13 @@ import Image from 'next/image';
 import PostJob from "../client/modal/PostJob";
 import NotificationCard from "../general/NotificationCard";
 import { MaskedLogo } from "../../../assets/icons";
-import { useAppSelector } from "@/hook";
-import { logoutUser } from "@/redux/action/auth";
+import { useAppDispatch, useAppSelector } from "@/hook";
+import { logoutUser as logoutEndpoint } from "@/redux/action/auth";
 import { INotification } from "../../../utils/interface";
 import NotificationToast from "../notification/NotificationToast";
 import { NotificationBell } from "../notification/NotificationBell";
 import { useAuthentication } from "@/hooks/useAuthentication";
-import RoundBtn from "../general/RoundBtn";
+import { logoutUser } from "@/redux/reducer/auth/auth";
 
 const { Content, Header } = Layout;
 
@@ -37,8 +37,9 @@ const ClientContainer = ({
     children,
     active
 }:Props) => {
+    const dispatch = useAppDispatch();
     const router = useRouter();
-    const { message } = App.useApp();
+    const { message, modal } = App.useApp();
     const [open, setOpen] = useState(false);
     const [ openJobModal, setOpenJobModal ] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
@@ -70,10 +71,11 @@ const ClientContainer = ({
 
     const handleLogout = useCallback(() => {
         setLoading(true);
-        logoutUser()
+        logoutEndpoint()
             .then((res) => {
             if (res.status === 200) {
                     setLoading(false);
+                    dispatch(logoutUser())
                     startTransition(() => {
                         router.push("/auth/login");
                     })
@@ -82,12 +84,21 @@ const ClientContainer = ({
         })
         .catch((err) => {
             setLoading(false);
+            dispatch(logoutUser())
             startTransition(() => {
                 router.push("/auth/login");
             })
             console.log("err:", err)
         });
-    }, [router]); 
+    }, [router, dispatch]); 
+
+    const handleAskLogout = () => {
+        modal.info({
+            title: "Are you sure you want to logout",
+            onOk: ()=> handleLogout(),
+            closable: true
+        })
+    }
 
     useEffect(() => {
         if (!isAuthenticated) handleLogout();
@@ -155,7 +166,7 @@ const ClientContainer = ({
                                 Post a Job
                             </Button>
                         
-                        <Button type='text' className="text-white! text-xs!" loading={loading} onClick={handleLogout}>Logout</Button>
+                        <Button type='text' className="text-white! text-xs!" loading={loading} onClick={handleAskLogout}>Logout</Button>
                     </div>
 
                     <div className='flex md:hidden items-center gap-2'>
@@ -180,7 +191,7 @@ const ClientContainer = ({
                     </div>   
                 </Layout>
                 {open && <ClientSidemenu loading={loading || isPending} 
-                        handleLogout={handleLogout} openJob={() => setOpenJobModal(true)} active={active} open={open} onCancel={() => setOpen(false)} />}
+                        handleLogout={handleAskLogout} openJob={() => setOpenJobModal(true)} active={active} open={open} onCancel={() => setOpen(false)} />}
                 {openJobModal && <PostJob open={openJobModal} onCancel={() => setOpenJobModal(false)} />}
             </Content>
         </Layout>

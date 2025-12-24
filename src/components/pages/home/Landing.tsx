@@ -51,7 +51,7 @@ const Landing = () => {
         <Row gutter={[0,5]} className='h-full !px-6 md:!px-25 !items-center !justify-center !pt-16'>
             <Col lg={14} sm={24} xs={24} className='!font-opensans h-full !flex !flex-col !justify-center gap-2 md:!px-10 md:!pr-20'>
                 <p className='!flex !items-center !text-[40px] md:!text-[72px] !flex-wrap font-semibold'>
-                    Trusted <ColoredText title='Care &' size={fontSize} /> <ColoredText title='Home' size={fontSize} /> <span>Services </span> Across Canada
+                    Trusted <ColoredText title='Care &' size={fontSize} /> <ColoredText title='Home' size={fontSize} /> <span className='mr-1'>Services </span>  Across Canada
                 </p>
 
                 <p className='!text-lg md!text-2xl w-full'>Connect with vetted care workers, babysitters, cooks, and home service professionals. Background-checked, and ready to help your family.</p>
@@ -89,7 +89,7 @@ const Landing = () => {
             </Col>
         </Row>
 
-        <div className='my-8'>
+        <div className='my-8! mt-16!'>
             <Search 
                 search={filters.searchTerm || ""}
                 location={filters.location || ""}

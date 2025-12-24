@@ -99,7 +99,8 @@ export interface IUser {
   isServiceWorkerOnboarded: boolean | null;
   hourlyRate: number;
   notificationSettings: INotificationSetting[];
-
+  currency: string;
+  timeZone: number;
   services: IServiceDetail[];
   languages: ILanguage[];
 }
@@ -156,13 +157,12 @@ export interface IBooking {
   numberOfReviews: number;
 }
 
-
-export interface Language {
+export interface ILanguage {
   name: string;
   code: string;
-  longCode: string;
-  isNative?: boolean;
+  longCode?: string;
   proficiencyLevel?: string;
+  isNative?: boolean 
 }
 
 export interface WorkerProfile {
@@ -171,10 +171,8 @@ export interface WorkerProfile {
   city: string;
   postalCode: string;
   country: string;
-  services: {
-    serviceCategoryIds: number[];
-  }[];
-  languages: Language[] | string[];
+  services: IServiceDetail[];
+  languages: ILanguage[];
   hourlyRate: number;
   latitude: number;
   longitude: number;
@@ -332,12 +330,6 @@ export interface bulkApprove {
   approveOnlyActiveUsers: boolean;
   approveOnlyCompleteProfiles: boolean;
   reason: string;
-}
-
-export interface languageType {
-  name: string;
-  code: string;
-  longCode: string;  
 }
 
 export interface categoryType {
@@ -595,12 +587,7 @@ export interface IServiceDetail {
   id?: string;
 }
 
-export interface ILanguage {
-  name: string;
-  code: string;
-  proficiencyLevel: string | null;
-  isNative: boolean | null;
-}
+
 
 
 export interface IClientDashboardMetrics {
@@ -1022,3 +1009,12 @@ export interface ITransactionLogItemResponse {
   status: string;
 }
 
+
+export interface IAdminUserProfile {
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfBirth: string;   // ISO date string (e.g., 2025-12-24T09:57:00.732Z)
+  gender: string;
+  phoneNumber: string;
+}

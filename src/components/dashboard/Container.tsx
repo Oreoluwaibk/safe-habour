@@ -37,7 +37,7 @@ const Container = ({
     center
 }:Props) => {
     const router = useRouter();
-    const { message } = App.useApp()
+    const { message, modal } = App.useApp()
     const [open, setOpen] = useState(false);
     const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const [ loading, setLoading ] = useState(false);
@@ -61,6 +61,14 @@ const Container = ({
             message.success("You have loggued out successfully!");
         });
     }, [message, dispatch]); 
+
+    const handleAskLogout = () => {
+        modal.info({
+            title: "Are you sure you want to logout",
+            onOk: ()=> handleLogout(),
+            closable: true
+        })
+    }
 
     const handleGoDashboard = () => {
         startTransition(() => {
@@ -103,7 +111,7 @@ const Container = ({
                     </div>}
 
                     {!hide && isAuthenticated && <div className='hidden md:flex items-center gap-4'>
-                        <Button type="text" loading={loading} className='!text-[#667085] !h-[44px] w-[94px] !text-base' onClick={handleLogout}>Logout</Button>
+                        <Button type="text" loading={loading} className='!text-[#667085] !h-[44px] w-[94px] !text-base' onClick={handleAskLogout}>Logout</Button>
                         <Button type='primary' className='!h-[44px] w-[124px] !rounded-[8px]' loading={isPending} onClick={handleGoDashboard}>Dashboard</Button>
                     </div>}
 
@@ -148,7 +156,7 @@ const Container = ({
                         </Col>
                     </Row>
                     <Row className="!flex !items-center !justify-between md:!border-t md:border-t-[#D1D1D1] !pt-8 md:!pb-6">
-                        <p>© 2077 Safe Harbour. All rights reserved.</p>
+                        <p>© 2025 Safe Harbour. All rights reserved.</p>
 
                         <div className='!flex !items-center gap-2 md:!gap-4 mt-2 md:mt-0'>
                             <TwitterOutlined  className='!text-2xl'/>
@@ -158,7 +166,7 @@ const Container = ({
                     </Row>
                 </Footer>
 
-                {open && <Sidemenu handleGoDashboard={handleGoDashboard} isPending={isPending} handleLogout={handleLogout} loading={loading} active={active} isAuthenticated={isAuthenticated} open={open} onCancel={() => setOpen(false)} />}
+                {open && <Sidemenu handleGoDashboard={handleGoDashboard} isPending={isPending} handleLogout={handleAskLogout} loading={loading} active={active} isAuthenticated={isAuthenticated} open={open} onCancel={() => setOpen(false)} />}
             </Content>
         </Layout>
     </Layout>

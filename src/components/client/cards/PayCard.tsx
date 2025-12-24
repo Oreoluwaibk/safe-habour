@@ -44,6 +44,22 @@ const PayCard = ({ isMaster, isChecked, card, refresh }: props) => {
     })
   }
 
+  const handleAskDelete = () => {
+    modal.info({
+      title: "Are you sure you want to delete this card?",
+      onOk: ()=> handleDeletePayment(),
+      closable: true
+    })
+  }
+
+  const handleAskMakeDefault = () => {
+    modal.info({
+      title: "You are about to set this card as default, click ok to proceed",
+      onOk: ()=> handleSetAsDefault(),
+      closable: true
+    })
+  }
+
   const handleDeletePayment = () => {
     setDeleteLoading(true);
     deletePaymentMethod(card.id)
@@ -79,11 +95,11 @@ const PayCard = ({ isMaster, isChecked, card, refresh }: props) => {
     <div className='absolute right-4 top-4 text-[#670316]! flex gap-2'>
        {loading ? 
       <LoadingOutlined spin className=' text-[#670316]!' /> 
-      : <Checkbox className='' checked={isChecked} onClick={handleSetAsDefault} />}
+      : <Checkbox className='' checked={isChecked} onClick={handleAskMakeDefault} />}
 
       {deleteLoading 
       ? <LoadingOutlined spin /> 
-      : <DeleteFilled onClick={handleDeletePayment} className=' text-[#670316]!' />}
+      : <DeleteFilled onClick={handleAskDelete} className=' text-[#670316]!' />}
     </div>
    
     <div className='flex items-center gap-2'>

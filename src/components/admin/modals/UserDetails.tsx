@@ -41,7 +41,7 @@ const UserDetails = ({
                 sideIcon={
                     <>
                     {!user.profilePicturePath && <Avatar icon={<UserOutlined />} className='text-xl! w-10! h-10!' />}
-                    {user.profilePicturePath && <Image src={`${pictureUrl}${user.profilePicturePath}`} alt={user.fullName} className='text-xl! w-10! h-10!' />}
+                    {user.profilePicturePath && <Image src={`${pictureUrl}${user.profilePicturePath}`} alt={user.fullName} width={40} height={40} className='text-xl! w-10! h-10!' />}
                     </>
                 }
                 status={isWorker && <Status  color={user.isVerified? "#039855" :"#ff0000"} bg={user.isVerified? "#E1FFF2" :""} title={user.isVerified ? "Verified" : "Not Verified"} />}

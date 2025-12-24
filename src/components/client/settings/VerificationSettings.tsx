@@ -10,7 +10,7 @@ import { createErrorMessage } from '../../../../utils/errorInstance'
 interface props {
     authentication: IUser;
 }
-const VerificationSettings = ({ authentication }: props) => {
+const VerificationSettings = ({  }: props) => {
     const [ idCard, setIdCard ] = useState<RcFile | null>(null);
     const [ proofOfAddress, setProofOfAddress ] = useState<RcFile | null>(null);
     const [ loading, setLoading ] = useState(false);

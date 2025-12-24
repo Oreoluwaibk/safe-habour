@@ -284,10 +284,7 @@ const Page = () => {
       key: "7",
       title: "Description",
       dataIndex: "description",
-      hidden: active !== "Role Permissions",
-      render(value) {
-        return <span className=''>{value.substr(0,20)}...</span>
-      }
+      hidden: active !== "Role Permissions"
     },
     {
       key: "8",

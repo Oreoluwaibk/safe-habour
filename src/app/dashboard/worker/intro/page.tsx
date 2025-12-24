@@ -4,9 +4,9 @@ import Steps from '@/components/general/Steps'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { Icon } from '@iconify/react'
 import { App, Button, Card, Col, Form, Input, InputNumber, Row, Select } from 'antd'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import PhoneInput from "react-phone-input-2";
-import { categoryType, languageType, WorkerProfile } from '../../../../../utils/interface'
+import { categoryType, IServiceDetail, ILanguage, WorkerProfile } from '../../../../../utils/interface'
 import { useLanguage } from '@/hooks/useLAnguage'
 import { useAppSelector } from '@/hook';
 import { useServiceCategory } from '@/hooks/useServiceCategory'
@@ -59,6 +59,7 @@ const Page = () => {
     const [ hourlyRate, setHourlyRate ] = useState<number | null>(0);
     const [ loading, setLoading ] = useState(false);
     const [ selectedLang, setSelectedLang ] = useState<string[]>([])
+    const [ isPending, startTransition ] = useTransition();
  
     useEffect(() => {
         const getLocal = async () => {
@@ -149,7 +150,7 @@ const Page = () => {
                     mode='multiple'
                     onChange={setSelectedLang}
                 >
-                    {languages.map((language: languageType, i: number) => <Option value={language.longCode} key={i}>{language.name}</Option>)}
+                    {languages.map((language: ILanguage, i: number) => <Option value={language.longCode} key={i}>{language.name}</Option>)}
                 </Select>
             </FormItem>
         </Col>
@@ -163,7 +164,7 @@ const Page = () => {
                     {categories.map((category: categoryType, i: number) => <Option value={category.id} key={i}>{category.name}</Option>)}
                 </Select>
             </FormItem>
-            <p className='text-[#7B7B7B] text-xs !mt-[-15px]'>Selected: {services.length} service(s)</p>
+            <p className='text-[#7B7B7B] text-xs !mt-[-15px]'>Selected: {services && services.length} service(s)</p>
         </Col>
         
         </>)
@@ -250,11 +251,17 @@ const Page = () => {
             ...data,
             latitude: geoLocate.latitude!,
             longitude: geoLocate.longitude!,
-            languages: handleDisplayLanguage(selectedLang),
-            services: [ { serviceCategoryIds: services } ]
+            languages: handleDisplayLanguage(selectedLang) as ILanguage[],
         }
 
+        payload.services = services.map((serviceId): IServiceDetail => ({
+            serviceCategoryId: serviceId,
+            hourlyRate: 0,
+            yearsOfExperience: 0,
+        }));
         delete payload.step
+
+        // return console.log("steops", payload)
 
         setLoading(true);
         onBoardServiceWorker(payload)
@@ -264,7 +271,9 @@ const Page = () => {
                 modal.success({
                     title: res.data.message,
                     onOk: () => {
-                        router.push("/dashboard/worker");
+                        startTransition(() => {
+                            router.push("/dashboard/worker");
+                        })
                         localStorage.removeItem("safe-habour-worker-profile");
                     }
                 })
@@ -307,9 +316,9 @@ const Page = () => {
         return selectedServices;
     }
     
-    const handleDisplayLanguage = (languageCode: string[]): {name: string; code: string; longCode: string;}[] => {
+    const handleDisplayLanguage = (languageCode: string[]): ILanguage[] => {
         const selectedLanguages = languages
-        .filter(language => languageCode.includes(language.longCode))
+        .filter(language => languageCode.includes(language.longCode || ""))
         .map(language => {
             return { ...language }
         });
@@ -327,7 +336,7 @@ const Page = () => {
             }
             actions={[<div key={1} className='flex items-center justify-between px-6 py-4'>
                 <Button disabled={steps===1} onClick={() => handlePrevious(steps)} type="default" className='md:!w-[129px] !h-[48px] !text-[#670316]' style={{borderRadius: 50}}><ArrowLeftOutlined /> Previous</Button>
-                <Button loading={loading} onClick={() => handleCheck(steps)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>{steps===5 ? "Submit" : "Next"} {steps !== 5 &&<ArrowRightOutlined className='ml-1' />}</Button>
+                <Button loading={loading || isPending} onClick={() => handleCheck(steps)} type="primary" className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>{steps===5 ? "Submit" : "Next"} {steps !== 5 &&<ArrowRightOutlined className='ml-1' />}</Button>
             </div>]}
             className='md:!w-[712px] justify-self-center !my-6'
             styles={{ body: {display: "flex", flexDirection: "column", gap: 20}}}

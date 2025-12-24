@@ -317,7 +317,7 @@ const PersonalSettings = ({
             <Row gutter={[15, 0]} >
             <Col lg={12} sm={24} xs={24}>
                 <FormItem 
-                    label="Street Address" 
+                    label="Location" 
                     className="font-semibold" 
                     name="streetAddress"
                     rules={[
@@ -347,7 +347,7 @@ const PersonalSettings = ({
                         defaultValue="Canada"
                         onChange={(val) => handleCountrySelect(val)}
                         name='registration'
-                        disabled={!isEdit}
+                        disabled
                         style={{ 
                             height: 50, 
                             width: "100%", 
@@ -364,7 +364,7 @@ const PersonalSettings = ({
 
             <Col lg={12} sm={24} xs={24}>
                 <FormItem 
-                    label="City" 
+                    label="Province" 
                     className="font-semibold" 
                     name="city"
                 >

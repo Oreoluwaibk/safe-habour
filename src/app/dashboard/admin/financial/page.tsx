@@ -5,7 +5,7 @@ import Dot from '@/components/general/Dot'
 import InfoWalletCards from '@/components/wallet/cards/InfoWalletCards'
 import { getAdminEscrowFunds, getAdminFinanceStats,  getAdminRevenueBreakdown } from '@/redux/action/admin'
 import { Icon } from '@iconify/react'
-import { App, Card, Col, Progress, Row } from 'antd'
+import { App, Card, Col, Row } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   PieChart,

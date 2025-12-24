@@ -23,6 +23,8 @@ const ServiceModal = ({
     selected,
     refresh 
 }: props) => {
+    console.log("service", selected, categories);
+    
     const [form] = Form.useForm();
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);

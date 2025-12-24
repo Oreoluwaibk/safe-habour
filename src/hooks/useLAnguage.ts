@@ -1,18 +1,18 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { languageType } from '../../utils/interface';
+import { ILanguage } from '../../utils/interface';
 import { allLanguages } from '../../utils/savedInfo';
 import { getLanguages } from '@/redux/action/extra';
 
 interface LanguageState {
-  languages: languageType[];
+  languages: ILanguage[];
   loading: boolean;
   error: string | null;
 //   handleGetLanguages: () => Promise<void>;
 }
 
 export const useLanguage = (): LanguageState => {
-   const [ languages, setLanguages ] = useState<languageType[]>(allLanguages);
+   const [ languages, setLanguages ] = useState<ILanguage[]>(allLanguages);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -59,8 +59,10 @@ const Payout = () => {
         .then(res => {
             if(res.status === 200) {
                 setLoading(false);
-                window.open(res.data.data, "_blank");
-                // setBankInfo(res.data.data);
+                modal.success({
+                    title: res.data.message || "Account created success, kindly proceed to onbarding",
+                    onOk: () => handleOnboardStripeAccount()
+                })
             }
         })
         .catch(err => {

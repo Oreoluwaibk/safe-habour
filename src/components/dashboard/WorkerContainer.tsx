@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/client.css"
 import { MenuOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Image as AntDImage } from 'antd';
+import { Avatar, Layout, Image as AntDImage, App } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState, useTransition } from 'react'
@@ -10,14 +10,15 @@ import Image from 'next/image';
 import NotificationCard from "../general/NotificationCard";
 import { CheckedCircle, MaskedLogo } from "../../../assets/icons";
 import WorkerSideMenu from "./WorkerSideMenu";
-import { useAppSelector } from "@/hook";
-import { logoutUser } from "@/redux/action/auth";
+import { useAppDispatch, useAppSelector } from "@/hook";
+import { logoutUser as logoutEndpoint } from "@/redux/action/auth";
 import { INotification } from "../../../utils/interface";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { pictureUrl } from "../../../utils/axiosConfig";
 import { NotificationBell } from "../notification/NotificationBell";
 import NotificationToast from "../notification/NotificationToast";
 import WorkerSearch from "../general/search/WorkerSearch";
+import { logoutUser } from "@/redux/reducer/auth/auth";
 
 const { Content, Header } = Layout;
 
@@ -37,6 +38,8 @@ const WorkerContainer = ({
     children,
     active
 }:Props) => {
+    const { modal } = App.useApp();
+    const dispatch = useAppDispatch();
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
@@ -68,10 +71,11 @@ const WorkerContainer = ({
 
     const handleLogout = useCallback(() => {
         setLoading(true);
-        logoutUser()
+        logoutEndpoint()
             .then((res) => {
             if (res.status === 200) {
                     setLoading(false);
+                    dispatch(logoutUser())
                     startTransition(() => {
                         router.push("/auth/login");
                     })
@@ -81,11 +85,20 @@ const WorkerContainer = ({
         .catch((err) => {
             setLoading(false);
             startTransition(() => {
+                dispatch(logoutUser())
                 router.push("/auth/login");
             })
             console.log("err:", err)
         });
-    }, [router]); 
+    }, [router, dispatch]); 
+
+    const handleAskLogout = () => {
+        modal.info({
+            title: "Are you sure you want to logout",
+            onOk: ()=> handleLogout(),
+            closable: true
+        })
+    }
 
     useEffect(() => {
         if (!isAuthenticated) handleLogout();
@@ -192,7 +205,7 @@ const WorkerContainer = ({
                     </div>   
                 </Layout>
                 {open && <WorkerSideMenu loading={loading || isPending} 
-                        handleLogout={handleLogout}  active={active} open={open} onCancel={() => setOpen(false)} />}
+                        handleLogout={handleAskLogout}  active={active} open={open} onCancel={() => setOpen(false)} />}
             </Content>
         </Layout>
     </Layout>

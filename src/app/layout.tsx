@@ -7,8 +7,13 @@ import { store } from "../store";
 import { Inter, Open_Sans } from "next/font/google";
 import "react-phone-input-2/lib/style.css";
 import StripeProvider from "@/components/general/StripeProvider";
+// import { usePathname } from "next/navigation";
+// import { useEffect, useState } from "react";
+// import LoadingOverlay from "@/components/LoadingOverlay";
 
 // Fonts
+
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -31,12 +36,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // const pathname = usePathname();
+  // const [loading, setLoading] = useState(false);
+
+  // // stop loading when the path changes (page finished)
+  // useEffect(() => {
+  //   setLoading(false);
+  // }, [pathname]);
   return (
     <html lang="en" className={`${inter.variable} ${openSans.variable}`}>
       <head>
         <title>Safe Harbour</title>
       </head>
       <body className="font-sans antialiased">
+         {/* {loading && <LoadingOverlay />} */}
         <StripeProvider>
           <Provider store={store}>
             <ConfigProvider theme={theme}>

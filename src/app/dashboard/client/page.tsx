@@ -3,8 +3,7 @@ import ClientContainer from '@/components/dashboard/ClientContainer'
 import CompleteInfo from '@/components/general/CompleteInfo'
 import { ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons'
 import React, { useCallback, useEffect, useState, useTransition } from 'react';
-import "@/styles/client.css"
-import Link from 'next/link';
+import "@/styles/client.css";
 import { Col, Row, App } from 'antd';
 import InfoCards from '@/components/client/cards/InfoCards';
 import WorkerComponent from '@/components/client/WorkerComponent';

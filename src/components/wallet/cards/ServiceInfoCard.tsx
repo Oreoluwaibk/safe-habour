@@ -24,6 +24,7 @@ const ServiceInfoCard = ({
     refresh
 }: props) => {
     const [ openAddModal, setOpenAddModal ] = useState(false);
+    console.log("ser", service);
   return (
     <>
     <Card 

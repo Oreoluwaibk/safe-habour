@@ -169,3 +169,17 @@ export const adminApproveDocument = async (data: { userId: string; documentType:
 
     return Promise.resolve(response);
 }
+
+export const deActviateAccount = async () => {
+    const url = `/Authentication/deactivate`;
+    const response = await axiosInstance.post(url, {});
+
+    return Promise.resolve(response);
+}
+
+export const reActviateAccount = async () => {
+    const url = `/Authentication/reactivate`;
+    const response = await axiosInstance.post(url, {});
+
+    return Promise.resolve(response);
+}

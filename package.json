@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint",
-        "postinstall": "next font && npm rebuild lightningcss || true"
+        "postinstall": "npm rebuild lightningcss || true"
     },
     "dependencies": {
         "@ant-design/icons": "^6.0.2",

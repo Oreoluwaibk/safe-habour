@@ -7,13 +7,9 @@ import { store } from "../store";
 import { Inter, Open_Sans } from "next/font/google";
 import "react-phone-input-2/lib/style.css";
 import StripeProvider from "@/components/general/StripeProvider";
-// import { usePathname } from "next/navigation";
-// import { useEffect, useState } from "react";
-// import LoadingOverlay from "@/components/LoadingOverlay";
+
 
 // Fonts
-
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -47,6 +43,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${openSans.variable}`}>
       <head>
         <title>Safe Harbour</title>
+        <meta name="description" content="Secure and efficient community management platform" />
       </head>
       <body className="font-sans antialiased">
          {/* {loading && <LoadingOverlay />} */}

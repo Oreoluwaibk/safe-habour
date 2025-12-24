@@ -50,7 +50,7 @@ const ValueProp = () => {
 
             <p className="text-base mb-3">Whether you&rsquo;re a senior seeking to stay independent at home or a family member finding support for a loved one, SafeHarbour Care connects you with trusted, qualified Helpers who provide <span className="font-semibold">non-medical homecare services</span>—from personal care and housekeeping to snow clearing and home chores.</p>
 
-            <p className="text-base p-7 px-6 bg-[#FFFAFB] border-l-4 border-l-[#670316] rounded-lg mb-6"><span className="font-semibold">Launch Special</span>: Be among the first 200 families in Winnipeg, Steinbach, Ottawa, or Mississauga to join and book care completely FREE—no booking fees, no platform charges, forever.</p>
+            <p className="text-base p-7 px-6 bg-[#FFFAFB] border-l-4 border-l-[#670316] rounded-lg mb-6"><span className="font-semibold">Launch Special</span>: Be among the first 200 families in Winnipeg, Steinbach, Ottawa, or Mississauga to join and book care completely FREE</p>
 
             <Button className='w-full md:w-fit text-base! px-8!' onClick={handleScroll}>Claim Your Free Booking Spot</Button>
           </Card>

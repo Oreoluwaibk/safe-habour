@@ -57,31 +57,24 @@ const Login = () => {
                 const role = res.data.data?.roles?.[0];
                 if (lastRoute) {
                     router.push(lastRoute);
-                    dispatch(setLastRoute(null)); // clear it
+                    dispatch(setLastRoute(null)); 
                 } 
-                else if (role === "ClientUser")  
-                    startTransition(() => {
-                        router.push("/dashboard/client");
-                    });
-                else if (role === "ServiceWorker") {
+                else if (role === "ClientUser"){  
+                    if(!isActive) {
+                        startTransition(() => router.push("/dashboard/client/deactivated")); 
+                        return;
+                    }
+                    startTransition(() => router.push("/dashboard/client"));
+                }else if (role === "ServiceWorker") {
                     if(!isActive) {
                         startTransition(() => router.push("/dashboard/worker/deactivated")); 
                         return;
                     }
 
-                    if(res.data.data.user?.isServiceWorkerOnboarded)  
-                        startTransition(() => {
-                            router.push("/dashboard/worker");
-                        }); 
-                    else startTransition(() => {
-                            router.push("/dashboard/worker/intro");
-                        });
+                    if(res.data.data.user?.isServiceWorkerOnboarded) startTransition(() => router.push("/dashboard/worker")); 
+                    else startTransition(() => router.push("/dashboard/worker/intro"));
                 }
-                else if(role === "SuperAdmin") {
-                    startTransition(() => {
-                        router.push("/dashboard/admin");
-                    });
-                }
+                else if(role === "SuperAdmin") startTransition(() => router.push("/dashboard/admin"));
                 message.success(res.data.message || "Log in successful"); 
             }
             if(res.status === 202) {
@@ -142,7 +135,7 @@ const Login = () => {
             <div className='flex items-center justify-between'>
                 <FormItem label="" name="rememberMe" className="flex items-center gap-1">
                     <>
-                        <Checkbox defaultChecked={rememberMe} checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} title="You agree to our friendly privacy policy." className="!mr-4"  />
+                        <Checkbox defaultChecked={rememberMe} checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} title="You agree to our friendly privacy policy." className="mr-4!"  />
                         <span className="agree">Remember me</span>
                     </>
                 </FormItem>
@@ -175,7 +168,7 @@ const Login = () => {
 
                 <Socialbtn 
                     title='Sign up with LinkedIn'
-                    icon={<LinkedinFilled className="!text-2xl !text-[#0077B5]" />}
+                    icon={<LinkedinFilled className="text-2xl! text-[#0077B5]!" />}
                 />
                 <div className='flex items-center justify-center gap-2 mt-2'>
                     <p>Don’t have an account?</p>

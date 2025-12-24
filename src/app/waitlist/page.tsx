@@ -23,7 +23,7 @@ const Page = () => {
         <HowItWorks />
         <SeekerForm />
         <HelperForm />
-        <FaqComponent />
+        {/* <FaqComponent /> */}
     </Container>
     </>
   )

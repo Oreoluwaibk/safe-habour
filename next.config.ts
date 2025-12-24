@@ -7,13 +7,13 @@ const nextConfig: NextConfig = {
   },
 
   // ✅ Disable minification for debugging (so the "j" variable becomes readable)
-  webpack(config, { dev }) {
-    if (!dev) {
-      config.optimization.minimize = false;
-    }
-    return config;
-  },
-  turbopack: {},
+  // webpack(config, { dev }) {
+  //   if (!dev) {
+  //     config.optimization.minimize = false;
+  //   }
+  //   return config;
+  // },
+ 
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

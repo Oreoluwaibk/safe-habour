@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  turbopack: {},
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

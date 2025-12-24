@@ -5,7 +5,7 @@ import { theme } from "../../theme/themeConfig";
 import { Provider } from "react-redux";
 import { store } from "../store";
 import { Inter, Open_Sans } from "next/font/google";
-import "react-phone-input-2/lib/style.css";
+// import "react-phone-input-2/lib/style.css";
 import StripeProvider from "@/components/general/StripeProvider";
 
 

@@ -74,7 +74,13 @@ const CustomAuth = ({
 
     const handleClick = () => {
         if(type === "forgot") handleForgotPassword();
-        if(type === "check your email")  window.location.href = `mailto:${email}`;
+        if(type === "check your email") {
+            const gmailUrl = "https://mail.google.com/";
+            window.location.href = `mailto:${email}`;
+            setTimeout(() => {
+                window.open(gmailUrl, "_blank");
+            }, 800);   
+        }
         if(type === "reset") handleResetPassword();
         if(type === "true") router.push("/auth/login");
         if(type === "email-verify") router.push("/auth/login");
@@ -281,7 +287,7 @@ const CustomAuth = ({
                     <p className='text-[#820116] cursor-pointer' onClick={handleResend}>Click to resend {resendLoading && <LoadingOutlined spin  />}</p>
                 </div>}
                 <div className='flex items-center justify-center gap-2 mt-2'>
-                    <ArrowLeftOutlined className='!text-[#667085]' />
+                    <ArrowLeftOutlined className='text-[#667085]!' />
                     <Link href="/auth/login" style={{color: "#667085"}}>Back to log in</Link>
                 </div>
             </FormItem>

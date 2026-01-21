@@ -1,20 +1,23 @@
-import Container from "@/components/dashboard/Container";
-import "@/styles/safety.css"
+import { Modal } from 'antd'
+import React from 'react'
 
-export default function Home() {
+interface props {
+    open: boolean;
+    onCancel: () => void;
+}
+const TermModal = ({ open, onCancel }: props) => {
   return (
-    <Container active="Terms">
-      <div className="top">
-
-      
-      <div className="policyContainer">
-  <h5>Current as of 20 Jan 2025</h5>
+    <Modal open={open} onCancel={onCancel} title={<div className='policyContainer'>
+        <h5>Current as of 20 Jan 2025</h5>
   <h1>Terms and Conditions</h1>
-  <p className="text-center">
+  <p className="text-left">
     By accessing or using SEO-Safeharbour, you agree to be bound by these Terms
     and confirm that you are responsible for compliance with all applicable
     local, provincial, and federal laws in Canada.
   </p>
+    </div>} classNames={{ body: "px-4!"}} width={800} footer={null}>
+        <div className="policyContainer">
+  
 
   <div className="mt-[40px] pt-6 pb-12">
     <p>
@@ -165,8 +168,9 @@ export default function Home() {
     </p>
   </div>
 </div>
- 
-      </div>
-    </Container>
-  );
+
+    </Modal>
+  )
 }
+
+export default TermModal

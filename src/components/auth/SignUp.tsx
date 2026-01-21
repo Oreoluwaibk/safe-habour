@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState, useTransition } from 'react';
 import "@/styles/auth.css";
-import { App, Button, Col, Form, Input, Row } from 'antd';
+import { App, Button, Checkbox, Col, Form, Input, Row } from 'antd';
 import "@/styles/form.css";
 import Link from 'next/link';
 import Socialbtn from '../general/Socialbtn';
@@ -12,6 +12,7 @@ import { createErrorMessage } from '../../../utils/errorInstance';
 import { registerPayload } from '../../../utils/interface';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import PhoneInput from "react-phone-input-2";
+import TermModal from '../general/modal/TermModal';
 
 const FormItem = Form.Item;
 
@@ -22,6 +23,8 @@ const SignUp = ({ type }: { type: string | null }) => {
     const [ loading, setLoading ] = useState(false);
     const { location, getLocation } = useGeolocation();
     const [ isPending, startTransition ] = useTransition();
+    const [ openModal, setOpenModal ] = useState(false);
+    const [ isAccept, setIsAccept ] = useState(false);
 
     useEffect(() => {
         const getLocal = async () => {
@@ -37,7 +40,9 @@ const SignUp = ({ type }: { type: string | null }) => {
     }
 
     const handleRegisterClient = () => {
-        const { validateFields } = form;
+        const { validateFields, setFields } = form;
+        if(!isAccept) return setFields([{ name: "terms", errors: ["Please accept the terms and conditions"] }]);
+         
         validateFields()
         .then(value => {
             const { 
@@ -48,6 +53,9 @@ const SignUp = ({ type }: { type: string | null }) => {
                 confirmPassword,
                 phoneNumber, 
             } = value;
+
+            setFields([{ name: "terms", errors: [] }]);
+            
             
             const payload: registerPayload = {
                 email,
@@ -111,7 +119,8 @@ const SignUp = ({ type }: { type: string | null }) => {
     */ 
 
     const handleRegisterWorker = () => {
-        const { validateFields } = form;
+        const { validateFields, setFields } = form;
+        if(!isAccept) return setFields([{ name: "terms", errors: ["Please accept the terms and conditions"] }]);
         validateFields()
         .then(value => {
             const { 
@@ -122,6 +131,8 @@ const SignUp = ({ type }: { type: string | null }) => {
                 confirmPassword,
                 phoneNumber, 
             } = value;
+            setFields([{ name: "terms", errors: [] }]);
+
             
             const payload: registerPayload = {
                 email,
@@ -133,6 +144,7 @@ const SignUp = ({ type }: { type: string | null }) => {
                 latitude: location.latitude,
                 longitude: location.longitude,
             }
+        
             setLoading(true)
             registerWorker(payload)
             .then(res => {
@@ -243,14 +255,15 @@ const SignUp = ({ type }: { type: string | null }) => {
                 <Input.Password placeholder="Password" style={{height: 48}} type="password" />
             </FormItem>
 
-            {/* <div className='flex items-center justify-between'>
-                <FormItem label="" className="flex items-center gap-1">
-                    <Checkbox title="You agree to our friendly privacy policy." className="!mr-4"  />
-                    <span className="agree">Remember me</span>
+            {/* <div className='flex items-center justify-between '> */}
+                <FormItem label="" name="terms" className="flex items-center gap-1 -mt-6!">
+                    <Checkbox onChange={(e) => setIsAccept(e.target.checked)} title="You agree to our friendly privacy policy." className="mr-4!"  />
+                    <span className="agree">I agree to the <span className="cursor-pointer font-semibold hover:underline" onClick={()=> setOpenModal(true)}>terms and conditions</span></span>
                 </FormItem>
 
-                <Link href="/auth/forgot-password">Forgot Password</Link>
-            </div>   */}
+                {/* <Link href="/auth/forgot-password">Forgot Password</Link> */}
+            {/* </div>   */}
+            
 
             <FormItem label="" name="btn">
                 <Button loading={loading || isPending} className="button_form" type="primary" onClick={() => handleRegister()}>Create account</Button>
@@ -286,6 +299,7 @@ const SignUp = ({ type }: { type: string | null }) => {
 
            
         </Form>
+        {openModal && <TermModal open={openModal} onCancel={() => setOpenModal(false)} />}
     </div>
   )
 }

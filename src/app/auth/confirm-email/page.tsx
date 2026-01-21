@@ -36,7 +36,7 @@ const VerifyEmailClient = () => {
       type='otp'
       title='Check your email'
       description={`We sent a verification link to ${email}`}
-      icon={<MailOutlined className='!text-[#670316] !text-[24px]' />}
+      icon={<MailOutlined className='text-[#670316]! text-[24px]!' />}
       btnTitle='Verify email'
       email={email}
       onClick={() => router.push("/auth/confirm-email?verify=success")}
@@ -48,7 +48,7 @@ const VerifyEmailClient = () => {
       email={email}
       token={token}
       description='Your password has been successfully reset. Click below to log in magically.'
-      icon={<CheckCircleOutlined className='!text-[#670316] !text-[24px]' />}
+      icon={<CheckCircleOutlined className='text-[#670316]! text-[24px]!' />}
       btnTitle='Continue'
       onClick={() => router.push("/auth/login")}
     />}

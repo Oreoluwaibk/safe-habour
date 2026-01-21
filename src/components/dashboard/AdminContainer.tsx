@@ -185,7 +185,7 @@ const AdminContainer = ({
                             </div>}
                         </div>
                         
-                        {<MenuOutlined  className='md:!hidden text-2xl' onClick={() => setOpen(true)} />}
+                        {<MenuOutlined  className='md:hidden! text-2xl' onClick={() => setOpen(true)} />}
                     </div>
 
                 </Header>

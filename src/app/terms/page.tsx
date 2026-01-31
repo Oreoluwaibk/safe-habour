@@ -8,7 +8,7 @@ export default function Home() {
 
       
       <div className="policyContainer">
-  <h5>Current as of 20 Jan 2025</h5>
+  <h5>Current as of 20 Jan 2026</h5>
   <h1>Terms and Conditions</h1>
   <p className="text-center">
     By accessing or using SEO-Safeharbour, you agree to be bound by these Terms
@@ -16,7 +16,7 @@ export default function Home() {
     local, provincial, and federal laws in Canada.
   </p>
 
-  <div className="mt-[40px] pt-6 pb-12">
+  <div className="mt-10 pt-6 pb-12">
     <p>
       SEO-Safeharbour operates as a neutral technology platform designed to
       connect independent service providers with individuals or families seeking

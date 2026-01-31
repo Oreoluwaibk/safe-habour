@@ -28,7 +28,7 @@ const Page = () => {
             />
           </Col>
 
-          {selected === "Profile Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
+          {selected === "Profile Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-50!'>
             <PersonalSettings 
               authentication={authentication!} 
               handleGetAuthentication={handleGetAuthentication} 
@@ -36,27 +36,27 @@ const Page = () => {
             />
           </Col>}
 
-          {selected === "Notification Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
+          {selected === "Notification Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:px-50!'>
             <NotificationSetting />
           </Col>}
 
-          {selected === "Password" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
+          {selected === "Password" && <Col lg={24} sm={24} xs={24} className='mb-6 md:px-50!'>
             <ResetPassword />
           </Col>}
 
-          {selected === "Two Factor Authentication" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
+          {selected === "Two Factor Authentication" && <Col lg={24} sm={24} xs={24} className='mb-6 md:px-50!'>
             <TwoFactor />
           </Col>}
 
-          {selected === "Payment Methods" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[300px]'>
+          {selected === "Payment Methods" && <Col lg={24} sm={24} xs={24} className='mb-6 md:px-75!'>
             <PaymentSchedule />
           </Col>}
 
-          {selected === "Verification Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
+          {selected === "Verification Settings" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-50!'>
             <VerificationSettings authentication={authentication!}  />
           </Col>}
 
-          {selected === "Review" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-[200px]'>
+          {selected === "Review" && <Col lg={24} sm={24} xs={24} className='mb-6 md:!px-50!'>
             <Review />
           </Col>}
           

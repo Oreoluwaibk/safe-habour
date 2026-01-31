@@ -16,10 +16,10 @@ const VerificationSettings = ({  }: props) => {
     const [ loading, setLoading ] = useState(false);
     const { modal } = App.useApp();
     const [ documents, setDocuments ] = useState({
-        "userIdentificationDocumentPath": "uploads/user-verification/e9ed3d12-83c0-4dc5-a0ac-f0c1077ffe45/useridentification_20251218_060448.pdf",
-        "userLocationDocumentPath": "uploads/user-verification/e9ed3d12-83c0-4dc5-a0ac-f0c1077ffe45/userlocation_20251218_060453.pdf",
-        "userIdentificationDocumentUrl": "https://safe-habour-api.azurewebsites.net/uploads/user-verification/e9ed3d12-83c0-4dc5-a0ac-f0c1077ffe45/useridentification_20251218_060448.pdf",
-        "userLocationDocumentUrl": "https://safe-habour-api.azurewebsites.net/uploads/user-verification/e9ed3d12-83c0-4dc5-a0ac-f0c1077ffe45/userlocation_20251218_060453.pdf",
+        "userIdentificationDocumentPath": "",
+        "userLocationDocumentPath": "",
+        "userIdentificationDocumentUrl": "",
+        "userLocationDocumentUrl": "",
         "hasIdentificationDocument": true,
         "hasLocationDocument": true
     })
@@ -30,7 +30,7 @@ const VerificationSettings = ({  }: props) => {
         .then(res => {
             if(res.status === 200) {
                 setLoading(false);
-                console.log(res.data);
+                setDocuments(res.data.data);
             }
         })
         .catch(err => {

@@ -110,11 +110,11 @@ const BookingCard = ({ worker, onRefresh }: props) => {
     }
   return (
     <Row className='booking-card' gutter={[15, 15]}>
-        <Col lg={8} sm={8} xs={12} className='flex items-center justify-center md:!w-[209px]'>
+        <Col lg={8} sm={8} xs={12} className='flex items-center justify-center md:w-52.25!'>
             {/* <Image src={C1} alt='image' className='md:!h-full object-cover !w-[500px] rounded-[24px]' /> */}
-            {worker?.photoUrl && <img  src={`${pictureUrl}${worker.photoUrl}`} alt='image' className='object-cover rounded-[8px] w-full! h-full!' />}
+            {worker?.photoUrl && <img  src={`${pictureUrl}${worker.photoUrl}`} alt='image' className='object-cover rounded-lg w-full! h-full!' />}
             {!worker?.photoUrl && (
-                <Avatar icon={<UserOutlined size={80} className='text-4xl' />} alt='Worker image' shape="square" className='md:!h-full object-cover w-full!  rounded-[24px]' />
+                <Avatar icon={<UserOutlined size={80} className='text-4xl' />} alt='Worker image' shape="square" className='md:h-full! object-cover w-full! rounded-3xl' />
             )}
         </Col>
         
@@ -122,13 +122,13 @@ const BookingCard = ({ worker, onRefresh }: props) => {
         <Col lg={16} sm={16} xs={12} className='flex flex-col gap-2'>
             <div className='flex items-center justify-between'>
                 <p className="t-pri text-[20px] font-semibold">{worker?.serviceWorkerFullName}</p>
-                <div style={{backgroundColor: colors.bg, color: colors.color}} className='rounded-[12px] p-4 flex items-center text-[12px] gap-1 !h-[15px] !w-fit'>
+                <div style={{backgroundColor: colors.bg, color: colors.color}} className='rounded-xl p-4 flex items-center text-[12px] gap-1 h-3.75! w-fit!'>
                     <p className=''>{statusTitle}</p>
                 </div>
             </div>
 
             <div className='flex items-center gap-1 mb-2'>
-                <StarFilled className='!text-[#ffdd33]' />
+                <StarFilled className='text-[#ffdd33]!' />
                 <span className='t-pri font-medium'>{worker?.totalRating}</span>
                 <span>({worker?.numberOfReviews} Reviews)</span>
             </div>
@@ -136,11 +136,11 @@ const BookingCard = ({ worker, onRefresh }: props) => {
             <p>{worker?.bio.slice(0,70)}...</p>
 
             <div className='flex items-center justify-between mb-2'>
-                 <div className='text-[#646464] rounded-[12px]  py-3 flex items-center text-[12px] gap-1 !h-[10px] !w-fit'>
+                 <div className='text-[#646464] rounded-xl py-3 flex items-center text-[12px] gap-1 h-2.5! w-fit@'>
                     <ClockCircleOutlined />
                     {worker?.dateCreated && <p className=''>{moment(worker?.dateCreated).format("MMM DD, h:mm A")}</p>}
                 </div>
-                <div className='text-[#646464] rounded-[12px] p-4 flex items-center text-[12px] gap-1 !h-[15px] !w-fit'>
+                <div className='text-[#646464] rounded-xl p-4 flex items-center text-[12px] gap-1 h-3.75! w-fit!'>
                     <EnvironmentFilled />
                     <p className=''>{worker?.location}</p>
                 </div>
@@ -150,9 +150,9 @@ const BookingCard = ({ worker, onRefresh }: props) => {
                 <p className='text-[#670316] font-medium text-lg'>${worker?.hourlyRate?.toFixed(2)}/hr</p> 
 
                 <div className='flex items-center gap-4 justify-between'>
-                    {worker?.status === 1 && <Button type="default" className='!h-[40px] w-[90px] !rounded-[50px] !font-medium !text-[#670316]' onClick={() => setOpenModal(true)}>Cancel</Button>}
-                    {worker?.status === 2 && <Button loading={loading} type="default" className='!h-[40px] w-[120px] !rounded-[50px] !font-medium !text-[#670316]' onClick={handleCheckHistory}>Message</Button>}
-                    <Button type='primary' className='!h-[40px] w-[128px] !rounded-[50px] primary-bg text-white !font-medium' onClick={handleNavigate} loading={isPending}>View More</Button>
+                    {worker?.status === 1 && <Button type="default" className='h-10! w-22.5 rounded-[50px]! font-medium! text-[#670316]!' onClick={() => setOpenModal(true)}>Cancel</Button>}
+                    {worker?.status === 2 && <Button loading={loading} type="default" className='h-10! w-30 rounded-[50px]! font-medium! text-[#670316]!' onClick={handleCheckHistory}>Message</Button>}
+                    <Button type='primary' className='h-10! w-32 rounded-[50px]! primary-bg text-white font-medium!' onClick={handleNavigate} loading={isPending}>View More</Button>
                 </div>
             </div>
 

@@ -26,24 +26,24 @@ const WorkersCard = ({ worker, authentication }: props) => {
     const isConfirmed = !authentication?.isVerified || !authentication?.isProfileComplete;
   return (
     <div className='workers-card'>
-        <div className='absolute top-8 right-8 text-[#6c4500] bg-[#ffeac0] rounded-[12px] px-2 py-3 flex items-center text-[8px] gap-1 !h-[10px] !w-fit'>
+        <div className='absolute top-8 right-8 text-[#6c4500] bg-[#ffeac0] rounded-xl px-2 py-3 flex items-center text-[8px] gap-1 h-2.5 w-fit'>
             <ClockCircleOutlined />
             <p className=''>{moment(worker.joinedDate).format("MMM DD, h:mm A")}</p>
         </div>
-        {worker?.profilePicturePath && <Image preview={false} src={`${worker.profilePicturePath}`} alt='image' className='md:!h-[169px] object-cover w-full' />}
+        {worker?.profilePicturePath && <Image preview={false} src={`${worker.profilePicturePath}`} alt='image' className='md:h-42.25! object-cover w-full' />}
         {!worker.profilePicturePath && (
-            <Avatar icon={<UserOutlined size={80} className='text-4xl' />} alt='Worker image' shape="square" className='md:!h-[169px] object-cover w-full!' />
+            <Avatar icon={<UserOutlined size={80} className='text-4xl' />} alt='Worker image' shape="square" className='md:h-42.25! object-cover w-full!' />
         )}
         <div className='flex items-center justify-between'>
             <p className="t-pri text-[20px] font-semibold">{worker.firstName}</p>
-            <div className='text-[#018a06] bg-[#f2fff2] rounded-[12px] p-4 flex items-center text-[8px] gap-1 !h-[15px] !w-fit'>
+            <div className='text-[#018a06] bg-[#f2fff2] rounded-xl p-4 flex items-center text-[8px] gap-1 h-3.75! w-fit!'>
                 <ClockCircleOutlined />
                 <p className=''>{worker.isVerified ? "Verified" : "UnVerified"}</p>
             </div>
         </div>
 
         <div className='flex items-center gap-1'>
-            <StarFilled className='!text-[#ffdd33]' />
+            <StarFilled className='text-[#ffdd33]!' />
             <span className='t-pri font-medium'>{worker.averageRating}</span>
             <span>({worker.reviewCount} Reviews)</span>
         </div>
@@ -51,7 +51,7 @@ const WorkersCard = ({ worker, authentication }: props) => {
         <p className=''>{worker.bio.slice(0, 70)}...</p>
 
         <div className='flex items-center justify-between'>
-            <div className='text-[#670316] bg-[#fff9fa] rounded-[12px] p-4 flex items-center text-[8px] gap-1 !h-[15px] !w-fit'>
+            <div className='text-[#670316] bg-[#fff9fa] rounded-xl p-4 flex items-center text-[8px] gap-1 h-3.75! w-fit!'>
                 <EnvironmentFilled />
                 <p className=''>{worker.streetAddress} {worker.city} {worker.country}</p>
             </div>
@@ -60,13 +60,13 @@ const WorkersCard = ({ worker, authentication }: props) => {
         </div>
 
         <div className='flex items-center gap-4 justify-between'>
-            <Button onClick={handleNavigate} loading={isPending} type="default" className='!h-[50px] w-[180px] !rounded-[50px] !font-medium !text-[#670316]'>View More</Button>
+            <Button onClick={handleNavigate} loading={isPending} type="default" className='h-12.5! w-45 rounded-[50px]! font-medium! text-[#670316]!'>View More</Button>
             <Tooltip title={isConfirmed ? "You have not completed your profile, complete your profile to perform this function" : ""}>
                 <Button 
                     disabled={isConfirmed} 
                     onClick={() => setOpenHireModal(true)} 
                     type='primary' 
-                    className='!h-[50px] w-[180px] !rounded-[50px] primary-bg text-white !font-medium'
+                    className='h-12.5! w-45 rounded-[50px]! primary-bg text-white font-medium!'
                 >
                     Hire Me
                 </Button>

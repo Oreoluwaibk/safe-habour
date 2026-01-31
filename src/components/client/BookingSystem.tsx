@@ -135,7 +135,7 @@ const BookingSystem = () => {
                         itemRender={itemRender}
                         total={totalWorkers}
                         align="center"
-                        className="border-t border-t-[#eaecf0] !py-4"
+                        className="border-t border-t-[#eaecf0] py-4!"
                         pageSize={filters.pageSize}
                         current={filters.pageNumber}
                         onChange={handlePagination}

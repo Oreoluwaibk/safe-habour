@@ -68,7 +68,7 @@ const VerificationSettings = ({  }: props) => {
                     value={idCard}
                     setValue={setIdCard}
                     type={1}
-                    icon={<Icon icon="material-symbols-light:id-card-rounded" color='#505050' className='!text-xl' fontSize={20} />}
+                    icon={<Icon icon="material-symbols-light:id-card-rounded" color='#505050' className='text-xl!' fontSize={20} />}
                     url={documents.userIdentificationDocumentUrl}
                 />
             </Col>
@@ -76,7 +76,7 @@ const VerificationSettings = ({  }: props) => {
                 <UploadCard 
                     title='Proof of Address' 
                     description='Upload Bill within 30 days' 
-                    icon={<Icon icon="mdi:address-marker" color='#505050' className='!text-xl' fontSize={20} />}
+                    icon={<Icon icon="mdi:address-marker" color='#505050' className='text-xl!' fontSize={20} />}
                     isUploaded={documents.hasIdentificationDocument}
                     value={proofOfAddress}
                     setValue={setProofOfAddress}

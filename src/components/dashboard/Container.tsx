@@ -26,7 +26,7 @@ export const NavItem = ({ href, label, active, mobile }: { href: string, label: 
     return(
 
     <Link href={href}>
-      <span className={`menu-link ${active ? 'active' : ''} ${mobile ? '!text-lg font-semibold text-[#1E1E1E]' : ''} text-text`}>{label}</span>
+      <span className={`menu-link ${active ? 'active' : ''} ${mobile ? 'text-lg! font-semibold text-[#1E1E1E]' : ''} text-text`}>{label}</span>
     </Link>
 )};
 
@@ -75,6 +75,7 @@ const Container = ({
             if(loginType === "ServiceWorker") router.push("/dashboard/worker/");
             if(loginType === "ClientUser") router.push("/dashboard/client");
             if(loginType === "SuperAdmin") router.push("/dashboard/admin");
+            if(!loginType) router.push("/");
         })
     }
     
@@ -82,15 +83,16 @@ const Container = ({
     <Layout >
         <Layout>
             <Content>
-                <Header className="!bg-white flex items-center gap-3 justify-between !py-4 !h-[80px] md:!px-28 !sticky top-0 z-3" >
+                <Header className="bg-white! flex items-center gap-3 justify-between py-4! h-20 md:px-28! sticky! top-0 z-3" >
                     <div className='flex items-center gap-20'>
-                        <Link href="/" className=''>
+                        {/* <Link href="/" className=''> */}
                         <Image 
                             src={Logo}
                             alt='Safe Habour'
-                            className="bg-white"
+                            className="bg-white cursor-pointer"
+                            onClick={handleGoDashboard} 
                         />
-                        </Link>
+                        {/* </Li/</Header>nk> */}
                        
 
                         {!hide && <div className="bg-white md:flex items-center gap-8 hidden">
@@ -106,28 +108,28 @@ const Container = ({
                     
 
                     {!hide && !isAuthenticated && <div className='hidden md:flex items-center gap-4'>
-                        <Button type="text" className='!text-[#667085] !h-[44px] w-[94px] !text-base' onClick={() => router.push("/auth/login")}>Login</Button>
-                        <Button type='primary' className='!h-[44px] w-[94px] !rounded-[8px]' onClick={() => router.push("/auth/choose-auth")}>Sign Up</Button>
+                        <Button type="text" className='text-[#667085]! h-11! w-23.5 text-base!' onClick={() => router.push("/auth/login")}>Login</Button>
+                        <Button type='primary' className='h-11! w-23.5 rounded-lg!' onClick={() => router.push("/auth/choose-auth")}>Sign Up</Button>
                     </div>}
 
                     {!hide && isAuthenticated && <div className='hidden md:flex items-center gap-4'>
-                        <Button type="text" loading={loading} className='!text-[#667085] !h-[44px] w-[94px] !text-base' onClick={handleAskLogout}>Logout</Button>
-                        <Button type='primary' className='!h-[44px] w-[124px] !rounded-[8px]' loading={isPending} onClick={handleGoDashboard}>Dashboard</Button>
+                        <Button type="text" loading={loading} className='text-[#667085]! h-11! w-23.5! text-base!' onClick={handleAskLogout}>Logout</Button>
+                        <Button type='primary' className='h-11! w-31 rounded-lg!' loading={isPending} onClick={handleGoDashboard}>Dashboard</Button>
                     </div>}
 
-                    {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
+                    {<MenuOutlined className='md:hidden! text-2xl' onClick={() => setOpen(!open)} />}
 
                 </Header>
-                <Layout className={`!bg-white ${center && "!flex !flex-col items-center justify-center"}`} >
+                <Layout className={`bg-white! ${center && "flex! flex-col! items-center justify-center"}`} >
                     {children}
                 </Layout>
-                <Footer className="!bg-[#250007] !text-white px-4 md:px-20">
-                    <Row gutter={[4, 8]} className="md:!py-16 md:!px-8">
+                <Footer className="bg-[#250007]! text-white! px-4 md:px-20">
+                    <Row gutter={[4, 8]} className="md:py-16! md:px-8!">
                         <Col lg={15} sm={24} xs={24} className="flex flex-col gap-4 mb-10 md:mb-0">
-                            <Link href="/" className='!mb-6'>
-                                <Image src={MaskedLogo} className="" alt="footer logo" />
-                            </Link>
-                            <p className='md:!w-1/2 !mt-6'>Connecting Canadian families with trusted, vetted care professionals for peace of mind and quality service.</p>
+                            {/* <Link href="/" className='mb-6!'> */}
+                            <Image src={MaskedLogo} onClick={handleGoDashboard} className="cursor-pointer mb-6!" alt="footer logo" />
+                            {/* </Link> */}
+                            <p className='md:w-1/2! mt-6!'>Connecting Canadian families with trusted, vetted care professionals for peace of mind and quality service.</p>
                         </Col>
                         <Col lg={3} sm={12} xs={12} className="footer-menu">
                             <p className="text-[#98A2B3] font-bold">Services</p>
@@ -155,12 +157,12 @@ const Container = ({
                             <Link href="/terms">Terms of Services</Link>
                         </Col>
                     </Row>
-                    <Row className="!flex !items-center !justify-between md:!border-t md:border-t-[#D1D1D1] !pt-8 md:!pb-6">
+                    <Row className="flex! items-center justify-between md:border-t! md:border-t-[#D1D1D1] pt-8! md:pb-6!">
                         <p>© 2025 Safe Harbour. All rights reserved.</p>
 
-                        <div className='!flex !items-center gap-2 md:!gap-4 mt-2 md:mt-0'>
-                            <TwitterOutlined  className='!text-2xl'/>
-                            <LinkedinFilled className='!text-2xl' />
+                        <div className='flex! items-center gap-2 md:gap-4! mt-2 md:mt-0'>
+                            <TwitterOutlined  className='text-2xl!'/>
+                            <LinkedinFilled className='text-2xl!' />
                             <Image src={FaceBook} alt='facebook icon' />
                         </div>
                     </Row>

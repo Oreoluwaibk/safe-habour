@@ -14,7 +14,7 @@ interface props {
 }
 const RoundBtn = ({ icon, title, onClick, primary, width = 144, height = 44, loading, bg, color }: props) => {
   return (
-    <Button  onClick={onClick} loading={loading} type={primary ? "primary" : 'default'} className={`!h-[${height}px] min-w-[${width}px] !rounded-[200px]`} style={{width: width ? width : undefined, height: height?height:undefined, backgroundColor: bg, color}} icon={icon}>
+    <Button  onClick={onClick} loading={loading} type={primary ? "primary" : 'default'} className={`h-[${height}px]! min-w-[${width}px] !rounded-[200px]`} style={{width: width ? width : undefined, height: height?height:undefined, backgroundColor: bg, color}} icon={icon}>
         {title}
     </Button>
   )

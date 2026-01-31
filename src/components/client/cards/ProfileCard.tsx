@@ -76,29 +76,29 @@ const ProfileCard = ({ onClick, worker, loading, status, applicationId, user, on
     <Card loading={loading} variant="borderless" styles={{ body: {padding: 0}}}>
         <Row className='booking-card' gutter={[15, 15]}>
             <Col lg={6} sm={6} xs={6} className='flex items-center justify-center'>
-                {worker.profilePicturePath && <AntdImage src={`${pictureUrl}${worker.profilePicturePath}`} alt={worker.firstName} className='object-cover !w-[100px] !h-[100px] rounded-[100px]' />}
+                {worker.profilePicturePath && <AntdImage src={`${pictureUrl}${worker.profilePicturePath}`} alt={worker.firstName} className='object-cover w-25! h-25! rounded-[100px]' />}
 
-                {!worker.profilePicturePath && <Avatar icon={<UserOutlined className='text-4xl' />} alt={worker.firstName} className='object-cover !w-[100px] !h-[100px] rounded-[100px]' />}
+                {!worker.profilePicturePath && <Avatar icon={<UserOutlined className='text-4xl' />} alt={worker.firstName} className='object-cover w-25! h-25! rounded-[100px]' />}
             </Col>
             
 
             <Col lg={18} sm={18} xs={18} className='flex flex-col gap-2'>
                 <div className='flex items-center justify-between'>
                     <p className="t-pri text-[20px] font-semibold">{worker.firstName} {worker.lastName}</p>
-                    <div className='text-[#018a06] bg-[#f4fff5] rounded-[12px] p-4 flex items-center text-[12px] gap-1 !h-[15px] !w-fit'>
+                    <div className='text-[#018a06] bg-[#f4fff5] rounded-xl p-4 flex items-center text-[12px] gap-1 h-3.75 w-fit!'>
                         <ClockCircleOutlined />
                         <p className=''>{worker.isVerified ? "Verified Professional": "Awaiting Verification"}</p>
                     </div>
                 </div>
 
                 <div className='flex items-center gap-1 mb-2'>
-                    <StarFilled className='!text-[#ffdd33]' />
+                    <StarFilled className='text-[#ffdd33]!' />
                     <span className='t-[#323232] font-medium'>{worker.averageRating}</span>
                     <span className='text-[#585858]'>({worker.reviewCount} Reviews)</span>
                 </div>
 
                 <div className='flex items-center justify-between mb-2'>
-                    <div className='text-[#670316] bg-[#fff9fa] rounded-[12px] p-4 flex items-center text-[12px] gap-1 !h-[15px] !w-fit'>
+                    <div className='text-[#670316] bg-[#fff9fa] rounded-xl p-4 flex items-center text-[12px] gap-1 h-3.75! w-fit!'>
                         <EnvironmentFilled />
                         <p className=''>{worker.streetAddress} {worker.city} {worker.country}</p>
                     </div>
@@ -108,9 +108,9 @@ const ProfileCard = ({ onClick, worker, loading, status, applicationId, user, on
 
                 <div className='flex items-center justify-end mt-6'>
                     {status && <p className='text-[#670316] font-medium text-lg mr-4'>${worker.hourlyRate?.toFixed(2)}/hr</p>}
-                    {status === "1" && applicationId && <Button type='default' className='!h-[40px] w-[128px] !rounded-[50px] !font-medium' onClick={() => setOpenModal(true)}>Cancel</Button>}
-                    {status === "2" && applicationId && <Button type='default' className='!h-[40px] w-[128px] !rounded-[50px] !font-medium' onClick={handleCheckHistory} loading={checkLoading}>Message</Button>}
-                    {status !== "1" && status !== "2" && <Button type='primary' className='!h-[40px] w-[128px] !rounded-[50px] primary-bg text-white !font-medium' onClick={onClick}>Hire Me</Button>}
+                    {status === "1" && applicationId && <Button type='default' className='h-10! w-32 rounded-[50px]! font-medium!' onClick={() => setOpenModal(true)}>Cancel</Button>}
+                    {status === "2" && applicationId && <Button type='default' className='h-10! w-32 rounded-[50px]! font-medium!' onClick={handleCheckHistory} loading={checkLoading}>Message</Button>}
+                    {status !== "1" && status !== "2" && <Button type='primary' className='h-10! w-32 rounded-[50px]! primary-bg text-white font-medium!' onClick={onClick}>Hire Me</Button>}
 
                 </div>
 

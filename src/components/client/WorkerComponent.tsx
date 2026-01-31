@@ -246,7 +246,7 @@ const WorkerComponent = ({ isDashboard }: props) => {
                         title="Filter By"
                         collapsed={collasped}
                         collapsible
-                        className="!bg-white flex flex-col gap-7 px-4 py-4"
+                        className="bg-white! flex flex-col gap-7 px-4 py-4"
                         width={318}
                         trigger={null}
                         onCollapse={(col) => setCollapsed(col)}
@@ -316,14 +316,14 @@ const WorkerComponent = ({ isDashboard }: props) => {
                                     value={Number(filters.minHourlyRate)} 
                                     min={0} 
                                     onChange={(value) => setFilters(prev => ({...prev, minHourlyRate: Number(value)}))} placeholder="Min" 
-                                    className="bg-white h-[42px] !w-[81px] rounded-[12px]" 
+                                    className="bg-white h-10.2 w-20.25! rounded-xl" 
                                 />-
                                 <InputNumber 
                                     value={Number(filters.maxHourlyRate)} 
                                     min={Number(filters.minHourlyRate) || 0} 
                                     onChange={(value) => setFilters(prev => ({...prev, maxHourlyRate: Number(value)}))}  
                                     placeholder="Max" 
-                                    className="bg-white h-[42px] !w-[81px] rounded-[12px]" 
+                                    className="bg-white h-10.5 w-20.25! rounded-xl" 
                                 />
                             </div>
                         </div>                      
@@ -360,7 +360,7 @@ const WorkerComponent = ({ isDashboard }: props) => {
                                 ))}
 
                                 {workers.length === 0 && (
-                                    <Col lg={24} sm={24} xs={24} className="min-h-2/5 !flex items-center justify-center">
+                                    <Col lg={24} sm={24} xs={24} className="min-h-2/5 flex! items-center justify-center">
                                         <p className="text-center text-[#121212]">You have no worker in this category!</p>
                                     </Col>
                                 )}
@@ -378,7 +378,7 @@ const WorkerComponent = ({ isDashboard }: props) => {
                                     current={filters.pageNumber}
                                     pageSize={filters.pageSize}
                                     align="center"
-                                    className="border-t border-t-[#eaecf0] !pt-4"
+                                    className="border-t border-t-[#eaecf0] pt-4!"
                                     onChange={handlePagination}
                                 />
                             </Col>

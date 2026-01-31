@@ -108,8 +108,8 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
 
       <FormItem label="Time" name="preferredEndDate" rules={[{required: true}]}>
         <TimePicker.RangePicker 
+          needConfirm={false}
           style={{width: "100%", height: 42}} 
-          // format="HH:mm A"
           onChange={(dates, dateStrings) => {
             // setTime({
             //   start: dateString[0],
@@ -140,9 +140,6 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
 
             setNoOfHours(`${hours}h ${minutes}m`)
           }}
-          // placeholder="Select Date"
-         
-
         />
       </FormItem>
 
@@ -172,7 +169,7 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
           type="primary" 
           loading={loading} 
           htmlType="submit" 
-          className='md:!w-[129px] !h-[48px]' 
+          className='md:w-32.25! h-12!' 
           style={{borderRadius: 50}}>
             Send Request
           </Button>

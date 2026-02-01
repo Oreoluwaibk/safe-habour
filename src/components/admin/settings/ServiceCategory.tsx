@@ -81,6 +81,14 @@ const ServiceCategory = () => {
         })
     }
 
+    const handleAsk = (id: number) => {
+        modal.info({
+            title: "Are you sure you want to delete this category",
+            onOk: ()=> handleDeleteService(id),
+            closable: true
+        })
+    }
+
     const handleDeleteService = (id: number) => {
         setDeleteLoading(true);
         deleteServicesCategory(id)
@@ -138,7 +146,7 @@ const ServiceCategory = () => {
                         deleteLoading={deleteLoading && selected === category.id}
                         isDelete={() => {
                             setSelected(category.id)
-                            handleDeleteService(category.id);
+                            handleAsk(category.id);
                         }}
                         value={category.isActive}
                     />

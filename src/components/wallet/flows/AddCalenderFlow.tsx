@@ -114,6 +114,7 @@ const AddCalenderFlow: React.FC<Props> = ({
                         value={startTime}
                         onChange={handleSetStart}
                         format="HH:mm"
+                        needConfirm={false}
                       />
                     </FormItem>
                   </Col>
@@ -124,6 +125,7 @@ const AddCalenderFlow: React.FC<Props> = ({
                         // value={endTime}
                         onChange={handleSetEnd}
                         format="HH:mm"
+                        needConfirm={false}
                       />
                     </FormItem>
                   </Col>

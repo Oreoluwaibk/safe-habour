@@ -102,7 +102,7 @@ const Container = ({
                             <NavItem href="/how-it-works" label="How it works" active={active === 'How it works'} /> 
                             <NavItem href="/trust-and-safety" label="Trust & Safety" active={active === 'Trust & Safety'} /> 
                             <NavItem href="/faqs" label="FAQs" active={active === 'FAQs'} /> 
-                            <NavItem href="/blogs" label="Blogs" active={active === 'Blogs'} /> 
+                            {/* <NavItem href="/blogs" label="Blogs" active={active === 'Blogs'} />  */}
                         </div>}
                     </div>
                     
@@ -147,7 +147,7 @@ const Container = ({
                             <Link href="/how-it-works">How It Works</Link>
                             <Link href="/trust-and-safety">Trust & Safety</Link>
                             <Link href="/contact-us">Contact</Link>
-                            <Link href="/blogs">Blog</Link>
+                            {/* <Link href="/blogs">Blog</Link> */}
                         </Col>
                         <Col lg={3} sm={12} xs={12} className="footer-menu mt-5 md:mt-0">
                             <p className="text-[#98A2B3] font-bold">Support</p>

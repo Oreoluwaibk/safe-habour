@@ -18,12 +18,13 @@ const Page = () => {
 
       <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
-          options={["Calendar", "Upcoming Jobs", "Weekly Template"]}
+          options={["Calendar", "Upcoming Jobs", ]}
           defaultValue='Calendar'
           value={active}
           onChange={(value) => setActive(value)}
         />
       </div>
+      {/* "Weekly Template" */}
 
       <Row className='min-h-[90vh] mt-4'>
        {active === "Calendar" && <Col lg={24} sm={24} xs={24}>
@@ -32,9 +33,9 @@ const Page = () => {
         {active === "Upcoming Jobs" && <Col lg={24} sm={24} xs={24}>
           <UpcomingSchedule />
         </Col>}
-        {active === "Weekly Template" && <Col lg={24} sm={24} xs={24} >
+        {/* {active === "Weekly Template" && <Col lg={24} sm={24} xs={24} >
           <WeeklyTemplate />
-        </Col>}
+        </Col>} */}
         
       </Row>
     </WorkerContainer>

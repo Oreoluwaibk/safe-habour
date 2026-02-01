@@ -170,7 +170,7 @@ const ProfileInfo = ({
                     
 
                     <div className='flex flex-col gap-1'>
-                        <CardTitle title={authentication?.fullName || ""} status={<Status title={authentication?.isVerified ? 'Verified' : "Unverified"} color={authentication?.isVerified ? '#018A06': "#ff0004"} bg={authentication?.isVerified ? '#f3fff4' : "#FFF7F9"} />} />
+                        <CardTitle title={authentication?.fullName || ""} status={<Status title={authentication?.isVerified ? 'Verified' : "Unverified"} color={authentication?.isProfileComplete ? '#018A06': "#ff0004"} bg={authentication?.isVerified ? '#f3fff4' : "#FFF7F9"} />} />
                         <div className='flex items-center gap-3'>
                             <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' />{authentication?.streetAddress} {authentication?.city} {authentication?.country}</span>
                             <Rating />

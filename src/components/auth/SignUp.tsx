@@ -200,9 +200,9 @@ const SignUp = ({ type }: { type: string | null }) => {
                 <Input placeholder="Enter your email" style={{height: 48}} type="text" />
             </FormItem>
 
-            <FormItem label="Referral Code" name="referral_code" >
+            {/* <FormItem label="Referral Code" name="referral_code" >
                 <Input placeholder="Enter your referral code" style={{height: 48}} type="text" />
-            </FormItem>
+            </FormItem> */}
 
              <FormItem 
                 label="Phone Number" 

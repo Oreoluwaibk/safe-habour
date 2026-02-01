@@ -18,7 +18,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 const Page = () => {
   const router = useRouter();
-  const [ closeInfo, setCloseInfo ] = useState(true);
+  const [ closeInfo, setCloseInfo ] = useState(false);
   const { message, modal } = App.useApp();
   const { user } = useAppSelector(state => state.auth);
   const { authentication } = useAuthentication();

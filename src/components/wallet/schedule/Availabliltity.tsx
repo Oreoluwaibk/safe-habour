@@ -43,49 +43,49 @@ const Availabliltity = () => {
   const [availability, setAvailability] = useState(false);
 
   // Fetch schedules from backend
-  
-    const handleGetAvailabilty = useCallback(() => {
-        setLoading(true);
-        getSchedule()
-        .then(res => {
-            setLoading(false);
-            if(res.status === 200) setAvailableDays(res.data.data);
-        })
-        .catch(err => {
-            setLoading(false);
-            modal.error({
-            title: 'Unable to get schedule',
-            content: err?.response ? createErrorMessage(err.response.data) : err.message,
-            });
-        });
-    }, [modal]);
 
-    useEffect(() => {
-        handleGetAvailabilty();
-    }, [handleGetAvailabilty]);
+  const handleGetAvailabilty = useCallback(() => {
+    setLoading(true);
+    getSchedule()
+    .then(res => {
+      setLoading(false);
+      if(res.status === 200) setAvailableDays(res.data.data);
+    })
+    .catch(err => {
+      setLoading(false);
+      modal.error({
+        title: 'Unable to get schedule',
+        content: err?.response ? createErrorMessage(err.response.data) : err.message,
+      });
+    });
+  }, [modal]);
 
-    useEffect(() => {
-        if(selectedDays.length === 0) {
-            handleReset();
-        }
-    }, [selectedDays]);
+  useEffect(() => {
+    handleGetAvailabilty();
+  }, [handleGetAvailabilty]);
 
-    const handleReset = () => {
-        setEditDays([]);
-        setIsAvailable(false);
-        setAvailability(false);
-        setPayload({
-            dayOfWeek: null,
-            startTime: '',
-            endTime: '',
-            isAvailable: false,
-            notes: '',
-            scheduleDate: ''
-        });
-        setStartTime(null);
-        setEndTime(null);
-    }
-    const onDateChange: CalendarProps<Dayjs>['onChange'] = (date) => {
+  useEffect(() => {
+      if(selectedDays.length === 0) {
+          handleReset();
+      }
+  }, [selectedDays]);
+
+  const handleReset = () => {
+    setEditDays([]);
+    setIsAvailable(false);
+    setAvailability(false);
+    setPayload({
+      dayOfWeek: null,
+      startTime: '',
+      endTime: '',
+      isAvailable: false,
+      notes: '',
+      scheduleDate: ''
+    });
+    setStartTime(null);
+    setEndTime(null);
+  }
+  const onDateChange: CalendarProps<Dayjs>['onChange'] = (date) => {
     if (!date) return;
 
     const dateStr = dayjs(date).format('YYYY-MM-DD');
@@ -93,20 +93,20 @@ const Availabliltity = () => {
 
     setSelectedDays(prev => {
         // Check if mixing saved and unsaved dates
-        const isMixing = prev.some(d => {
-        const dHasSchedule = avaliableDays.some(s => s.scheduleDate.split('T')[0] === d.format('YYYY-MM-DD'));
+      const isMixing = prev.some(d => {
+      const dHasSchedule = avaliableDays.some(s => s.scheduleDate.split('T')[0] === d.format('YYYY-MM-DD'));
         return dHasSchedule !== hasSchedule;
-        });
+      });
 
-        if (isMixing) {
+      if (isMixing) {
         message.warning("You cannot select dates with saved schedules together with unsaved dates. Selection has been reset.");
         return [date]; // reset selection to just this date
-        }
+      }
 
-        // Toggle date selection
-        const exists = prev.some(d => d.isSame(date, 'day'));
-        if (exists) return prev.filter(d => !d.isSame(date, 'day'));
-        return [...prev, date];
+      // Toggle date selection
+      const exists = prev.some(d => d.isSame(date, 'day'));
+      if (exists) return prev.filter(d => !d.isSame(date, 'day'));
+      return [...prev, date];
     });
 
     setSelectedDay(date);
@@ -116,156 +116,157 @@ const Availabliltity = () => {
     setEditDays(schedules);
 
     if (schedules.length) {
-        const first = schedules[0];
-        setPayload({ ...first });
-        setIsAvailable(true);
-        setAvailability(true);
-        setStartTime(dayjs(first.startTime));
-        setEndTime(dayjs(first.endTime));
+      const first = schedules[0];
+      setPayload({ ...first });
+      setIsAvailable(true);
+      setAvailability(true);
+      setStartTime(dayjs(first.startTime));
+      setEndTime(dayjs(first.endTime));
     } else {
-        setPayload({
+      setPayload({
         dayOfWeek: date.day(),
         startTime: '',
         endTime: '',
         isAvailable: false,
         notes: '',
         scheduleDate: ''
-        });
-        setIsAvailable(false);
-        setAvailability(false);
-        setStartTime(null);
-        setEndTime(null);
+      });
+      setIsAvailable(false);
+      setAvailability(false);
+      setStartTime(null);
+      setEndTime(null);
     }
-    };
+  };
 
-    const handleSave = (availabilityFlag: boolean = false) => {
-        if(editDays.length) handleUpdateSchedules(availabilityFlag);
-        else handleSetSchedules(availabilityFlag);
-    };
+  const handleSave = (availabilityFlag: boolean = false) => {
+      if(editDays.length) handleUpdateSchedules(availabilityFlag);
+      else handleSetSchedules(availabilityFlag);
+  };
 
-    const handleSetSchedules = (availabilityFlag: boolean = false) => {
-        if(selectedDays.length === 0) return;
+  const handleSetSchedules = (availabilityFlag: boolean = false) => {
+    if(selectedDays.length === 0) return;
 
-        const payloads: schedule[] = selectedDays.map(day => ({
-        ...payLoad,
-        isAvailable: availabilityFlag,
-        scheduleDate: day.toISOString(),
-        dayOfWeek: day.day()
-        }));
+    const payloads: schedule[] = selectedDays.map(day => ({
+      ...payLoad,
+      isAvailable: availabilityFlag,
+      scheduleDate: day.toISOString(),
+      dayOfWeek: day.day()
+    }));
 
-        setLoading(true);
-        saveBulkSchedule(payloads)
-        .then(res => {
-            setLoading(false);
-            message.success('Schedules have been created successfully!');
-            handleGetAvailabilty();
-            setEditDays(res.data.data);
-        })
-        .catch(err => {
-            setLoading(false);
-            modal.error({
-            title: 'Unable to create schedules',
-            content: err?.response ? createErrorMessage(err.response.data) : err.message,
-            });
-        });
-    };
+    setLoading(true);
+    saveBulkSchedule(payloads)
+    .then(res => {
+      setLoading(false);
+      message.success('Schedules have been created successfully!');
+      handleGetAvailabilty();
+      setEditDays(res.data.data);
+      setSelectedDays([])
+    })
+    .catch(err => {
+      setLoading(false);
+      modal.error({
+        title: 'Unable to create schedules',
+        content: err?.response ? createErrorMessage(err.response.data) : err.message,
+      });
+    });
+  };
 
-    const handleUpdateSchedules = (availabilityFlag: boolean = false) => {
-        if(editDays.length === 0) return;
+  const handleUpdateSchedules = (availabilityFlag: boolean = false) => {
+    if(editDays.length === 0) return;
 
-        const payloads: schedule[] = selectedDays.map(day => ({
-        ...payLoad,
-        isAvailable: availabilityFlag,
-        scheduleDate: day.toISOString(),
-        dayOfWeek: day.day(),
-        id: editDays.find(d => d.scheduleDate.split('T')[0] === day.format('YYYY-MM-DD'))?.id
-        }));
+    const payloads: schedule[] = selectedDays.map(day => ({
+      ...payLoad,
+      isAvailable: availabilityFlag,
+      scheduleDate: day.toISOString(),
+      dayOfWeek: day.day(),
+      id: editDays.find(d => d.scheduleDate.split('T')[0] === day.format('YYYY-MM-DD'))?.id
+    }));
 
-        setLoading(true);
-        updateBulkSchedule(payloads) // assuming endpoint accepts multiple IDs + array payload
-        .then(res => {
-            setLoading(false);
-            message.success('Schedules have been updated successfully!');
-            handleGetAvailabilty();
-            setEditDays(res.data.data);
-        })
-        .catch(err => {
-            setLoading(false);
-            modal.error({
-            title: 'Unable to update schedules',
-            content: err?.response ? createErrorMessage(err.response.data) : err.message,
-            });
-        });
-    };
+    setLoading(true);
+    updateBulkSchedule(payloads) // assuming endpoint accepts multiple IDs + array payload
+    .then(res => {
+      setLoading(false);
+      message.success('Schedules have been updated successfully!');
+      handleGetAvailabilty();
+      setEditDays(res.data.data);
+    })
+    .catch(err => {
+      setLoading(false);
+      modal.error({
+        title: 'Unable to update schedules',
+        content: err?.response ? createErrorMessage(err.response.data) : err.message,
+      });
+    });
+  };
 
-    const handleToggleMarkAvailable = (availabilityFlag: boolean) => {
-        if(!selectedDay) return;
-        if(editDays.length === 0) return;
+  const handleToggleMarkAvailable = (availabilityFlag: boolean) => {
+      if(!selectedDay) return;
+      if(editDays.length === 0) return;
 
-        const payloads: schedule[] = selectedDays.map(day => ({
-        ...payLoad,
-        isAvailable: availabilityFlag,
-        scheduleDate: day.toISOString(),
-        dayOfWeek: day.day(),
-        id: editDays.find(d => d.scheduleDate.split('T')[0] === day.format('YYYY-MM-DD'))?.id
-        }));
+      const payloads: schedule[] = selectedDays.map(day => ({
+      ...payLoad,
+      isAvailable: availabilityFlag,
+      scheduleDate: day.toISOString(),
+      dayOfWeek: day.day(),
+      id: editDays.find(d => d.scheduleDate.split('T')[0] === day.format('YYYY-MM-DD'))?.id
+      }));
 
-        setMarkLoading(true);
-        updateBulkSchedule(payloads)
-        .then(res => {
-            setMarkLoading(false);
-            message.success(`This time has been marked ${availabilityFlag ? 'available' : 'unavailable'}!`);
-            handleGetAvailabilty();
-            setPayload(prev=> ({ ...prev, isAvailable: availabilityFlag }));
-            setEditDays(res.data.data);
-        })
-        .catch(err => {
-            setMarkLoading(false);
-            modal.error({
-            title: 'Unable to toggle availability',
-            content: err?.response ? createErrorMessage(err.response.data) : err.message,
-            });
-        });
-    };
+      setMarkLoading(true);
+      updateBulkSchedule(payloads)
+      .then(res => {
+          setMarkLoading(false);
+          message.success(`This time has been marked ${availabilityFlag ? 'available' : 'unavailable'}!`);
+          handleGetAvailabilty();
+          setPayload(prev=> ({ ...prev, isAvailable: availabilityFlag }));
+          setEditDays(res.data.data);
+      })
+      .catch(err => {
+          setMarkLoading(false);
+          modal.error({
+          title: 'Unable to toggle availability',
+          content: err?.response ? createErrorMessage(err.response.data) : err.message,
+          });
+      });
+  };
 
-    const handleDeleteSchedule = () => {
-        if (!editDays.length) return;
+  const handleDeleteSchedule = () => {
+      if (!editDays.length) return;
 
-        setDeleteLoading(true);
-        
-        const deletePromises = editDays.map(day => deleteSchedule(day.id!));
+      setDeleteLoading(true);
+      
+      const deletePromises = editDays.map(day => deleteSchedule(day.id!));
 
-        Promise.all(deletePromises)
-        .then(() => {
-            setDeleteLoading(false);
-            message.success('All selected schedules deleted successfully!');
-            handleGetAvailabilty();
+      Promise.all(deletePromises)
+      .then(() => {
+          setDeleteLoading(false);
+          message.success('All selected schedules deleted successfully!');
+          handleGetAvailabilty();
 
-            // Reset states
-            setSelectedDay(null);
-            setSelectedDays([]);
-            setEditDays([]);
-            setIsAvailable(false);
-            setAvailability(false);
-            setStartTime(null);
-            setEndTime(null);
-            setPayload({
-                dayOfWeek: 0,
-                startTime: '',
-                endTime: '',
-                isAvailable: false,
-                notes: '',
-                scheduleDate: ''
-            });
-        })
-        .catch(err => {
-            setDeleteLoading(false);
-            modal.error({
-                title: 'Unable to delete schedules',
-                content: err?.response ? createErrorMessage(err.response.data) : err.message,
-            });
-        });
-    };
+          // Reset states
+          setSelectedDay(null);
+          setSelectedDays([]);
+          setEditDays([]);
+          setIsAvailable(false);
+          setAvailability(false);
+          setStartTime(null);
+          setEndTime(null);
+          setPayload({
+              dayOfWeek: 0,
+              startTime: '',
+              endTime: '',
+              isAvailable: false,
+              notes: '',
+              scheduleDate: ''
+          });
+      })
+      .catch(err => {
+          setDeleteLoading(false);
+          modal.error({
+              title: 'Unable to delete schedules',
+              content: err?.response ? createErrorMessage(err.response.data) : err.message,
+          });
+      });
+  };
 
 
   return (

@@ -50,6 +50,7 @@ const UpcomingContainer = ({ metrics }: props) => {
                 ? createErrorMessage(err.response.data)
                 : err.message,
             });
+             setLoading(false)
         })
     }, [modal])
 
@@ -69,6 +70,7 @@ const UpcomingContainer = ({ metrics }: props) => {
                 ? createErrorMessage(err.response.data)
                 : err.message,
             });
+             setLoading(false)
         })
     }, [modal])
 

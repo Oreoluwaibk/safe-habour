@@ -1,6 +1,6 @@
 "use client"
 import AdminContainer from '@/components/dashboard/AdminContainer'
-import { UserOutlined } from '@ant-design/icons'
+import { LoadingOutlined, UserOutlined } from '@ant-design/icons'
 import { App, Avatar, Button, Card, Col, DatePicker, Form, Image, Input, Row, Select, Upload } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { pictureUrl } from '../../../../../utils/axiosConfig'
@@ -12,6 +12,7 @@ import { getAdminProfile, updateAdminProfile, updateAdminProfilePic } from '@/re
 import { createErrorMessage } from '../../../../../utils/errorInstance'
 import { getAdminRoles, IRoles } from '@/redux/action/admin'
 import { toFormData } from '../../../../../utils/converters'
+import { Icon } from '@iconify/react'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -118,7 +119,8 @@ const Page = () => {
     form.validateFields()
     .then(values => {
       setUpdateLoading(true);
-      updateAdminProfile(values)
+      const formData = toFormData(values) as FormData;
+      updateAdminProfile(formData)
       .then(res => {
         if(res.status === 200) {
           setUpdateLoading(false);
@@ -145,7 +147,7 @@ const Page = () => {
   <AdminContainer active='Profile'>
   <Card classNames={{ body: "bg-[#f6f6f6]!"}}>
     <div>
-      <h1 className='t-pri !font-semibold text-[32px]'>Profile</h1>
+      <h1 className='t-pri font-semibold! text-[32px]'>Profile</h1>
       <p className='t-pri mb-6'>Manage your professional profile and settings</p>
     </div>
 
@@ -167,24 +169,24 @@ const Page = () => {
                 icon={<UserOutlined className='text-2xl' />} 
                 alt=''
                 size={84} 
-                className='h-[84px] w-[84px] rounded-full object-cover' 
+                className='h-21 w-21 rounded-full object-cover' 
               />}
-            {/* {isEdit && (uploading ? <LoadingOutlined spin /> :<Upload
+            {isEdit && (uploading ? <LoadingOutlined spin /> :<Upload
               className='absolute bottom-2 right-0'
               accept=".jpg, .png, .jpeg"
               beforeUpload={handleUploadPicture}
               showUploadList={false}
             >
-            <div className='cursor-pointer bg-[#003E8F] w-[27px] h-[27px] rounded-full flex items-center justify-center'>
+            <div className='cursor-pointer bg-[#003E8F] w-6.75 h-6.75 rounded-full flex items-center justify-center'>
               <Icon icon="mdi:edit" color='#fff' />
             </div>
             </Upload>
-          )} */}
+          )}
           </div>
         </div>
         }
         classNames={{ header: "!py-4", body: "", }}
-        className='!mt-0'
+        className='mt-0!'
       >
       <Form layout="vertical" form={form} onFinish={handleSubmit}>
         <Row gutter={[15, 0]} >
@@ -304,7 +306,7 @@ const Page = () => {
             <div key={1} className='flex items-center gap-4 justify-end'>
               <RoundBtn title={isEdit ? "Cancel" : "Edit"} primary={!isEdit} width={87} onClick={() => setIsEdit(!isEdit)} />
               {isEdit && <FormItem className='flex items-center justify-end m-0! p-0!'>
-                <Button loading={updateLoading} htmlType="submit" type="primary" className='!w-[150px] !h-[40px] !rounded-[100px]'>Save Changes</Button>              
+                <Button loading={updateLoading} htmlType="submit" type="primary" className='w-37.5! h-10 rounded-[100px]!'>Save Changes</Button>              
               </FormItem>}
             </div>
             

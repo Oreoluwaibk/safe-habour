@@ -1,10 +1,12 @@
 "use client"
-import { App, Button, DatePicker, Form, Input, Modal, TimePicker } from 'antd'
+import { App, Button,  Form, Input, Modal, TimePicker } from 'antd'
+import DatePicker, { DateObject } from "react-multi-date-picker";
 import React, { useState } from 'react';
 import "@/styles/modal.css";
 import { IJobHireRequest, UserWorkerProfile } from '../../../../utils/interface';
 import { hireServiceWorker } from '@/redux/action/jobs';
 import { createErrorMessage } from '../../../../utils/errorInstance';
+import moment from 'moment';
 
 interface props {
   open: boolean;
@@ -16,12 +18,13 @@ interface props {
 const FormItem = Form.Item;
 const BookRequest = ({ open, onCancel, worker, type }: props) => {
   const [form] = Form.useForm();
-  const { modal } = App.useApp();
+  const { modal, message } = App.useApp();
   const [ loading, setLoading ] = useState(false);
-  const [ date, setDate ] = useState({
-    start: "",
-    end: ""
-  })
+  // const [ date, setDate ] = useState({
+  //   start: "",
+  //   end: ""
+  // })
+   const [date, setDate] = useState<string[]>([]);
   const [ time, setTime ] = useState({
     start: "",
     end: "",
@@ -35,15 +38,16 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
     .then(value => {
       const payload: IJobHireRequest = {
         timePreference: value.timePreference,
-        preferredStartDate:date.start,
+        preferredStartDate: moment(date[0]).format("YYYY-MM-DD"),
         serviceWorkerId: worker.userId,
         proposedRate: parseFloat(time.amount),
         budget: parseFloat(time.amount),
         hireType: type,
-        preferredEndDate: date.end,
+        preferredEndDate: moment(date[date.length - 1]).format("YYYY-MM-DD"),
         description: value.description,
         timePreferenceEnd: time.end,
-        timePreferenceStart:time.start
+        timePreferenceStart:time.start,
+        preferredDates: date
       }
 
       if(worker.services) payload.serviceCategoryId = worker.services[worker.services.length - 1].serviceCategoryId
@@ -85,7 +89,7 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
   >
     <Form layout="vertical" form={form} className='' onFinish={handleHire}>
       <FormItem label="Day" name="preferredStartDate" rules={[{required: true}]}>
-        <DatePicker.RangePicker 
+        {/* <DatePicker 
           style={{width: "100%", height: 42}} 
           // placeholder="Select Date"
           onChange={(date, dateString) => {
@@ -95,6 +99,22 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
             })
           }}
 
+        /> */}
+        <DatePicker 
+          value={date} 
+           onChange={(dates) => {
+            // dates is an array of DateObject
+            const isoDates = dates.map(d =>
+              d.toDate().toISOString()
+            );
+
+            setDate(isoDates);
+          }} 
+          multiple
+          style={{width: "100%", height: 42, padding: "0 10px"}}
+          containerStyle={{ width: "100%"}}
+          placeholder='Select Date(s)'
+          minDate={new DateObject()} 
         />
       </FormItem>
 
@@ -115,6 +135,7 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
             //   start: dateString[0],
             //   end: dateString[1]
             // })
+            if(date.length === 0) return message.error("Please select date(s) first");
             if (!dates) return;
 
             const [start, end] = dates;
@@ -135,11 +156,12 @@ const BookRequest = ({ open, onCancel, worker, type }: props) => {
               start: dateStrings[0],
               end: dateStrings[1],
               duration: diffInMinutes,
-              amount: totalAmount.toFixed(2)
+              amount:(totalAmount * date.length).toFixed(2)
             });
 
             setNoOfHours(`${hours}h ${minutes}m`)
           }}
+          format="HH:mm"
         />
       </FormItem>
 

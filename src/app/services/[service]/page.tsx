@@ -27,13 +27,13 @@ const Page = ({ params }: {params: Promise<{ service: string }> }) => {
         />
         <IncludedServices service={services} />
         
-        <div className='md:!px-[100px] !px-[10px] pb-10 mt-20 md:pt-0'>
-          <div className='flex items-center justify-between !mb-10'>
-            <p className='!text-[#101828] text-2xl font-semibold'>More Service</p>
+        <div className='md:px-25! px-2.5! pb-10 mt-20 md:pt-0'>
+          <div className='flex items-center justify-between mb-10!'>
+            <p className='text-[#101828]! text-2xl font-semibold'>More Service</p>
 
             <BsArrowRightCircle size={30} className="cursor-pointer" onClick={() => router.push("/services")} />
           </div>
-          <Row gutter={[15, 15]} className='!mx-0 !px-0'>
+          <Row gutter={[15, 15]} className='mx-0! px-0!'>
             {services?.more.map((more, i) => (
               <Col lg={8} sm={12} xs={24} key={i}>
                 <MoreServiceCard link={more.link} title={more.name} description={more.description} image={more.image} items={more.service} />

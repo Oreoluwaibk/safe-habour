@@ -1,3 +1,5 @@
+import { DateObject } from "react-multi-date-picker";
+
 export interface signinReducer {
     user: any,
     isAuthenticated: boolean,
@@ -252,15 +254,16 @@ export interface IJobHireRequest {
   serviceCategoryId?: number;
   budget?: number;
   hireType: HireType;
-  preferredStartDate: string;
+  preferredStartDate: string | DateObject;
   timePreference: number;
   reoccurringDays?: number[];
   proposedRate: number;
   paymentMethodId?: string;
-  "preferredEndDate": string;
+  "preferredEndDate": string | DateObject;
   "timePreferenceStart": string;
   "timePreferenceEnd": string;
   "description"?: string;
+  preferredDates?: DateObject[] | string[];
 }
 
 export interface acceptInvite {
@@ -587,6 +590,15 @@ export interface IServiceDetail {
   id?: string;
 }
 
+
+export interface IAdminServiceCategory {
+  id: number;
+  name: string;
+  description: string;
+  commisionRate: number;
+  isActive: boolean;
+  bookingCount: number | null;
+}
 
 
 

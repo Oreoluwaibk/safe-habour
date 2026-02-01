@@ -29,13 +29,13 @@ const Financial = () => {
                     <InputNumber disabled={!isEdit} placeholder='10' style={{ width: "100%" }} />
                 </FormItem> 
 
-                <Card title="Service Categories">
+                {/* <Card title="Service Categories">
                     {categories.map((savedCategory, i) => (
                         <FormItem key={i} className="finance_form" label={savedCategory.name} layout="horizontal"  style={{ justifyContent: "space-between "}}>
                             <InputNumber disabled={!isEdit} style={{ width: 95, height: 40, justifySelf: "end" }}  />
                         </FormItem>
                     ))}
-                </Card>
+                </Card> */}
 
                  <Card 
                     title={<CardTitle title="Auto-releae Escrow" description="Automatically release after job completion" />}
@@ -44,7 +44,7 @@ const Financial = () => {
                             <Switch disabled={!isEdit} />
                         </FormItem>
                     )}
-                    classNames={{ body: "h-0! p-0!" }}
+                    classNames={{ body: "h-0! p-0! mt-6!" }}
                 />
             </Form>
         </Card>

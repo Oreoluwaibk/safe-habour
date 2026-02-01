@@ -492,7 +492,22 @@ body {
     padding: 10px 20px !important;
 }
 
-.finance_form .ant-form-item-control-input-content {
+.rmdp-day.rmdp-today span,
+.rmdp-day.rmdp-selected span {
+    background-color: #670316 !important;
+}
+
+.rmdp-week-day,
+.rmdp-arrow-container,
+.rmdp-arrow {
+    color: #670316 !important;
+}
+
+.rmdp-day .sd:hover {
+    background-color: #670316 !important;
+}
+
+back .finance_form .ant-form-item-control-input-content {
     display: flex !important;
     align-items: center !important;
     justify-content: flex-end !important;

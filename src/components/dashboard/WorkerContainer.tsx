@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/client.css"
 import { MenuOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Image as AntDImage, App } from 'antd';
+import { Avatar, Layout, Image as AntDImage, App, Button } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState, useTransition } from 'react'
@@ -117,7 +117,7 @@ const WorkerContainer = ({
             <Content className="bg-white">
                 <Header className="client-nav prim-bg bg-white sticky top-5 z-[2]" >
                     <div className='flex items-center justify-between w-[60%]'>
-                        <Link href="/" className=''>
+                        <Link href="/dashboard/worker" className=''>
                         <Image 
                             src={Logo}
                             alt='Safe Habour'
@@ -163,6 +163,7 @@ const WorkerContainer = ({
                         {authentication?.isProfileComplete && <div className="bg-[#EAFFF5] h-[14px] w-[14px] rounded-[100px] flex items-center justify-center absolute z-[1] right-[-4px] top-2">
                             <Image src={CheckedCircle} alt="image" className="!text-[#039855] " />
                         </div>}
+                        <Button type='text' className="text-white! text-xs!" loading={loading} onClick={handleAskLogout}>Logout</Button>
                     </div>
                     
                     {/* <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button> */}

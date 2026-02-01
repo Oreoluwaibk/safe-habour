@@ -104,6 +104,7 @@ const Page = () => {
           ? createErrorMessage(err.response.data)
           : err.message,
       });
+      setLoading(false);
     })
   }, [modal]);
 

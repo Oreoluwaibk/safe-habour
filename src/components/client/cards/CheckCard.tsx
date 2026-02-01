@@ -1,5 +1,5 @@
 import RoundBtn from '@/components/general/RoundBtn';
-import { LoadingOutlined } from '@ant-design/icons';
+import { DeleteFilled, LoadingOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import { Card, Switch } from 'antd'
 import React from 'react'
@@ -12,6 +12,8 @@ interface props {
   onChange?: React.Dispatch<React.SetStateAction<boolean>>;
   loading?: boolean;
   isEdit?: () => void
+  isDelete?: () => void;
+  deleteLoading?: boolean;
 }
 const CheckCard = ({ 
   title, 
@@ -20,7 +22,9 @@ const CheckCard = ({
   onChange,
   onClick,
   loading ,
-  isEdit
+  isEdit,
+  isDelete,
+  deleteLoading
 }: props) => {
   return (
   <Card 
@@ -35,6 +39,7 @@ const CheckCard = ({
     <div className='flex items-center gap-3'>
     {loading ? <LoadingOutlined spin /> :<Switch value={value} checked={value} onClick={onClick} onChange={onChange} />}
     {isEdit && <RoundBtn width={86} onClick={isEdit} title='Edit' icon={<Icon icon="flowbite:edit-outline" fontSize={20} />} />}
+    {isDelete && (deleteLoading ? <LoadingOutlined spin />  :<DeleteFilled className='text-[#670316]! text-xl! cursor-pointer' onClick={isDelete} />)}
     </div>
   </Card>
   )

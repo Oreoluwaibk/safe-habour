@@ -24,7 +24,7 @@ const Page = () => {
 
       <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
-          options={["Profile Info", "Services & Rate", "Verification", "Review"]}
+          options={["Profile Info", "Services", "Verification", "Review"]}
           defaultValue={active}
           value={active}
           onChange={(value) => setActive(value)}
@@ -40,7 +40,7 @@ const Page = () => {
             authLoading={authLoading}
           />
         </Col>}
-        {active === "Services & Rate" && <Col lg={24} sm={24} xs={24}>
+        {active === "Services" && <Col lg={24} sm={24} xs={24}>
           <ServicesInfo 
             authentication={authentication!} 
             handleGetAuthentication={handleGetAuthentication}

@@ -11,7 +11,7 @@ const Page = () => {
   return (
     <WorkerContainer active='Schedule'>
       <div >
-        <h1 className='t-pri !font-semibold text-[32px]'>Schedule Management</h1>
+        <h1 className='t-pri font-semibold! text-[32px]'>Schedule Management</h1>
         <p className='t-pri mb-6'>Manage your availability and view upcoming jobs</p>
 
       </div>

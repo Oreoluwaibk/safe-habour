@@ -24,16 +24,15 @@ const ServiceInfoCard = ({
     refresh
 }: props) => {
     const [ openAddModal, setOpenAddModal ] = useState(false);
-    console.log("ser", service);
   return (
     <>
     <Card 
         title={<CardTitle title={title} description={description} />}
         extra={<div className='flex items-center gap-2'>
-            <div className='flex flex-col items-center'>
+            {/* <div className='flex flex-col items-center'>
                 <p className='text-lg text-[#1e1e1e] font-semibold'>{rate}</p>
                 <p className='text-[#646464] text-sm'>Current rate</p>
-            </div>
+            </div> */}
             <RoundBtn width={86} onClick={() => setOpenAddModal(true)} title='Edit' icon={<Icon icon="flowbite:edit-outline" fontSize={20} />} />
         </div>}
         className='p-0'

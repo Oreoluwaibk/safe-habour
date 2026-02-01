@@ -125,7 +125,7 @@ const ClientContainer = ({
             <Content className="bg-white">
                 <Header className="client-nav prim-bg bg-white" >
                     <div className='flex items-center justify-between w-[50%]'>
-                        <Link href="/" className=''>
+                        <Link href="/dashboard/client" className=''>
                         <Image 
                             src={Logo}
                             alt='Safe Habour'

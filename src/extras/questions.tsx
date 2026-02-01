@@ -76,21 +76,21 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/service/snow-plowing"
+                link: "/services/snow-plowing"
             },
             {
                 image: PCook,
                 name: "Personal Cooks",
                 description: "Professional meal preparation and cooking services",
                 service: ["Meal planning", "Special diets"],
-                link: "/service/personal-cooks"
+                link: "/services/personal-cooks"
             },
             {
                 image: HouseClean,
                 name: "House Chores & Cleaning",
                 description: "Comprehensive home maintenance and cleaning services",
                 service: ["Deep cleaning", "Regular maintenance"],
-                link: "/service/house-chores"
+                link: "/services/house-chores"
             }
         ]
     },
@@ -115,21 +115,21 @@ export const serviceTypes = [
                 name: "Care Worker",
                 description: "Professional personal care and support for seniors and individuals with disabilities",
                 service: ["Evening babysitting","After-school care"],
-                link: "/service/care-workers"
+                link: "/services/care-workers"
             },
             {
                 image: PCook,
                 name: "Personal Cooks",
                 description: "Professional meal preparation and cooking services",
                 service: ["Meal planning", "Special diets"],
-                link: "/service/personal-cooks"
+                link: "/services/personal-cooks"
             },
             {
                 image: HouseClean,
                 name: "House Chores & Cleaning",
                 description: "Comprehensive home maintenance and cleaning services",
                 service: ["Deep cleaning", "Regular maintenance"],
-                link: "/service/house-chores"
+                link: "/services/house-chores"
             }
         ]
     },
@@ -156,21 +156,21 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/service/snow-plowing"
+                link: "/services/snow-plowing"
             },
             {
                 image: CareWork,
                 name: "Care Worker",
                 description: "Professional personal care and support for seniors and individuals with disabilities",
                 service: ["Evening babysitting","After-school care"],
-                link: "/service/care-workers"
+                link: "/services/care-workers"
             },
             {
                 image: HouseClean,
                 name: "House Chores & Cleaning",
                 description: "Comprehensive home maintenance and cleaning services",
                 service: ["Deep cleaning", "Regular maintenance"],
-                link: "/service/house-chores"
+                link: "/services/house-chores"
             }
         ]
     },
@@ -195,21 +195,21 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/service/snow-plowing"
+                link: "/services/snow-plowing"
             },
             {
                 image: CareWork,
                 name: "Care Worker",
                 description: "Professional personal care and support for seniors and individuals with disabilities",
                 service: ["Evening babysitting","After-school care"],
-                link: "/service/care-workers"
+                link: "/services/care-workers"
             },
             {
                 image: PCook,
                 name: "Personal Cooks",
                 description: "Professional meal preparation and cooking services",
                 service: ["Meal planning", "Special diets"],
-                link: "/service/personal-cooks"
+                link: "/services/personal-cooks"
             },
         ]
     },
@@ -234,21 +234,21 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/service/snow-plowing"
+                link: "/services/snow-plowing"
             },
             {
                 image: CareWork,
                 name: "Care Worker",
                 description: "Professional personal care and support for seniors and individuals with disabilities",
                 service: ["Evening babysitting","After-school care"],
-                link: "/service/care-workers"
+                link: "/services/care-workers"
             },
             {
                 image: PCook,
                 name: "Personal Cooks",
                 description: "Professional meal preparation and cooking services",
                 service: ["Meal planning", "Special diets"],
-                link: "/service/personal-cooks"
+                link: "/services/personal-cooks"
             },
         ]
     },
@@ -273,21 +273,21 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/service/snow-plowing"
+                link: "/services/snow-plowing"
             },
             {
                 image: CareWork,
                 name: "Care Worker",
                 description: "Professional personal care and support for seniors and individuals with disabilities",
                 service: ["Evening babysitting","After-school care"],
-                link: "/service/care-workers"
+                link: "/services/care-workers"
             },
             {
                 image: PCook,
                 name: "Personal Cooks",
                 description: "Professional meal preparation and cooking services",
                 service: ["Meal planning", "Special diets"],
-                link: "/service/personal-cooks"
+                link: "/services/personal-cooks"
             },
         ]
     },

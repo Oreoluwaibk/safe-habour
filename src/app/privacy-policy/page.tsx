@@ -212,8 +212,8 @@ export default function Home() {
     </p>
     <p>
       <strong>Attn:</strong> Privacy Officer<br />
-      <strong>Email:</strong> dpo@seosafeharbour.com<br />
-      <strong>Address:</strong> [Insert Registered Canadian Office]
+      {/* <strong>Email:</strong> dpo@seosafeharbour.com<br />
+      <strong>Address:</strong> [Insert Registered Canadian Office] */}
     </p>
   </div>
 </div>

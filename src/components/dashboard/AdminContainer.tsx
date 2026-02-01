@@ -120,7 +120,7 @@ const AdminContainer = ({
             <Content className="bg-white min-h-[80vh]">
                 <Header className="client-nav prim-bg bg-white sticky top-5 z-[2]" >
                     <div className='flex items-center justify-between w-[60%]'>
-                        <Link href="/" className=''>
+                        <Link href="/dashboard/admin" className=''>
                             <Image 
                                 src={Logo}
                                 alt='Safe Habour'

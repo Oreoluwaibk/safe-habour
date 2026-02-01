@@ -1,17 +1,18 @@
 import RoundBtn from '@/components/general/RoundBtn';
 import { App, Form, Input, InputNumber, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react'
-import { categoryType, IServiceDetail } from '../../../../utils/interface';
+import { categoryType, IAdminServiceCategory, IServiceDetail } from '../../../../utils/interface';
 import { updateServiceWorkerRate } from '@/redux/action/serviceWorker';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { useAuthentication } from '@/hooks/useAuthentication';
+import CardTitle from '@/components/general/CardTitle';
+import { createServiceCategory, editServiceCategory } from '@/redux/action/superAdmin';
 
 interface props {
     open: boolean;
     onCancel: () => void;
     isEdit?: boolean;
-    categories: categoryType[];
-    selected: IServiceDetail | null;
+    selected: IAdminServiceCategory | null;
     refresh: () => void;
 }
 const FormItem = Form.Item;
@@ -20,25 +21,21 @@ const ServiceModal = ({
     onCancel, 
     open, 
     isEdit,
-    categories,
     selected,
     refresh 
 }: props) => {
-    const { authentication } = useAuthentication();
     const [form] = Form.useForm();
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);
-    const [ serviceName, setServiceName ] = useState(selected && categories[selected?.serviceCategoryId]?.name || "")
     
     useEffect(() => {
-        if(isEdit && selected && categories.length > 0) 
-            setServiceName(categories[selected?.serviceCategoryId]?.name)
+        if(isEdit && selected) 
             form.setFieldsValue({
-                serviceCategoryId: selected && categories[selected?.serviceCategoryId]?.name || "",
-                hourlyRate: authentication && authentication?.hourlyRate || 1,
-                yearsOfExperience: selected && selected?.yearsOfExperience || 1
+                name: selected && selected.name || "",
+                commisionRate: selected && selected?.commisionRate || 1,
+                description: selected && selected?.description || ""
             })
-    }, [isEdit, selected, categories, form, authentication])
+    }, [isEdit, selected, form])
     const handleSubmit = () => {
         if(isEdit) handleEdit()
         else handleCreate()
@@ -48,12 +45,12 @@ const ServiceModal = ({
         form.validateFields()
         .then(value => {
             setLoading(true);
-            updateServiceWorkerRate({...value, hourlyRate: authentication && authentication?.hourlyRate || 1,})
+            createServiceCategory(value)
             .then(res => {
-                if(res.status === 200) {
+                if(res.status === 200 || res.status === 201) {
                     setLoading(false);
                     modal.success({
-                        title: "Service rate created successfully",
+                        title: "Service created successfully",
                         onOk: () => {
                             setLoading(false);
                             refresh();
@@ -78,18 +75,14 @@ const ServiceModal = ({
     const handleEdit = () => {
         form.validateFields()
         .then(value => {
-            const payload = {
-                ...value,
-                serviceCategoryId: selected && selected?.serviceCategoryId.toString() || "",
-                hourlyRate: authentication && authentication?.hourlyRate || 1,
-            }
             setLoading(true);
-            updateServiceWorkerRate(payload)
+            const id = selected && selected.id || ""
+            editServiceCategory(id, value)
             .then(res => {
-                if(res.status === 200) {
+                if(res.status === 200 || res.status === 204) {
                     setLoading(false);
                     modal.success({
-                        title: "Service rate updated successfully",
+                        title: "Service category updated successfully",
                         onOk: () => {
                             setLoading(false);
                             refresh();
@@ -115,7 +108,7 @@ const ServiceModal = ({
     <Modal
         open={open}
         onCancel={onCancel}
-        title={<p>{isEdit ? "Edit Service" : "Add New Service"}</p>}
+        title={<CardTitle title={<p>{isEdit ? "Edit Category" : "Add New Category"}</p>} description={<p>{isEdit ? "Edit this service Category" : "Create a New Service Category for the platform"}</p>} />}
         footer={<div className='flex justify-end items-center gap-4'>
             <RoundBtn width={86} title="Cancel" onClick={onCancel} />
             <RoundBtn loading={loading} width={136} title={isEdit ? "Save" : "Add Service"} primary onClick={handleSubmit} />
@@ -124,24 +117,16 @@ const ServiceModal = ({
         className='py-12'
     >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
-            {isEdit && <FormItem name="serviceCategoryId" label="Service Name" rules={[{required: true}]}>
-                <Input placeholder='e.g., Pet Care' disabled value={serviceName} />
-            </FormItem>}
+            <FormItem name="name" label="Service Name" rules={[{required: true}]}>
+                <Input placeholder='e.g., Care Worker' />
+            </FormItem>
 
-            {!isEdit && <FormItem name="serviceCategoryId" label="Service Name" rules={[{required: true}]}>
-                <Select placeholder='e.g., Pet Care' style={{height: 52}}>
-                {categories.map((Category, i: number) => (
-                    <Option value={Category.id} key={i}>{Category.name}</Option>
-                ))}
-                </Select>
-            </FormItem>}
-
-            {/* <FormItem name="hourlyRate" label="Hourly Rate ($)" rules={[{required: true}]}>
+            <FormItem name="commisionRate" label="Commission" rules={[{required: true}]}>
                 <InputNumber min={1} style={{ width: "100%"}} placeholder='25' />
-            </FormItem> */}
+            </FormItem>
 
-            <FormItem name="yearsOfExperience" label="Experience" rules={[{required: true}]}>
-                <InputNumber style={{ width: "100%"}} min={1} placeholder='e.g., 3 years' />
+            <FormItem name="description" label="Description" rules={[{required: true}]}>
+                <Input.TextArea style={{ width: "100%"}} rows={4} placeholder='Description' />
             </FormItem>
         </Form>
     </Modal>

@@ -17,7 +17,7 @@ const Messages = ({ messages }: props) => {
 
   return (
   <Row 
-    gutter={[20,25]} 
+    gutter={[20,5]} 
     className='h-full overflow-y-scroll pb-4'
     ref={scrollRef}
   >

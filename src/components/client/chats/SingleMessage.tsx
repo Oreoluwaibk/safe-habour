@@ -20,12 +20,12 @@ const SingleMessage = ({ message }: props) => {
   return (
     <div style={{display: "flex", justifyContent: isUser ? "right" :"left", gap: 10}}>
     {!isUser && <div className='relative'>
-        <Image className='h-[40px] w-[40px] rounded-[100px] object-cover' src={C1} alt="" />
-        <BsRecordFill color='#12B76A' size={20} className='absolute bottom-[30px] right-[-4px]' />
+        <Image className='h-10 w-10 rounded-[100px] object-cover' src={C1} alt="" />
+        <BsRecordFill color='#12B76A' size={20} className='absolute bottom-7.5 -right-1' />
     </div>}
     <Card
         title={<p className='text-[#344054] text-xs font-medium'>{isUser ? "You" : message.receiver?.fullName || message.senderName}</p>}
-        extra={<p className='text-[#667085] text-xs font-light'>{moment(message.sentAt).format("dddd h:mm a")}</p>}
+        extra={<p className='text-[#667085] text-xs font-light'>{moment(message.sentAt).format("MMM, dddd, h:mm a")}</p>}
         styles={{header: {padding: 0, border: "none", boxShadow: "none", minHeight: "fit-content", paddingBottom: 5}, body: {padding: "15px", borderRadius: 15, backgroundColor: isUser ? "#670316" : "#F2F4F7"}}}
         style={{border: "none", boxShadow: "none", padding: 0, backgroundColor: "#F9FAFB",  width: isUser ? 428 : 520}}
     >

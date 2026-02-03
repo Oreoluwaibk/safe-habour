@@ -163,18 +163,18 @@ const Message = () => {
           icon={<UserOutlined className='text-2xl' />} 
           alt={activeChat.otherUserName} 
           size={40} 
-          className='h-[40px] w-[40px] rounded-full object-cover' 
+          className='h-10 w-10 rounded-full object-cover' 
         />}
         {activeChat.otherUserProfilePicture && 
         <AntdesingImg 
-          className='h-[40px]! w-[40px]! rounded-[100px] object-cover' 
+          className='h-10! w-10! rounded-[100px] object-cover' 
           src={`${pictureUrl}${activeChat?.otherUserProfilePicture}`} 
           alt={activeChat.otherUserName} 
         />}
         </div>
       
         <div className='flex flex-col text-sm'>
-          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} {isConnected &&<span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-[16px] flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> connected</span>}</p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
+          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} {isConnected &&<span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-2xl flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> connected</span>}</p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
         </div>
     </div>}
     </>
@@ -188,10 +188,10 @@ const Message = () => {
             style={{boxShadow: "none"}}
             styles={{header: {border: "none", boxShadow: "none"}}}
             title={<div className='px-2'>
-              <p className='text-[#1e1e1e] text-lg font-semibold'>Messages <span className='bg-[#FFF7F8] h-[32px] w-[32px] rounded-[100px] text-[#670316] text-xs ml-2'>{chatList.length}</span></p>
+              <p className='text-[#1e1e1e] text-lg font-semibold'>Messages <span className='bg-[#FFF7F8] h-8 w-8 rounded-[100px] text-[#670316] text-xs ml-2'>{chatList.length}</span></p>
               
               </div>}
-            extra={<div className='px-2 border p-2 h-[40px] w-[40px] rounded-[8px] border-[#D0D5DD] flex items-center justify-center'><Image src={EditSVG} alt='edit svg' /> </div>}
+            extra={<div className='px-2 border p-2 h-10 w-10 rounded-lg border-[#D0D5DD] flex items-center justify-center'><Image src={EditSVG} alt='edit svg' /> </div>}
             loading={loading}
           >
             <div className='md:px-2 pb-4 border-b border-b-[#EAECF0]'>
@@ -229,15 +229,15 @@ const Message = () => {
               {!activeChat && <p className='text-center text-lg'>No current chat, select a chat to send messages!</p>}
             </div>
             
-            {activeChat && <div className='min-h-[104px] border border-[#D0D5DD] rounded-[8px] p-2 justify-end'>
+            {activeChat && <div className='min-h-26 border border-[#D0D5DD] rounded-lg p-2 justify-end'>
               <Input.TextArea 
                 placeholder='Send a message' 
-                className='!border-none !bg-[#F9FAFB]' 
+                className='border-none! bg-[#F9FAFB]!' 
                 onChange={(e) => setMessage(e.target.value)}
                 value={message}
               ></Input.TextArea>
               <div className='flex items-center justify-end'>
-                <Button onClick={handleSendMessage} loading={sendLoading} type="primary" className='!w-[81px] !h-[40px] !rounded-[100px]'>Send</Button>
+                <Button onClick={handleSendMessage} loading={sendLoading} type="primary" className='w-20.25! h-10! rounded-[100px]!'>Send</Button>
               </div>
               
             </div>}

@@ -97,11 +97,11 @@ const UploadCard = ({ title, description, icon, isUploaded, value, type, setValu
       
       <p className='text-[#808080]'>{description} - click to upload</p>
     </div>
-    {isUploaded && !approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-[16px] px-2 h-[30px] flex items-center '>
+    {isUploaded && !approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-2xl px-2 h-7.5 flex items-center '>
       <span className='text-[#670316] text-[12px]'>uploaded</span>
     </div>}
 
-    {isUploaded && approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-[16px] px-2 h-[30px] flex items-center '>
+    {isUploaded && approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-2xl px-2 h-7.5 flex items-center '>
       <span className='text-[#670316] text-[12px]'>Approved</span>
     </div>}
        

@@ -1,9 +1,11 @@
 import CardTitle from '@/components/general/CardTitle'
-import { Card, Col, Row } from 'antd'
-import React, { useState } from 'react'
+import { App, Card, Col, Row } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
 import VerificationUpload from '../cards/VerificationUpload'
 import { RcFile } from 'antd/es/upload'
 import { IUser } from '../../../../utils/interface'
+import { getVerificationDocument } from '@/redux/action/auth'
+import { createErrorMessage } from '../../../../utils/errorInstance'
 // import { getVerifiedDocuments } from '@/redux/action/auth'
 // import { createErrorMessage } from '../../../../utils/errorInstance'
 
@@ -13,9 +15,44 @@ interface props {
     authLoading: boolean;
 }
 const Verification = ({ authentication }: props) => {
-    const [ loading ] = useState(false);
     const [ policeReport, setPoliceReport ] = useState<RcFile | null>(null);
     const [ sectorCheck, setSectorCheck ] = useState<RcFile | null>(null);
+    const [ documents, setDocuments ] = useState({
+        "userIdentificationDocumentPath": "",
+        "userLocationDocumentPath": "",
+        "userIdentificationDocumentUrl": "",
+        "userLocationDocumentUrl": "",
+        "hasIdentificationDocument": true,
+        "hasLocationDocument": true
+    });
+    const [ loading, setLoading ] = useState(false);
+    const { modal } = App.useApp();
+
+
+    const handleGetDocument = useCallback(() => {
+        setLoading(true);
+        getVerificationDocument()
+        .then(res => {
+            if(res.status === 200) {
+                setLoading(false);
+                setDocuments(res.data.data);
+            }
+        })
+        .catch(err => {
+            modal.error({
+                title: "Unable to get verification documents",
+                content: err?.response
+                    ? createErrorMessage(err.response.data)
+                    : err.message,
+                onOk: () => setLoading(false)
+            });
+        })
+    }, [modal]);
+
+    useEffect(() => {
+        handleGetDocument();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // const handleGetVerifyDocs = useCallback(() => {
     //     setLoading(true);
@@ -44,7 +81,7 @@ const Verification = ({ authentication }: props) => {
             header: "",
             body: "flex flex-col gap-6"
         }}
-        className='!mt-6'
+        className='mt-6!'
         loading={loading}
     >
         <Row>
@@ -57,6 +94,7 @@ const Verification = ({ authentication }: props) => {
                     value={policeReport}
                     setValue={setPoliceReport}
                     type={1}
+                    url={documents.userIdentificationDocumentUrl}
                 />
             </Col>
 
@@ -69,6 +107,7 @@ const Verification = ({ authentication }: props) => {
                     isUploaded={authentication.hasIdentificationDocument}
                     setValue={setSectorCheck}
                     type={2}
+                    url={documents.userLocationDocumentUrl}
                 />
             </Col>
         </Row>

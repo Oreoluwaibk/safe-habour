@@ -14,7 +14,7 @@ interface props {
 const TransactionCard = ({ isTransaction, payout, transaction }: props) => {
   return (
     <Card variant="borderless" styles={{body: {display: "flex", gap: 10, padding: "20px 10px"}}}>
-        <div  className='bg-[#FFF9FA] flex items-center justify-center !h-6 !w-6'>
+        <div  className='bg-[#FFF9FA] flex items-center justify-center h-6! w-6!'>
             <Image src={Lightening} alt="" /> 
         </div>
 
@@ -39,7 +39,7 @@ const TransactionCard = ({ isTransaction, payout, transaction }: props) => {
                     </div>}
 
                     {isTransaction && (
-                        <div className='bg-[#FFF5F7] text-[#670316] rounded-[12px] text-[8px] p-1'><p>Payment</p></div>
+                        <div className='bg-[#FFF5F7] text-[#670316] rounded-xl text-[8px] p-1'><p>Payment</p></div>
                     )}
                 </div>
             </div>
@@ -47,7 +47,7 @@ const TransactionCard = ({ isTransaction, payout, transaction }: props) => {
             <div className={`flex items-center ${payout && "flex-col-reverse"} gap-2`}>
                 <p className='text-base text-[#1e1e1e]'>${transaction.amount.toFixed(2)} CAD</p>
 
-                <div className='bg-[#FFF5F7] text-[#670316] rounded-[12px] text-[8px] p-1'><p>Released</p></div>
+                <div className='bg-[#FFF5F7] text-[#670316] rounded-xl text-[8px] p-1'><p>Released</p></div>
             </div>
         </div>
     </Card>

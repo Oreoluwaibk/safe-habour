@@ -26,7 +26,7 @@ const VerificationSettings = ({  }: props) => {
         "hasLocationDocument": true
     })
 
-     const handleGetDocument = useCallback(() => {
+    const handleGetDocument = useCallback(() => {
         setLoading(true);
         getVerificationDocument()
         .then(res => {

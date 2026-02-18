@@ -136,23 +136,23 @@ const PersonalSettings = ({
         classNames={{ extra: "pt-4 pr-4" }}
         extra={(
             <FormItem className='flex items-center justify-end'>
-                <Button loading={loading} type="primary" onClick={handleSubmit} className='!w-[81px] !h-[40px] !rounded-[100px]'>{isEdit ? "Save" : "Edit"}</Button>              
+                <Button loading={loading} type="primary" onClick={handleSubmit} className='w-20.25! h-10 rounded-[100px]!'>{isEdit ? "Save" : "Edit"}</Button>              
             </FormItem>
         )}
     >
         <div className='flex items-center gap-6 mt-3 mb-8'>
             <div className='relative'>
-                {authentication?.profilePicturePath && <Image src={`${pictureUrl}${authentication?.profilePicturePath}`} height={84} width={84} alt='' className='h-[84px]! w-[84px]! rounded-full object-cover' />}
+                {authentication?.profilePicturePath && <Image src={`${pictureUrl}${authentication?.profilePicturePath}`} height={84} width={84} alt='' className='h-21! w-21! rounded-full object-cover' />}
                  {!authentication?.profilePicturePath && 
                 <Avatar 
                     icon={<UserOutlined className='text-2xl' />} 
                     alt=''
                     size={65} 
-                    className='h-[84px] w-[84px] rounded-full object-cover' 
+                    className='h-21 w-21 rounded-full object-cover' 
                 />}
                 {/* {<Avatar icon={<UserOutlined />} size={65} />} */}
-                {uploading ? <LoadingOutlined spin className='absolute bottom-[10px] right-[5px]' /> :<Upload 
-                    className='absolute bottom-[10px] right-[5px] cursor-pointer bg-[#003E8F] h-[30px] w-[30px] flex items-center justify-center rounded-[100px]'
+                {uploading ? <LoadingOutlined spin className='absolute bottom-2.5 right-1.25' /> :<Upload 
+                    className='absolute bottom-2.5 right-11.25 cursor-pointer bg-[#003E8F] h-7.5 w-7.5 flex items-center justify-center rounded-[100px]'
                     beforeUpload={handleUploadPicture}
                     // onRemove={handleRemovePicture}
                     accept=".jpg,.png,.jpeg," 
@@ -170,11 +170,11 @@ const PersonalSettings = ({
                 disabled={!isEdit}
                 showUploadList={false}
             >
-                <Button loading={uploading} type="primary" className='!h-[40px] !rounded-[3.2px] !font-semibold'>Upload New</Button>
+                <Button loading={uploading} type="primary" className='h-10! rounded-[3.2px]! font-semibold!'>Upload New</Button>
             </Upload>}
             
 
-           {<Button type="default" className='!h-[40px] !font-semibold !rounded-[3.2px] !bg-[#F1F1F1] !text-[#5D5D5D] !border-none' disabled={!isEdit}>Delete Avatar</Button>}
+           {<Button type="default" className='h-10! font-semibold! rounded-[3.2px]! bg-[#F1F1F1]! text-[#5D5D5D]! border-none!' disabled={!isEdit}>Delete Avatar</Button>}
         </div>
         <Form layout="vertical" form={form}>
             <Row gutter={[15, 0]} >

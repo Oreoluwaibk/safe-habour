@@ -1,5 +1,5 @@
 "use client"
-import { App, Avatar, Button, Card, Col, DatePicker, Form, Input, Image, message, Row, Select, Upload } from 'antd'
+import { App, Avatar, Button, Card, Col, DatePicker, Form, Input, Image, Row, Select, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload';
 import React, { useEffect, useState } from 'react'
 import { Icon } from '@iconify/react';
@@ -33,7 +33,7 @@ const PersonalSettings = ({
     const [ initialCode, setInitialCode ] = useState("ca");
     const [ uploading, setUploading ] = useState(false);
     const [ isEdit, setIsEdit ] = useState(false);
-    const { modal } = App.useApp();
+    const { modal, message } = App.useApp();
     const [ loading, setLoading ] = useState(false);
 
     useEffect(() => {
@@ -55,7 +55,9 @@ const PersonalSettings = ({
             const payload = {
                 ...value,
                 dateOfBirth: value.dateOfBirth ? new Date(value.dateOfBirth).toISOString(): authentication.dateOfBirth,
-                userId: authentication.id 
+                userId: authentication.id,
+                city: state || authentication.city,
+                country: country || authentication.country 
             }
 
             const formData = toFormData(payload) as FormData
@@ -321,7 +323,11 @@ const PersonalSettings = ({
                     className="font-semibold" 
                     name="streetAddress"
                     rules={[
-                        {required:true}
+                        { required: true, message: "Address is required" },
+                        {
+                            pattern: /^\d+,\s?[A-Za-z\s]+$/,
+                            message: "Enter a valid address (e.g. 124, Main Street)"
+                        }
                     ]}
                 >
                     <Input 
@@ -371,7 +377,14 @@ const PersonalSettings = ({
                     <RegionDropdown
                         country={country}
                         value={state}
-                        onChange={(val) => setState(val)}
+                        // onChange={(val) => setState(val)}
+                        onChange={(val) => {
+                            if (val === "Ontario" || val === "Manitoba") setState(val);
+                            else {
+                                message.error("Sorry, we currently only support services in Ontario and Manitoba. We are working on expanding to other provinces soon!")
+                                setState("Ontario");
+                            }
+                        }}
                         defaultOptionLabel="Select Your State"
                         name='registration'
                         disabled={!isEdit}

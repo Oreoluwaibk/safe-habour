@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode, useCallback, useState, useTransition } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState, useTransition } from 'react';
 import { App, Button, Col, Layout, Row } from 'antd';
 import Image from 'next/image';
 import { LinkedinFilled, MenuOutlined, TwitterOutlined } from '@ant-design/icons';
@@ -39,10 +39,18 @@ const Container = ({
     const router = useRouter();
     const { message, modal } = App.useApp()
     const [open, setOpen] = useState(false);
-    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType, tokenExpiry } = useAppSelector(state => state.auth);
     const [ loading, setLoading ] = useState(false);
     const [ isPending, startTransition ] = useTransition();
-    const dispatch = useAppDispatch();      
+    const dispatch = useAppDispatch();
+    
+    useEffect(() => {
+        if (tokenExpiry) {
+            const expiryTime = new Date(tokenExpiry).getTime();
+            const currentTime = Date.now();
+            if (expiryTime < currentTime) handleLogout();
+        }
+    }, [tokenExpiry])
 
     const handleLogout = useCallback(() => {
         setLoading(true);

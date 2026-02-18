@@ -10,6 +10,7 @@ import { savedPreferredTime } from '../../../../utils/savedInfo'
 import ApplyJob from '../modal/ApplyJob'
 import moment from 'moment'
 import { timeAgo } from '../../../../utils/converters'
+import { useAuthentication } from '@/hooks/useAuthentication'
 
 interface props {
   job: jobs;
@@ -20,9 +21,11 @@ const AvailableJobCard = ({ job, verified }: props) => {
   const [ openModal, setOpenModal ] = useState(false);
   const { message } = App.useApp();
   const [isPending, startTransition] = useTransition();
+  const { authentication } = useAuthentication();
 
   const handleApply = () => {
     if(!verified) return message.info("You have not been verified, this feature is only available to verified users!");
+    if(authentication?.dateOfBirth && moment().diff(moment(authentication.dateOfBirth), 'years') < 18) return message.info("You must be at least 18 years old to apply for jobs");
     setOpenModal(true)
   }
 
@@ -33,7 +36,7 @@ const AvailableJobCard = ({ job, verified }: props) => {
   }
   return (
      <Card
-        title={<CardTitle title={job?.jobTitle || "Hire Service"} description={`Client: ${job?.client?.name || ""}`} />}
+        title={<CardTitle title={job?.jobTitle || "Hire Service"} description={`Client: ${job?.client?.name.split(" ")[0] || ""}`} />}
         extra={<Rating />}
         actions={[
           <div className='flex items-center justify-between px-4' key={1}>

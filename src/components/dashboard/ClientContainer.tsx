@@ -43,7 +43,7 @@ const ClientContainer = ({
     const [open, setOpen] = useState(false);
     const [ openJobModal, setOpenJobModal ] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType, tokenExpiry } = useAppSelector(state => state.auth);
     const { authentication } = useAuthentication();
     const [ isPending, startTransition ] = useTransition();
     const [ loading, setLoading ] = useState(false);
@@ -102,7 +102,15 @@ const ClientContainer = ({
 
     useEffect(() => {
         if (!isAuthenticated) handleLogout();
-    }, [isAuthenticated, handleLogout]); 
+    }, [isAuthenticated, handleLogout]);
+    
+    useEffect(() => {
+        if (tokenExpiry) {
+            const expiryTime = new Date(tokenExpiry).getTime();
+            const currentTime = Date.now();
+            if (expiryTime < currentTime) handleLogout();
+        }
+    }, [tokenExpiry])
 
     useEffect(() => {
         if(isAuthenticated && loginType !== "ClientUser") {

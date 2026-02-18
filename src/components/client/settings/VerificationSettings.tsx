@@ -6,6 +6,7 @@ import { RcFile } from 'antd/es/upload'
 import { IUser } from '../../../../utils/interface'
 import { getVerificationDocument } from '@/redux/action/auth'
 import { createErrorMessage } from '../../../../utils/errorInstance'
+import { useAuthentication } from '@/hooks/useAuthentication'
 
 interface props {
     authentication: IUser;
@@ -14,6 +15,7 @@ const VerificationSettings = ({  }: props) => {
     const [ idCard, setIdCard ] = useState<RcFile | null>(null);
     const [ proofOfAddress, setProofOfAddress ] = useState<RcFile | null>(null);
     const [ loading, setLoading ] = useState(false);
+    const { authentication } = useAuthentication();
     const { modal } = App.useApp();
     const [ documents, setDocuments ] = useState({
         "userIdentificationDocumentPath": "",
@@ -64,6 +66,7 @@ const VerificationSettings = ({  }: props) => {
                 <UploadCard 
                     title='Canadian ID' 
                     isUploaded={documents.hasIdentificationDocument}
+                    approved={authentication?.isIdentityDocumentApproved}
                     description='Upload your D/L ,PR or Canadian Card' 
                     value={idCard}
                     setValue={setIdCard}
@@ -78,6 +81,7 @@ const VerificationSettings = ({  }: props) => {
                     description='Upload Bill within 30 days' 
                     icon={<Icon icon="mdi:address-marker" color='#505050' className='text-xl!' fontSize={20} />}
                     isUploaded={documents.hasIdentificationDocument}
+                    approved={authentication?.isIdentityDocumentApproved}
                     value={proofOfAddress}
                     setValue={setProofOfAddress}
                     type={2}

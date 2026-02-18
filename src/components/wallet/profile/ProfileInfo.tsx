@@ -59,7 +59,9 @@ const ProfileInfo = ({
             const payload = {
                 ...value,
                 dateOfBirth: value.dateOfBirth ? new Date(value.dateOfBirth).toISOString(): authentication.dateOfBirth,
-                userId: authentication.id 
+                userId: authentication.id ,
+                city: state || authentication.city,
+                country: country || authentication.country
             }
 
             const formData = toFormData(payload) as FormData
@@ -384,7 +386,14 @@ const ProfileInfo = ({
                     <RegionDropdown
                         country={country}
                         value={state}
-                        onChange={(val) => setState(val)}
+                        // onChange={(val) => setState(val)}
+                        onChange={(val) => {
+                            if (val === "Ontario" || val === "Manitoba") setState(val);
+                            else {
+                                message.error("Sorry, we currently only support service workers based in Ontario and Manitoba. We are working on expanding to other provinces soon!")
+                                setState("Ontario");
+                            }
+                        }}
                         defaultOptionLabel="Select Your State"
                         name='registration'
                         disabled={!isEdit}

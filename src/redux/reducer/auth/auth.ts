@@ -37,7 +37,7 @@ const initialState: signinReducer = {
   user: storedUser ? JSON.parse(storedUser) : null,
   isAuthenticated: !!storedUser,
   token: storedToken || null,
-  tokenExpiry: storedExpiry ? Number(storedExpiry) : null,
+  tokenExpiry: storedExpiry ? storedExpiry : null,
   loading: false,
   success: false,
   error: null,
@@ -50,14 +50,14 @@ export const signinSlice = createSlice({
   initialState,
   reducers: {
     // ✅ update access token after refresh
-    setToken: (state, action: PayloadAction<{ token: string; tokenExpiry: number }>) => {
+    setToken: (state, action: PayloadAction<{ token: string; tokenExpiry: string }>) => {
       state.token = action.payload.token;
       state.tokenExpiry = action.payload.tokenExpiry;
       state.isAuthenticated = true;
 
       if (isBrowser) {
         localStorage.setItem("safehabour_token", action.payload.token);
-        localStorage.setItem("safehabour_token_expiry", String(action.payload.tokenExpiry));
+        localStorage.setItem("safehabour_token_expiry", action.payload.tokenExpiry);
       }
     },
      setLastRoute: (state, action) => {

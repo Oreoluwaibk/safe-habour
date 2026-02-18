@@ -15,13 +15,14 @@ interface props {
   description: string;
   icon: ReactNode;
   isUploaded?: boolean;
+  approved?: boolean;
   type?: number;
   value?: RcFile | null;
   setValue?: React.Dispatch<React.SetStateAction<RcFile | null>>;
   url?: string;
 }
 const maxFileSize = 10000000;
-const UploadCard = ({ title, description, icon, isUploaded, value, type, setValue, url }: props) => {
+const UploadCard = ({ title, description, icon, isUploaded, value, type, setValue, url, approved }: props) => {
   const { user } = useAppSelector(state => state.auth);
   const { message, modal } = App.useApp();
   const [ loading, setLoading ] = useState(false);
@@ -94,10 +95,14 @@ const UploadCard = ({ title, description, icon, isUploaded, value, type, setValu
         {loading && <LoadingOutlined spin />}
       </div>
       
-      <p className='text-[#808080]'>{description}</p>
+      <p className='text-[#808080]'>{description} - click to upload</p>
     </div>
-    {isUploaded && <div className='text-[#670316] bg-[#FFE4E9] rounded-[16px] px-2 h-[30px] flex items-center '>
+    {isUploaded && !approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-[16px] px-2 h-[30px] flex items-center '>
       <span className='text-[#670316] text-[12px]'>uploaded</span>
+    </div>}
+
+    {isUploaded && approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-[16px] px-2 h-[30px] flex items-center '>
+      <span className='text-[#670316] text-[12px]'>Approved</span>
     </div>}
        
     </Upload> 

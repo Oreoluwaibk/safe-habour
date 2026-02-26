@@ -18,7 +18,7 @@ const CompleteInfo = ({ title, description, nav, onCancel, icon=<InfoCircleOutli
           <p className='incomplete-des'>{description}</p>
           {nav}
       </div>
-      <CloseOutlined onClick={onCancel} className='color-bg absolute right-4 top-4 z-[1] cursor-pointer' />
+      <CloseOutlined onClick={onCancel} className='color-bg absolute right-4 top-4 z-1 cursor-pointer' />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import axiosInstance from "../../../utils/axiosConfig";
-import { schedule } from "../../../utils/interface";
+import { Schedule, schedule } from "../../../utils/interface";
 
-export const saveSchedule = async (data: schedule) => {
+export const saveSchedule = async (data: Schedule) => {
     const url = `/Schedules`;
     const response = await axiosInstance.post(url, data);
 
@@ -15,7 +15,7 @@ export const saveBulkSchedule = async (data: schedule[]) => {
     return Promise.resolve(response);
 }
 
-export const updateBulkSchedule = async (data: schedule[]) => {
+export const updateBulkSchedule = async (data: Schedule[]) => {
     const url = `/Schedules/bulk`;
     const response = await axiosInstance.put(url, data);
 

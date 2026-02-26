@@ -173,7 +173,12 @@ const Page = () => {
     {
       key: "3",
       title: "Workers",
-      dataIndex: "workerName"
+      dataIndex: "workerName",
+      render(value) {
+        return (
+          <span>{value || "Worker not assigned"}</span>
+        )
+      },
     },
     {
       key: "4",

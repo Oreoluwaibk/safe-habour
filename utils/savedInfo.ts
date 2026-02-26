@@ -34,13 +34,13 @@ export const savedCategory = [
 ]
 
 export const dayOfWeek = [
-    {id: 6, title: "Sun", name: "Sunday"},
-    {id: 0, title: "Mon", name: "Monday"},
-    {id: 1, title: "Tue", name: "Tuesday"},
-    {id: 2, title: "Wed", name: "Wednesday"},
-    {id: 3, title: "Thur", name: "Thurday"},
-    {id: 4, title: "Fri", name: "Friday"},
-    {id: 5, title: "Sat", name: "Saturday"},
+    {id: 0, title: "Sun", name: "Sunday"},
+    {id: 1, title: "Mon", name: "Monday"},
+    {id: 2, title: "Tue", name: "Tuesday"},
+    {id: 3, title: "Wed", name: "Wednesday"},
+    {id: 4, title: "Thur", name: "Thurday"},
+    {id: 5, title: "Fri", name: "Friday"},
+    {id: 6, title: "Sat", name: "Saturday"},
 ]
 
 export const savedPreferredTime = [

@@ -98,7 +98,7 @@ const UploadCard = ({ title, description, icon, isUploaded, value, type, setValu
       <p className='text-[#808080]'>{description} - click to upload</p>
     </div>
     {isUploaded && !approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-2xl px-2 h-7.5 flex items-center '>
-      <span className='text-[#670316] text-[12px]'>uploaded</span>
+      <span className='text-[#670316] text-[12px]'>Pending</span>
     </div>}
 
     {isUploaded && approved && <div className='text-[#670316] bg-[#FFE4E9] rounded-2xl px-2 h-7.5 flex items-center '>
@@ -127,7 +127,7 @@ const UploadCard = ({ title, description, icon, isUploaded, value, type, setValu
           preview={false} // optional: disable AntD preview
           style={{
             width: "100%",
-            height: "100%",
+            height: 200,
             objectFit: "cover", // fills container, crops if necessary
             display: "block",  // prevents inline spacing issues
           }} 

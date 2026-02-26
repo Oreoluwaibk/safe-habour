@@ -36,7 +36,7 @@ export default function AdminSideMenu({ active, onCancel, open, handleLogout, lo
     { label: "Overview", key: "Overview", path: "/dashboard/admin" },
     { label: "Users", key: "Users", path: "/dashboard/admin/users" },
     { label: "KYC Verification", key: "KYC Verification", path: "/dashboard/admin/kyc" },
-    { label: "Job & Bookings", key: "Job & Bookings", path: "/dashboard/admin/jobs-bookings" },
+    { label: "Jobs & Bookings", key: "Job & Bookings", path: "/dashboard/admin/jobs-bookings" },
     { label: "Financial", key: "Financial", path: "/dashboard/admin/financial" },
     { label: "Transactions", key: "Transactions", path: "/dashboard/admin/transactions" },
     { label: "Analytics", key: "Analytics", path: "/dashboard/admin/analytics" },

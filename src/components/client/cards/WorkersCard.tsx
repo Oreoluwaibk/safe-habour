@@ -2,7 +2,7 @@
 import React, { useState, useTransition } from 'react';
 import "@/styles/client.css";
 import { ClockCircleOutlined, EnvironmentFilled, StarFilled, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Image, Tooltip } from 'antd';
+import { App, Avatar, Button, Image, Tooltip } from 'antd';
 import { useRouter } from 'next/navigation';
 import { IUser, UserWorkerProfile } from '../../../../utils/interface';
 import moment from 'moment';
@@ -13,6 +13,7 @@ interface props {
     authentication: IUser;
 }
 const WorkersCard = ({ worker, authentication }: props) => {
+    const { message } = App.useApp()
     const [ openHireModal, setOpenHireModal ] = useState(false);
     const router = useRouter();
     const [ isPending, startTransition ] = useTransition();
@@ -64,7 +65,11 @@ const WorkersCard = ({ worker, authentication }: props) => {
             <Tooltip title={isConfirmed ? "You have not completed your profile, complete your profile to perform this function" : ""}>
                 <Button 
                     disabled={isConfirmed} 
-                    onClick={() => setOpenHireModal(true)} 
+                    onClick={() => {
+                        if(authentication?.dateOfBirth && moment().diff(moment(authentication.dateOfBirth), 'years') < 18) 
+                            return message.info("You must be at least 18 years old to apply for jobs");
+                        setOpenHireModal(true);
+                    }} 
                     type='primary' 
                     className='h-12.5! w-45 rounded-[50px]! primary-bg text-white font-medium!'
                 >

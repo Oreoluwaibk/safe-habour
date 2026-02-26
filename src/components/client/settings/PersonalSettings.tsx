@@ -11,6 +11,8 @@ import { updateClientProfile } from '@/redux/action/client';
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { pictureUrl } from '../../../../utils/axiosConfig';
+import Status from '@/components/general/Status';
+import CardTitle from '@/components/general/CardTitle';
 
 interface props {
     authentication: IUser;
@@ -136,7 +138,7 @@ const PersonalSettings = ({
         classNames={{ extra: "pt-4 pr-4" }}
         extra={(
             <FormItem className='flex items-center justify-end'>
-                <Button loading={loading} type="primary" onClick={handleSubmit} className='w-20.25! h-10 rounded-[100px]!'>{isEdit ? "Save" : "Edit"}</Button>              
+                <Button loading={loading} type="primary" onClick={handleSubmit} className='w-20.25! h-10! rounded-[100px]!'>{isEdit ? "Save" : "Edit"}</Button>              
             </FormItem>
         )}
     >
@@ -152,7 +154,7 @@ const PersonalSettings = ({
                 />}
                 {/* {<Avatar icon={<UserOutlined />} size={65} />} */}
                 {uploading ? <LoadingOutlined spin className='absolute bottom-2.5 right-1.25' /> :<Upload 
-                    className='absolute bottom-2.5 right-11.25 cursor-pointer bg-[#003E8F] h-7.5 w-7.5 flex items-center justify-center rounded-[100px]'
+                    className='absolute bottom-0 -right-2! cursor-pointer bg-[#003E8F] h-7.5 w-7.5 flex items-center justify-center rounded-[100px]'
                     beforeUpload={handleUploadPicture}
                     // onRemove={handleRemovePicture}
                     accept=".jpg,.png,.jpeg," 
@@ -175,6 +177,8 @@ const PersonalSettings = ({
             
 
            {<Button type="default" className='h-10! font-semibold! rounded-[3.2px]! bg-[#F1F1F1]! text-[#5D5D5D]! border-none!' disabled={!isEdit}>Delete Avatar</Button>}
+
+            <Status title={authentication?.isProfileComplete ? 'Verified' : "Unverified"} color={authentication?.isProfileComplete ? '#018A06': "#ff0004"} bg={authentication?.isProfileComplete ? '#f3fff4' : "#FFF7F9"} />
         </div>
         <Form layout="vertical" form={form}>
             <Row gutter={[15, 0]} >
@@ -319,13 +323,13 @@ const PersonalSettings = ({
             <Row gutter={[15, 0]} >
             <Col lg={12} sm={24} xs={24}>
                 <FormItem 
-                    label="Location" 
+                    label="Address" 
                     className="font-semibold" 
                     name="streetAddress"
                     rules={[
                         { required: true, message: "Address is required" },
                         {
-                            pattern: /^\d+,\s?[A-Za-z\s]+$/,
+                            pattern: /^\d+ \s?[A-Za-z\s]+$/,
                             message: "Enter a valid address (e.g. 124, Main Street)"
                         }
                     ]}

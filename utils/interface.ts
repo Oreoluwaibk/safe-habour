@@ -105,7 +105,25 @@ export interface IUser {
   timeZone: number;
   services: IServiceDetail[];
   languages: ILanguage[];
+  hasPaymentMethod?: boolean;
 }
+
+export type Schedule = {
+  id?: string;
+  serviceWorkerId?: string;
+  dayOfWeek: string | number;
+  scheduleDate?: string;
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
+  notes?: string;
+  createdAt?: string;
+};
+
+export type DaySchedule = {
+  dayOfWeek: string;
+  schedules: Schedule[];
+};
 export interface INotificationSetting {
   id?: string;
   notificationType?: number;

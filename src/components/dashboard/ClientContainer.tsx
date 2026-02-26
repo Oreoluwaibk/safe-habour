@@ -18,6 +18,7 @@ import NotificationToast from "../notification/NotificationToast";
 import { NotificationBell } from "../notification/NotificationBell";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { logoutUser } from "@/redux/reducer/auth/auth";
+import moment from "moment";
 
 const { Content, Header } = Layout;
 
@@ -120,6 +121,8 @@ const ClientContainer = ({
     }, [loginType, isAuthenticated, router]);
 
     const handlePostJob = () => {
+        if(authentication?.dateOfBirth && moment().diff(moment(authentication.dateOfBirth), 'years') < 18) 
+            return message.info("You must be at least 18 years old to apply for jobs");
         if(!authentication?.isProfileComplete) 
             return message.info("You have not completed your profile, complete your profile to perform this function!");
         if(!authentication?.isVerified) 

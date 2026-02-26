@@ -21,7 +21,7 @@ const KycCard = ({ verification, refresh }: props) => {
     <Card
         title={<CardTitle 
             title={verification.fullName}
-            description={`Snow Plowing . Submitted on ${moment(verification.submittedAt).format("YYYY-MM-DD")}`}
+            description={`${verification.service} . Submitted on ${moment(verification.submittedAt).format("YYYY-MM-DD")}`}
             status={<Status title='Pending Review' color='#670316' bg='#FFE4E9' />}
         />}
         actions={[

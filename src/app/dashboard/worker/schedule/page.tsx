@@ -7,7 +7,7 @@ import { Col, Row, Segmented } from 'antd';
 import React, { useState } from 'react'
 
 const Page = () => {
-    const [ active, setActive ] = useState("Calendar");
+    const [ active, setActive ] = useState("Weekly Template");
   return (
     <WorkerContainer active='Schedule'>
       <div >
@@ -18,8 +18,8 @@ const Page = () => {
 
       <div  className='mb-6 overflow-x-auto no-scrollbar'>
         <Segmented 
-          options={["Calendar", "Upcoming Jobs", ]}
-          defaultValue='Calendar'
+          options={["Weekly Template", "Upcoming Jobs", ]}
+          defaultValue='Weekly Template'
           value={active}
           onChange={(value) => setActive(value)}
         />
@@ -27,15 +27,16 @@ const Page = () => {
       {/* "Weekly Template" */}
 
       <Row className='min-h-[90vh] mt-4'>
-       {active === "Calendar" && <Col lg={24} sm={24} xs={24}>
+       {/* {active === "Calendar" && <Col lg={24} sm={24} xs={24}>
           <Availabliltity />
+        </Col>} */}
+        {active === "Weekly Template" && <Col lg={24} sm={24} xs={24} >
+          <WeeklyTemplate />
         </Col>}
         {active === "Upcoming Jobs" && <Col lg={24} sm={24} xs={24}>
           <UpcomingSchedule />
         </Col>}
-        {/* {active === "Weekly Template" && <Col lg={24} sm={24} xs={24} >
-          <WeeklyTemplate />
-        </Col>} */}
+        
         
       </Row>
     </WorkerContainer>

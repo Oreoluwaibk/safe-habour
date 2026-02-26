@@ -9,6 +9,7 @@ import { Icon } from '@iconify/react'
 import RecentActivity from '@/components/admin/cards/RecentActivity'
 import { createErrorMessage } from '../../../../utils/errorInstance'
 import { getActivityLogs, getDashboardAdminStats } from '@/redux/action/admin'
+import { motion } from "framer-motion";
 
 const Page = () => {
   const { modal } = App.useApp();
@@ -90,7 +91,7 @@ const Page = () => {
     <AdminContainer active='Overview'>
     <Card classNames={{ body: "bg-[#f6f6f6]!"}} loading={loading}>
       <div>
-        <h1 className='t-pri !font-semibold text-[32px]'>Dashboard Overview</h1>
+        <h1 className='t-pri font-semibold! text-[32px]'>Dashboard Overview</h1>
         <p className='t-pri mb-6'>Monitor your platform&apos;s key metrics and activities</p>
       </div>
 
@@ -123,7 +124,16 @@ const Page = () => {
           />
         </Col>
 
-        {showMore && <>
+        {showMore && <motion.div
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="relative w-full"
+      style={{
+        backgroundSize: 'cover', backgroundPosition: 'center' 
+      }}
+    >
+            <Row className='mt-6 mb-4' gutter={[15, 15]}>
         <Col lg={8} sm={12} xs={24}>
           <InfoWalletCards 
             title='Avg. Completion Rate'
@@ -151,7 +161,8 @@ const Page = () => {
             icon={<Icon icon="carbon:analytics" color='#670316' />}
           />
         </Col>
-        </>}
+        </Row>
+        </motion.div>}
 
         <Col lg={24} sm={24} xs={24} className=''>
           <div className='flex items-center justify-center' >

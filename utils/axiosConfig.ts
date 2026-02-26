@@ -45,7 +45,7 @@ const handleTokenRefresh = async (oldToken: string) => {
       const currentUrl = window.location.pathname + window.location.search;
       store.dispatch(setLastRoute(currentUrl));
     }
-    // store.dispatch(logoutUser());
+    store.dispatch(logoutUser());
     throw err;
   } finally {
     isRefreshing = false;
@@ -99,7 +99,7 @@ axiosInstance.interceptors.response.use(
           const currentUrl = window.location.pathname + window.location.search;
           store.dispatch(setLastRoute(currentUrl));
         }
-        // store.dispatch(logoutUser());
+        store.dispatch(logoutUser());
         return Promise.reject(error);
       }
 

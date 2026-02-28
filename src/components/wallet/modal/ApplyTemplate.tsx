@@ -42,24 +42,24 @@ const ApplyTemplate = ({ open, onCancel, allSchedule, avaliableDays, refresh }: 
             return data;
         })
     
-        setLoading(true);
-        updateBulkSchedule(payLoad)
-        .then(res => {
-            if(res.status === 200) {
-                setLoading(false);
-                form.resetFields();
-                message.success(res.data.message || "Template has been applied successfully!");
-                refresh();
-                onCancel();
-            }
-        })
-        .catch(err => {
-            setLoading(false);
-            modal.error({
-                title: "Unable to set schedule",
-                content: err?.response ? createErrorMessage(err.response.data) : err.message,
-            });
-        })
+        // setLoading(true);
+        // updateBulkSchedule(payLoad)
+        // .then(res => {
+        //     if(res.status === 200) {
+        //         setLoading(false);
+        //         form.resetFields();
+        //         message.success(res.data.message || "Template has been applied successfully!");
+        //         refresh();
+        //         onCancel();
+        //     }
+        // })
+        // .catch(err => {
+        //     setLoading(false);
+        //     modal.error({
+        //         title: "Unable to set schedule",
+        //         content: err?.response ? createErrorMessage(err.response.data) : err.message,
+        //     });
+        // })
     }
     
     const handleSetStart = (date: dayjs.Dayjs, dateString: string | string[]) => {

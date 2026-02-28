@@ -182,21 +182,21 @@ const Availabliltity = () => {
       id: editDays.find(d => d.scheduleDate.split('T')[0] === day.format('YYYY-MM-DD'))?.id
     }));
 
-    setLoading(true);
-    updateBulkSchedule(payloads) // assuming endpoint accepts multiple IDs + array payload
-    .then(res => {
-      setLoading(false);
-      message.success('Schedules have been updated successfully!');
-      handleGetAvailabilty();
-      setEditDays(res.data.data);
-    })
-    .catch(err => {
-      setLoading(false);
-      modal.error({
-        title: 'Unable to update schedules',
-        content: err?.response ? createErrorMessage(err.response.data) : err.message,
-      });
-    });
+    // setLoading(true);
+    // updateBulkSchedule(payloads) // assuming endpoint accepts multiple IDs + array payload
+    // .then(res => {
+    //   setLoading(false);
+    //   message.success('Schedules have been updated successfully!');
+    //   handleGetAvailabilty();
+    //   setEditDays(res.data.data);
+    // })
+    // .catch(err => {
+    //   setLoading(false);
+    //   modal.error({
+    //     title: 'Unable to update schedules',
+    //     content: err?.response ? createErrorMessage(err.response.data) : err.message,
+    //   });
+    // });
   };
 
   const handleToggleMarkAvailable = (availabilityFlag: boolean) => {
@@ -212,21 +212,21 @@ const Availabliltity = () => {
       }));
 
       setMarkLoading(true);
-      updateBulkSchedule(payloads)
-      .then(res => {
-          setMarkLoading(false);
-          message.success(`This time has been marked ${availabilityFlag ? 'available' : 'unavailable'}!`);
-          handleGetAvailabilty();
-          setPayload(prev=> ({ ...prev, isAvailable: availabilityFlag }));
-          setEditDays(res.data.data);
-      })
-      .catch(err => {
-          setMarkLoading(false);
-          modal.error({
-          title: 'Unable to toggle availability',
-          content: err?.response ? createErrorMessage(err.response.data) : err.message,
-          });
-      });
+      // updateBulkSchedule(payloads)
+      // .then(res => {
+      //     setMarkLoading(false);
+      //     message.success(`This time has been marked ${availabilityFlag ? 'available' : 'unavailable'}!`);
+      //     handleGetAvailabilty();
+      //     setPayload(prev=> ({ ...prev, isAvailable: availabilityFlag }));
+      //     setEditDays(res.data.data);
+      // })
+      // .catch(err => {
+      //     setMarkLoading(false);
+      //     modal.error({
+      //     title: 'Unable to toggle availability',
+      //     content: err?.response ? createErrorMessage(err.response.data) : err.message,
+      //     });
+      // });
   };
 
   const handleDeleteSchedule = () => {

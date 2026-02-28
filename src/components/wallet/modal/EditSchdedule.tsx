@@ -129,7 +129,7 @@ const EditSchdedule = ({ open, onCancel, refresh, day, schedule, isAvailable }: 
         if(!endTime) return message.error("set end time to continue");
 
         const newSchedule = {
-            dayOfWeek: dayOfWeek.find(date => date.name === day)?.id ||"",
+            dayOfWeek: dayOfWeek.find(date => date.name === day)?.id ||0,
             startTime: startTime.toString(),
             endTime: endTime.toString(),
             isAvailable: true,
@@ -184,7 +184,7 @@ const EditSchdedule = ({ open, onCancel, refresh, day, schedule, isAvailable }: 
         setUpdateLoading(true);
         const updateSchedule = timeSlots.map((time) => {
             time.isAvailable = value;
-            time.dayOfWeek = dayOfWeek.find(date => date.name === day)?.id ||""
+            time.dayOfWeek = dayOfWeek.find(date => date.name === day)?.id ||0
             return time
         })
 

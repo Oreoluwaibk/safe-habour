@@ -1,5 +1,6 @@
 "use client"
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import "@/styles/safety.css"
 import { Button, Col, Row } from 'antd';
 import useWindowWidth from '@/hooks/useWindowResize';
@@ -31,11 +32,16 @@ const SafeGuarantee = () => {
     const [ selected, setSelected ] = useState(1);
     const router = useRouter();
     const width = useWindowWidth();
+    const skipIntro = useRef(true);
 
     useEffect(() => {
         const size = width <= 1042 ? 24 : 32;
         setFontSize(size);
     }, [width]);
+
+    useEffect(() => {
+        skipIntro.current = false;
+    }, []);
     
   return (
     <div className='howowrks dashtop dashbottom'>
@@ -88,7 +94,17 @@ const SafeGuarantee = () => {
             </Col>
             
             <Col lg={12} sm={24} xs={24} className='mt-6'>
-                <Image src={images[selected-1]} alt='side image' className='!object-cover' />
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={selected}
+                        initial={skipIntro.current ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                    >
+                        <Image src={images[selected-1]} alt='side image' className='!object-cover' />
+                    </motion.div>
+                </AnimatePresence>
             </Col>
        </Row>
        <div className='flex items-center justify-center mt-12 md:!mb-[60px]'>

@@ -1,10 +1,12 @@
+"use client"
 import { ClockCircleOutlined, HeartOutlined, HomeOutlined, UsergroupAddOutlined } from '@ant-design/icons'
 import { Button, Col, Row, Tabs, TabsProps } from 'antd'
 import Image from 'next/image';
-import React from 'react'
+import React, { useState } from 'react'
 import { C1, C1c, C2, C2c, C3, H1, H2, H3, P1, P2, P3, P4, S1, S1s, S2, S2s, S3, S4 } from '../../../assets/image';
 import { LuChefHat } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 
 export const ListItem = ({ label }: { label: string }) => (
@@ -18,6 +20,7 @@ export const ListItem = ({ label }: { label: string }) => (
 
 const ServicesTabs = () => {
   const router = useRouter();
+  const [activeKey, setActiveKey] = useState("1");
 
   const tabItems: TabsProps["items"] = [
     {
@@ -133,7 +136,7 @@ const ServicesTabs = () => {
                 <Image src={P1} alt='c 1' className='object-cover col_image' />
               </Col>
               <Col lg={10} sm={12} xs={12}className='md:!h-[186px]'>
-                <Image src={P2} alt='c 1' className='!h-[186px] object-cover rounded-[12px]' />
+                <Image src={P2} alt='c 1' className='!h-[186px] !w-auto object-cover rounded-[12px]' style={{ width: "auto", height: 186 }} />
               </Col>
 
               <Col lg={12} sm={12} xs={12}>
@@ -271,9 +274,22 @@ const ServicesTabs = () => {
   ]
   return (
     <div>
-        <Tabs 
-          items={tabItems}
-          
+        <Tabs
+          activeKey={activeKey}
+          onChange={setActiveKey}
+          items={tabItems.map((item) => ({
+            ...item,
+            children: activeKey === item.key ? (
+              <motion.div
+                key={item.key}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+              >
+                {item.children}
+              </motion.div>
+            ) : null,
+          }))}
         />
     </div>
   )

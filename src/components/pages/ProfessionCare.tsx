@@ -6,8 +6,9 @@ import ColoredText from '../general/ColoredText';
 import useWindowWidth from '@/hooks/useWindowResize';
 import ServicesTabs from '../general/ServicesTabs';
 import "@/styles/profcare.css";
+import { RevealText } from '@/components/motion/Reveal';
 
-const ProfessionCare = () => {
+const ProfessionCare = ({ compact = false }: { compact?: boolean }) => {
   const [fontSize, setFontSize] = useState<number>(72);
   const width = useWindowWidth();
 
@@ -17,16 +18,16 @@ const ProfessionCare = () => {
   }, [width]);
 
   return (
-    <div className='container1 '>
+    <div className={`container1 ${compact ? "!mt-0 !pt-8 md:!pt-12" : ""}`}>
       <Image src={PLine} alt='P line' className='absolute top-0 left-[20%] hidden md:block !overflow-hidden' />
 
-      <p className='header'>Professional Care <ColoredText title='Services' size={fontSize} /></p>
+      <RevealText className='header'>Professional Care <ColoredText title='Services' size={fontSize} /></RevealText>
       <div className='flex items-center justify-center mt-2'>
         <p className='p2 !text-center'>From personal care to household support, our vetted professionals provide the services Canadian families need most.</p>
       </div>
       
 
-      <div className='!mt-6 md:!mt-16'>
+      <div className={compact ? "!mt-6 md:!mt-8" : "!mt-6 md:!mt-16"}>
         <ServicesTabs />
       </div>
     </div>

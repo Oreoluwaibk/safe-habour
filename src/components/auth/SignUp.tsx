@@ -256,10 +256,10 @@ const SignUp = ({ type }: { type: string | null }) => {
             </FormItem>
 
             {/* <div className='flex items-center justify-between '> */}
-                <FormItem label="" name="terms" className="flex items-center gap-1 -mt-6!">
-                    <Checkbox onChange={(e) => setIsAccept(e.target.checked)} title="You agree to our friendly privacy policy." className="mr-4!"  />
+                <div className="flex items-center gap-1 -mt-6!">
+                    <Checkbox onChange={(e) => setIsAccept(e.target.checked)} className="mr-4!" />
                     <span className="agree">I agree to the <span className="cursor-pointer font-semibold hover:underline" onClick={()=> setOpenModal(true)}>terms and conditions</span></span>
-                </FormItem>
+                </div>
 
                 {/* <Link href="/auth/forgot-password">Forgot Password</Link> */}
             {/* </div>   */}
@@ -286,7 +286,7 @@ const SignUp = ({ type }: { type: string | null }) => {
                     </svg>}
                 />
             </FormItem>
-            <FormItem label="" name="">
+            <div>
                 <Socialbtn 
                     title='Sign up with LinkedIn'
                     icon={<LinkedinFilled className="!text-2xl !text-[#0077B5]" />}
@@ -295,7 +295,7 @@ const SignUp = ({ type }: { type: string | null }) => {
                     <p>Already have an account?</p>
                     <Link href="/auth/login">Log in</Link>
                 </div>
-            </FormItem>
+            </div>
 
            
         </Form>

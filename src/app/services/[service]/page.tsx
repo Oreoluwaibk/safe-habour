@@ -7,35 +7,31 @@ import ServiceLanding from '@/components/pages/services/ServiceLAnding'
 import { serviceType, serviceTypes } from '@/extras/questions'
 import { Col, Row } from 'antd'
 import { useRouter } from 'next/navigation'
-import React, { use, useEffect, useState } from 'react'
+import React, { use } from 'react'
 import { BsArrowRightCircle } from 'react-icons/bs'
 
 const Page = ({ params }: {params: Promise<{ service: string }> }) => {
   const { service } = use(params);
   const router = useRouter();
-  const [ services, setService ] = useState<serviceType>();
-
-  useEffect(() => {
-    if(service) setService(serviceTypes.find((servic: serviceType) => servic.id === service))
-  }, [service])
+  const current = serviceTypes.find((item: serviceType) => item.id === service);
   
   return (
     <Container active="Services">
       <div>
         <ServiceLanding 
-          service={services} 
+          service={current} 
         />
-        <IncludedServices service={services} />
+        <IncludedServices service={current} />
         
-        <div className='md:px-25! px-2.5! pb-10 mt-20 md:pt-0'>
-          <div className='flex items-center justify-between mb-10!'>
-            <p className='text-[#101828]! text-2xl font-semibold'>More Service</p>
+        <div className='px-6 pb-12 md:px-20 md:pb-16 lg:px-28'>
+          <div className='mb-8 flex items-center justify-between'>
+            <p className='text-2xl font-semibold text-[#101828]'>More Services</p>
 
             <BsArrowRightCircle size={30} className="cursor-pointer" onClick={() => router.push("/services")} />
           </div>
-          <Row gutter={[15, 15]} className='mx-0! px-0!'>
-            {services?.more.map((more, i) => (
-              <Col lg={8} sm={12} xs={24} key={i}>
+          <Row gutter={[16, 16]} className='!mx-0'>
+            {current?.more.map((more) => (
+              <Col lg={8} sm={12} xs={24} key={more.link} className="!flex">
                 <MoreServiceCard link={more.link} title={more.name} description={more.description} image={more.image} items={more.service} />
               </Col>
             ))}

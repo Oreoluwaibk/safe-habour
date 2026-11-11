@@ -9,8 +9,8 @@ interface props {
 }
 
 export const ListItem = ({ label }: { label: string }) => (
-    <div className='flex md:items-center items-start gap-4'>
-      <div className='h-[28px] w-[28px] rounded-[100px] !bg-[#FFF8F9] flex items-center justify-center'>
+    <div className='flex items-start gap-4'>
+      <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#FFF8F9]'>
         <CheckOutlined className='!text-[#670316]' />
       </div>
       <p className='tablist'>{label}</p>
@@ -18,33 +18,34 @@ export const ListItem = ({ label }: { label: string }) => (
 );
 
 
-const IncludedServices = ({ service}: props) => {
+const IncludedServices = ({ service }: props) => {
   return (
-    <Row gutter={[15,15]} className='!mx-0 px-[10px] md:px-[100px] !items-center md:!h-[632px]'>
-        <Col lg={14} sm={24} xs={24}>
-            <div className='flex flex-col gap-2'>
-                <p className='care_p mb-4'> Service Included</p>
+    <section className="px-6 py-12 md:px-20 md:py-16 lg:px-28">
+        <Row gutter={[40, 24]} className="!mx-0 !items-center">
+            <Col lg={14} sm={24} xs={24}>
+                <p className="care_p mb-3">Service Included</p>
+                <p className="mb-8 max-w-xl text-lg text-[#1E1E1E]">Comprehensive care tailored to your needs</p>
+                <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div className="flex flex-col gap-6">
+                        {service?.services.map((item) => <ListItem key={item} label={item} />)}
+                    </div>
+                    <div className="flex flex-col gap-6">
+                        {service?.services2.map((item) => <ListItem key={item} label={item} />)}
+                    </div>
+                </div>
+            </Col>
 
-                <p className='p_p2 mb-8'>Comprehensive care tailored to your needs</p>
-                <Row >
-                    <Col lg={12} sm={12} xs={24}>
-                        {<div className='flex flex-col gap-6 mb-6 md:mb-10 mt-2.5 !ml-4 md:!ml-0'>
-                            {service?.services.map((service, i)  => <ListItem key={i} label={service} />)}
-                        </div>} 
-                    </Col>
-                     <Col lg={12} sm={12} xs={24}>
-                        {<div className='flex flex-col gap-6 mb-6 md:mb-10 mt-2.5 !ml-4 md:!ml-0'>
-                            {service?.services2.map((service, i)  => <ListItem key={i} label={service} />)}
-                        </div>} 
-                    </Col>
-                </Row>    
-            </div>
-        </Col>
-
-        <Col lg={10} sm={24} xs={24}>
-            {service?.image &&<Image src={service?.image} alt='c 1' className='' />}
-        </Col>
-    </Row>
+            <Col lg={10} sm={24} xs={24}>
+                {service?.image && (
+                    <Image
+                        src={service.image}
+                        alt={service.title}
+                        className="h-[260px] w-full rounded-2xl object-cover lg:h-[460px]"
+                    />
+                )}
+            </Col>
+        </Row>
+    </section>
   )
 }
 

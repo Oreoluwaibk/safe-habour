@@ -1,8 +1,10 @@
+"use client"
 import { CheckCircleOutlined, CheckOutlined, FileProtectOutlined, LockOutlined, PhoneOutlined } from '@ant-design/icons'
 import { Col, Row } from 'antd'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Check2, Check3, Check4, Check5, SafeRec } from '../../../assets/image';
 import Image from 'next/image';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export const ListItem = ({ label }: { label: string }) => (
     <div className='flex items-center gap-4'>
@@ -39,9 +41,41 @@ const description = [
     "Ongoing monitoring and quality checks to ensure excellent service standards",
     "Your personal information is protected with bank-level security measures"
 ]
+const slide = {
+    enter: (direction: number) => ({
+        x: direction > 0 ? 72 : -72,
+        opacity: 0,
+    }),
+    center: {
+        x: 0,
+        opacity: 1,
+    },
+    exit: (direction: number) => ({
+        x: direction > 0 ? -72 : 72,
+        opacity: 0,
+    }),
+}
+
 const SafetyCheck = ({ checkedValue }: props) => {
+    const previousValue = useRef(checkedValue);
+    const direction = checkedValue >= previousValue.current ? 1 : -1;
+
+    useEffect(() => {
+        previousValue.current = checkedValue;
+    }, [checkedValue]);
     
   return (
+    <div className="overflow-hidden">
+    <AnimatePresence mode="wait" custom={direction} initial={false}>
+    <motion.div
+        key={checkedValue}
+        custom={direction}
+        variants={slide}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        transition={{ duration: 0.35, ease: "easeOut" }}
+    >
     <Row gutter={[15,15]} className='px-2 md:px-0'>
         <Col lg={14} sm={24} xs={24}>
             <div className='flex flex-col gap-2'>
@@ -90,6 +124,9 @@ const SafetyCheck = ({ checkedValue }: props) => {
             <Image src={images[checkedValue-1]} alt='c 1' className='' />
         </Col>
     </Row>
+    </motion.div>
+    </AnimatePresence>
+    </div>
   )
 }
 

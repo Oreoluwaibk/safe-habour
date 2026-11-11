@@ -7,6 +7,7 @@ import { ShoppingOutlined } from '@ant-design/icons';
 import useWindowWidth from '@/hooks/useWindowResize';
 import ColoredText from './ColoredText';
 import { LuUserCheck } from 'react-icons/lu';
+import { RevealText } from '@/components/motion/Reveal';
 
 const OurVision = () => {
     const [fontSize, setFontSize] = useState<number>(72);
@@ -19,7 +20,7 @@ const OurVision = () => {
     
   return (
     <div className='howowrks dashbottom md:pb-[60px]' style={{backgroundColor: "#FFF8F9"}}>
-        <p className='header'>Our <ColoredText title='Vision' size={fontSize} /></p>
+        <RevealText className='header'>Our <ColoredText title='Vision' size={fontSize} /></RevealText>
 
        {<Row className='!mt-6 md:!mt-[58px] !px-2 md:!px-[100px]' gutter={[0, 15]}>
             <Col lg={8} sm={24} xs={24}>

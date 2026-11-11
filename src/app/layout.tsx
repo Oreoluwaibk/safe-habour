@@ -1,4 +1,5 @@
 "use client";
+import "@ant-design/v5-patch-for-react-19";
 import "./globals.css";
 import { ConfigProvider, App as AntApp } from "antd";
 import { theme } from "../../theme/themeConfig";

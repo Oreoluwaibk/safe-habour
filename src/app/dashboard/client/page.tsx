@@ -15,6 +15,7 @@ import { createErrorMessage } from '../../../../utils/errorInstance';
 import { getClientMetrics } from '@/redux/action/client';
 import { IClientDashboardMetrics } from '../../../../utils/interface';
 import { useRouter } from 'next/navigation';
+import { Reveal } from '@/components/motion/Reveal';
 
 const Page = () => {
   const router = useRouter();
@@ -125,7 +126,7 @@ const Page = () => {
 
   return (
     <ClientContainer active='Dashboard'>
-      <div >
+      <Reveal immediate>
         <h1 className='t-pri font-semibold! text-[32px]'>Welcome Back, {user?.firstName}! {loading && <LoadingOutlined spin/>}</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
@@ -143,8 +144,9 @@ const Page = () => {
           nav={<p className='color-bg font-medium cursor-pointer text-end' onClick={handleNavigate}>Get Started {isPending ? <LoadingOutlined spin className='color-bg ml-2' /> : <ArrowRightOutlined className='color-bg ml-2' />}</p>}
           onCancel={() => setCloseInfo(false)}
         />}
-      </div>
+      </Reveal>
 
+      <Reveal immediate delay={0.08}>
       <Row className='mt-6' gutter={[15, 15]}>
         <Col lg={6} sm={12} xs={24}>
           <InfoCards 
@@ -171,6 +173,7 @@ const Page = () => {
           />
         </Col>
       </Row>
+      </Reveal>
 
       <Row className='mt-6' gutter={[15, 15]}>
         <WorkerComponent 

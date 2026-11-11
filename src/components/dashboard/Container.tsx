@@ -39,11 +39,16 @@ const Container = ({
     const router = useRouter();
     const { message, modal } = App.useApp()
     const [open, setOpen] = useState(false);
+    const [authReady, setAuthReady] = useState(false);
     const { isAuthenticated, loginType, tokenExpiry } = useAppSelector(state => state.auth);
     const [ loading, setLoading ] = useState(false);
     const [ isPending, startTransition ] = useTransition();
     const dispatch = useAppDispatch();
     
+    useEffect(() => {
+        setAuthReady(true);
+    }, []);
+
     useEffect(() => {
         if (tokenExpiry) {
             const expiryTime = new Date(tokenExpiry).getTime();
@@ -59,14 +64,14 @@ const Container = ({
             if (res.status === 200) {
                 setLoading(false);
                 dispatch(logoutUser());
-                message.success(res.data.message || "You have loggued out successfully!");
+                message.success(res.data.message || "You have logged out successfully!");
             }
         })
         .catch((err) => {
             setLoading(false);
             dispatch(logoutUser());
             console.log("err:", err)
-            message.success("You have loggued out successfully!");
+            message.success("You have logged out successfully!");
         });
     }, [message, dispatch]); 
 
@@ -91,38 +96,33 @@ const Container = ({
     <Layout >
         <Layout>
             <Content>
-                <Header className="bg-white! flex items-center gap-3 justify-between py-4! h-20 md:px-28! sticky! top-0 z-3" >
-                    <div className='flex items-center gap-20'>
-                        {/* <Link href="/" className=''> */}
-                        <Image 
-                            src={Logo}
-                            alt='Safe Habour'
-                            className="bg-white cursor-pointer"
-                            onClick={handleGoDashboard} 
-                        />
-                        {/* </Li/</Header>nk> */}
-                       
+                <Header className="bg-white! relative flex items-center justify-between !h-20 !leading-none px-4! md:px-16! lg:px-28! sticky! top-0 z-3" >
+                    <Image 
+                        src={Logo}
+                        alt='Safe Habour'
+                        className="bg-white cursor-pointer shrink-0"
+                        priority
+                        onClick={handleGoDashboard} 
+                    />
 
-                        {!hide && <div className="bg-white md:flex items-center gap-8 hidden">
-                            <NavItem href="/" label="Home" active={active === 'Home'} /> 
-                            <NavItem href="/about" label="About Us" active={active === 'About Us'} /> 
-                            <NavItem href="/services" label="Services" active={active === 'Services'} /> 
-                            <NavItem href="/how-it-works" label="How it works" active={active === 'How it works'} /> 
-                            <NavItem href="/trust-and-safety" label="Trust & Safety" active={active === 'Trust & Safety'} /> 
-                            <NavItem href="/faqs" label="FAQs" active={active === 'FAQs'} /> 
-                            {/* <NavItem href="/blogs" label="Blogs" active={active === 'Blogs'} />  */}
-                        </div>}
-                    </div>
-                    
+                    {!hide && <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-6 lg:gap-8 md:flex">
+                        <NavItem href="/" label="Home" active={active === 'Home'} /> 
+                        <NavItem href="/about" label="About Us" active={active === 'About Us'} /> 
+                        <NavItem href="/services" label="Services" active={active === 'Services'} /> 
+                        <NavItem href="/how-it-works" label="How it works" active={active === 'How it works'} /> 
+                        <NavItem href="/trust-and-safety" label="Trust & Safety" active={active === 'Trust & Safety'} /> 
+                        <NavItem href="/faqs" label="FAQs" active={active === 'FAQs'} /> 
+                    </nav>}
 
-                    {!hide && !isAuthenticated && <div className='hidden md:flex items-center gap-4'>
-                        <Button type="text" className='text-[#667085]! h-11! w-23.5 text-base!' onClick={() => router.push("/auth/login")}>Login</Button>
-                        <Button type='primary' className='h-11! w-23.5 rounded-lg!' onClick={() => router.push("/auth/choose-auth")}>Sign Up</Button>
-                    </div>}
-
-                    {!hide && isAuthenticated && <div className='hidden md:flex items-center gap-4'>
-                        <Button type="text" loading={loading} className='text-[#667085]! h-11! w-23.5! text-base!' onClick={handleAskLogout}>Logout</Button>
-                        <Button type='primary' className='h-11! w-31 rounded-lg!' loading={isPending} onClick={handleGoDashboard}>Dashboard</Button>
+                    {!hide && <div className='hidden md:flex items-center gap-4 min-h-11 shrink-0'>
+                        {authReady && !isAuthenticated && <>
+                            <Button type="text" className='text-[#667085]! h-11! w-23.5 text-base!' onClick={() => router.push("/auth/login")}>Login</Button>
+                            <Button type='primary' className='h-11! w-23.5 rounded-lg!' onClick={() => router.push("/auth/choose-auth")}>Sign Up</Button>
+                        </>}
+                        {authReady && isAuthenticated && <>
+                            <Button type="text" loading={loading} className='text-[#667085]! h-11! w-23.5! text-base!' onClick={handleAskLogout}>Logout</Button>
+                            <Button type='primary' className='h-11! w-31 rounded-lg!' loading={isPending} onClick={handleGoDashboard}>Dashboard</Button>
+                        </>}
                     </div>}
 
                     {<MenuOutlined className='md:hidden! text-2xl' onClick={() => setOpen(!open)} />}

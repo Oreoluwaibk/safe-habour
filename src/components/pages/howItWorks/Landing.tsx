@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { SideVec,Works1, Works2, Works3, Works4 } from '../../../../assets/image'
 import ColoredText from '@/components/general/ColoredText'
 import useWindowWidth from '@/hooks/useWindowResize'
+import { motion } from 'framer-motion'
 
 
 const Landing = () => {
@@ -21,14 +22,19 @@ const Landing = () => {
         <Image src={SideVec} alt='side vec' style={{position: "absolute", top: 0}} />
         <Row gutter={[0,5]} className='h-full !px-6 md:!px-25 !items-center !justify-center !pt-16'>
             <Col lg={14} sm={24} xs={24} className='!font-opensans h-full !flex !flex-col !justify-center gap-2 md:!px-10 md:!pr-20'>
+                <motion.div
+                    className="flex w-full flex-col gap-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                >
                 <p className='!flex !items-center !text-[40px] md:!text-[72px] !flex-wrap font-semibold md:!mb-6'>
                     How SafeHarbour 
                     <ColoredText title='Works' size={fontSize} />
                 </p>
 
                 <p className='!text-lg md!text-2xl w-full'>Our simple process connects families with trusted care professionals. Whether you need care or provide care, we make it easy and secure.</p>
-
-                
+                </motion.div>
             </Col>
 
             <Col lg={10} sm={24} xs={24} className='mt-8 md:mt-0'>

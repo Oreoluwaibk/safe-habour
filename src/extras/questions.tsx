@@ -76,7 +76,7 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/services/snow-plowing"
+                link: "/services/snow-plowings"
             },
             {
                 image: PCook,
@@ -97,7 +97,7 @@ export const serviceTypes = [
     {
         key: "2",
         id: "snow-plowings",
-        title: "snow Plowings",
+        title: "Snow Plowing",
         description: "Reliable snow removal experts for your comfort and safety.",
         services: [
             "Evening and weekend snow removal services.",
@@ -156,7 +156,7 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/services/snow-plowing"
+                link: "/services/snow-plowings"
             },
             {
                 image: CareWork,
@@ -195,7 +195,7 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/services/snow-plowing"
+                link: "/services/snow-plowings"
             },
             {
                 image: CareWork,
@@ -234,7 +234,7 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/services/snow-plowing"
+                link: "/services/snow-plowings"
             },
             {
                 image: CareWork,
@@ -273,7 +273,7 @@ export const serviceTypes = [
                 name: "Snow Plowing",
                 description: "Reliable snow removal experts for your comfort and safety.",
                 service: ["Evening snow plowing", "Weekend snow clearing"],
-                link: "/services/snow-plowing"
+                link: "/services/snow-plowings"
             },
             {
                 image: CareWork,

@@ -13,7 +13,7 @@ export default function Loading() {
         animate={{ opacity: 1, scale: 1 }}     // animate to full size & visible
         transition={{ duration: 1, ease: "easeOut" }} // 1s smooth
       >
-        <Image src={Logo} alt="Logo" className="md:w-[500px]!" />
+        <Image src={Logo} alt="Logo" className="h-auto md:w-[500px]!" style={{ height: "auto" }} />
       </motion.div>
     </div>
     

@@ -8,7 +8,7 @@ export default function Home() {
     <Container active="Services">
       <div>
         <Landing />
-        <ProfessionCare />
+        <ProfessionCare compact />
         <ReadyToStart />
       </div>
     </Container>

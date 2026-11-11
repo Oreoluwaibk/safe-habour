@@ -133,12 +133,10 @@ const Login = () => {
             </FormItem>
 
             <div className='flex items-center justify-between'>
-                <FormItem label="" name="rememberMe" className="flex items-center gap-1">
-                    <>
-                        <Checkbox defaultChecked={rememberMe} checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} title="You agree to our friendly privacy policy." className="mr-4!"  />
-                        <span className="agree">Remember me</span>
-                    </>
-                </FormItem>
+                <div className="flex items-center gap-1">
+                    <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="mr-4!" />
+                    <span className="agree">Remember me</span>
+                </div>
 
                 <Link href="/auth/forgot-password">Forgot Password</Link>
             </div>  

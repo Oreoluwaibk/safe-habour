@@ -7,6 +7,7 @@ import { Pline2 } from '../../../assets/image';
 import { Radio } from 'antd';
 import SafetyCheck from '../general/SafetyCheck';
 import "@/styles/profcare.css";
+import { RevealText } from '@/components/motion/Reveal';
 
 const SafetyPriority = () => {
     const [fontSize, setFontSize] = useState<number>(72);
@@ -21,7 +22,7 @@ const SafetyPriority = () => {
   return (
     <div className='container2 !md:px-[100px]'>
       <Image src={Pline2} alt='P line' className='absolute top-0 left-[20%] hidden md:block !overflow-hidden' />
-      <Radio.Group className='!hidden md:!flex !flex-col gap-10' onChange={(e) => setCheckedValue(e.target.value)} defaultValue={checkedValue}>
+      <Radio.Group className='hidden! md:flex! flex-col! gap-10!' onChange={(e) => setCheckedValue(e.target.value)} value={checkedValue}>
         <Radio value={1} className='absolute top-[33%] left-[45.8%] z-1'/>
         <Radio value={2}  className='absolute top-[42%] left-[46%] z-1'/>
         <Radio value={3} className='absolute top-[51%] left-[45.8%] z-1'/>
@@ -29,16 +30,16 @@ const SafetyPriority = () => {
         <Radio value={5}  className='absolute top-[69%] left-[45.4%] z-1'/>
       </Radio.Group>
 
-      <p className='header'>Your <ColoredText title='Safety' size={fontSize} /> is Our Priority</p>
+      <RevealText className='header'>Your <ColoredText title='Safety' size={fontSize} /> is Our Priority</RevealText>
       <div className='flex items-center justify-center mt-2'>
-        <p className='p2 !text-center w-full md:!w-1/2'>We take trust seriously. Every worker is thoroughly vetted, insured, and monitored to ensure the highest standards of safety and reliability.</p>
+        <p className='p2 text-center! w-full! md:w-1/2!'>We take trust seriously. Every worker is thoroughly vetted, insured, and monitored to ensure the highest standards of safety and reliability.</p>
       </div>
       
 
-      <div className='!mt-6 md:!mt-16'>
+      <div className='mt-6! md:mt-16!'>
        <SafetyCheck checkedValue={checkedValue} />
       </div>
-      <Radio.Group className='md:!hidden !flex !justify-center !gap-4 !mt-4' onChange={(e) => setCheckedValue(e.target.value)} defaultValue={checkedValue}>
+      <Radio.Group className='md:hidden! flex! justify-center! gap-4! mt-4!' onChange={(e) => setCheckedValue(e.target.value)} value={checkedValue}>
         <Radio value={1} />
         <Radio value={2} />
         <Radio value={3} />

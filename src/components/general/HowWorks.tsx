@@ -7,6 +7,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined, ShoppingOutlined } from '@ant-de
 import useWindowWidth from '@/hooks/useWindowResize';
 import ColoredText from './ColoredText';
 import { LuUserCheck } from 'react-icons/lu';
+import { RevealText } from '@/components/motion/Reveal';
 
 const HowWorks = () => {
     const [ showWorker, setShowWorker ] = useState(false);
@@ -20,8 +21,8 @@ const HowWorks = () => {
     
   return (
     <div className='howowrks md:pb-[60px]'>
-        <p className='header'>How <ColoredText title='SafeHarbour' size={fontSize} /> works</p>
-        <p className='p2'>Getting reliable care and home services has never been easier. Our simple 3-step process connects you with trusted professionals.</p>
+        <RevealText className='header'>How <ColoredText title='SafeHarbour' size={fontSize} /> works</RevealText>
+        <RevealText className='p2' delay={0.08}>Getting reliable care and home services has never been easier. Our simple 3-step process connects you with trusted professionals.</RevealText>
 
        {!showWorker &&<Row className='!mt-6 md:!mt-[58px] !px-2 md:!px-[100px]' gutter={[0, 15]}>
             <Col lg={8} sm={24} xs={24}>

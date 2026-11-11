@@ -26,22 +26,22 @@ const MoreServiceCard = ({ title, description, image, items, link }: props) => {
     const router = useRouter();
     
   return (
-    <div className='p-5! shadow rounded-xl'>
-        <Image src={image} alt={title} className='rounded-lg! object-cover w-full! h-30.25! md:h-62.25!'  />
-        <div className='flex flex-col gap-4 mt-4'>
+    <div className='flex h-full w-full flex-col rounded-xl p-5 shadow'>
+        <Image src={image} alt={title} className='h-[180px] w-full rounded-lg object-cover md:h-[220px]' />
+        <div className='mt-4 flex flex-1 flex-col gap-4'>
             <div className='flex items-center gap-2'>
-                <div style={{height: 24, width: 24, borderRadius: 100, display: "flex", alignItems: "center", justifyContent: "center"}}><Image src={Smile} alt='title' /></div>
-                <p className='font-semibold text-lg'>{title}</p>
+                <div className="flex h-6 w-6 items-center justify-center rounded-full"><Image src={Smile} alt="" /></div>
+                <p className='text-lg font-semibold'>{title}</p>
             </div>
 
-            <p className='text-sm! h-10!'>{description}</p>
+            <p className='text-sm text-[#475467]'>{description}</p>
 
-            <div>
-                <ListItem label={items[0]} /> 
-                <ListItem label={items[1]} /> 
+            <div className="flex flex-col gap-2">
+                {items[0] && <ListItem label={items[0]} />}
+                {items[1] && <ListItem label={items[1]} />}
             </div>
 
-            <Button className='w-full! h-11.75!' onClick={() => router.push(`${link}`)}>
+            <Button className='mt-auto h-12! w-full!' onClick={() => router.push(link)}>
                 Learn More
             </Button>
         </div>

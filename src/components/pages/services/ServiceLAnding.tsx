@@ -1,106 +1,81 @@
+"use client"
 import { serviceType } from '@/extras/questions';
 import { Button, Col, Row } from 'antd';
 import Image from 'next/image';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { useRouter } from 'next/navigation';
 
 interface props {
     service?: serviceType;
 }
-const ServiceLanding = ({
-    service
-}: props) => {
+
+const photoClass = "w-full rounded-xl object-cover";
+
+const ServicePhoto = ({ src, alt, className }: { src: string | StaticImport; alt: string; className: string }) => (
+    <Image src={src} alt={alt} className={`${photoClass} ${className}`} />
+);
+
+const ServiceCollage = ({ images, title }: { images: (string | StaticImport)[]; title: string }) => {
+    if (images.length === 0) return null;
+
+    if (images.length === 2) {
+        return (
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
+                <ServicePhoto src={images[0]} alt={title} className="h-[220px] lg:h-[460px]" />
+                <ServicePhoto src={images[1]} alt={title} className="h-[220px] lg:h-[460px]" />
+            </div>
+        );
+    }
+
+    if (images.length === 3) {
+        return (
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
+                <ServicePhoto src={images[0]} alt={title} className="h-[250px] lg:h-[540px]" />
+                <div className="flex flex-col gap-3 md:gap-4">
+                    <ServicePhoto src={images[1]} alt={title} className="h-[119px] lg:h-[262px]" />
+                    <ServicePhoto src={images[2]} alt={title} className="h-[119px] lg:h-[262px]" />
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid grid-cols-2 items-start gap-3 md:gap-4">
+            <div className="flex flex-col gap-3 md:gap-4">
+                <ServicePhoto src={images[0]} alt={title} className="h-[160px] lg:h-[280px]" />
+                <ServicePhoto src={images[1]} alt={title} className="h-[130px] lg:h-[220px]" />
+            </div>
+            <div className="flex flex-col gap-3 pt-6 md:gap-4 md:pt-10">
+                <ServicePhoto src={images[2]} alt={title} className="h-[130px] lg:h-[230px]" />
+                <ServicePhoto src={images[3]} alt={title} className="h-[160px] lg:h-[290px]" />
+            </div>
+        </div>
+    );
+};
+
+const ServiceLanding = ({ service }: props) => {
     const router = useRouter();
-  return (
-     <div style={{position: "relative", backgroundColor: "#FFF8F9"}} className='min-h-[614px] mb-4 pb-4 dashbottom'>
-            <Row gutter={[0,5]} className='h-full !px-6 md:!px-25 !items-center !justify-center !pt-16'>
-                <Col lg={14} sm={24} xs={24} className='!font-opensans h-full !flex !flex-col items-center md:items-start !justify-center gap-0 md:!px-10 md:!pr-20'>
-                    <p className='text-[#670316] p-2 !bg-[#FFEFF2] rounded-[12px] !w-[116px] !font-semibold !text-center'>Our Service</p>
-                    <p className='!flex !items-center !text-[40px] md:!text-[72px] !flex-wrap font-semibold md:!mb-6'>
+
+    return (
+        <div className="dashbottom relative overflow-hidden bg-[#FFF8F9]">
+            <Row gutter={[32, 24]} className="!mx-0 !items-start !px-6 !py-10 md:!px-20 md:!py-14 lg:!px-28">
+                <Col lg={12} sm={24} xs={24} className="!flex !flex-col !justify-center gap-2">
+                    <p className="w-fit rounded-xl bg-[#FFEFF2] px-3 py-2 text-center font-semibold text-[#670316]">Our Service</p>
+                    <h1 className="text-[40px] font-semibold leading-tight text-[#1E1E1E] md:text-[56px]">
                         {service?.title}
-                    </p>
-    
-                    <p className='!text-lg md!text-2xl w-full text-center md:text-left'>{service?.description}</p>
-    
-                    <div className='flex items-center gap-8 mt-6'>
-                        <Button type="primary" className='md:min-w-[220px]' onClick={() =>router.push("/auth/choose-auth")}>Book Service Now</Button>
+                    </h1>
+                    <p className="w-full text-lg text-[#1E1E1E] md:text-2xl">{service?.description}</p>
+                    <div className="mt-4">
+                        <Button type="primary" className="md:min-w-[220px]" onClick={() => router.push("/auth/choose-auth")}>Book Service Now</Button>
                     </div>
                 </Col>
-    
-                <Col lg={10} sm={24} xs={24} className='mt-8 md:mt-0'>
-                    {service?.id === "care-workers" && <Row gutter={[15,15]} className='md:!pr-9 !relative'>
-                       <Col lg={12} sm={12} xs={12}>
-                        {service?.images?.[0] && <Image src={service.images[0]} alt='service 1' className='!rounded-[12px] object-cover !h-full md:!h-full' />}
-                       </Col>
-    
-                       <Col lg={12} sm={12} xs={12} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[1] && <Image src={service?.images[1]} alt='service 1' className='!rounded-[12px] object-cover !h-[166px] md:!h-[48%]' />}
-                        {service?.images?.[2] && <Image src={service?.images[2]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[48%]' />}
-                       </Col>
-                    </Row>}
 
-                    {service?.id === "snow-plowings" && <Row gutter={[15,15]} className='md:!pr-9 !relative'>
-                       <Col lg={12} sm={12} xs={12} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[0] && <Image src={service.images[0]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[60%]' />}
-                        {service?.images?.[1] && <Image src={service.images[1]} alt='service 1' className='!rounded-[12px] object-cover !h-[166px] md:!h-[184px]' />}
-                       </Col>
-    
-                       <Col lg={12} sm={12} xs={12} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[2] && <Image src={service?.images[2]} alt='service 1' className='!rounded-[12px] object-cover !h-[166px] md:!h-[42%]' />}
-                        {service?.images?.[3] && <Image src={service?.images[3]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[56%]' />}
-                       </Col>
-                    </Row>}
-
-                    {service?.id === "personal-cooks" && <Row gutter={[15,15]} className='md:!pr-9 !relative'>
-                        <Col lg={14} sm={14} xs={14} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                         {service?.images?.[0] && <Image src={service.images[0]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[186px]' />}
-                        </Col>
-                       <Col lg={10} sm={10} xs={10} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[1] && <Image src={service.images[1]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[186px]' />}
-                       </Col>
-    
-                       <Col lg={12} sm={12} xs={12} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[2] && <Image src={service?.images[2]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[238px]' />}
-                        
-                       </Col>
-                       <Col lg={12} sm={12} xs={12} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                       {service?.images?.[3] && <Image src={service?.images[3]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[238px]' />}</Col>
-                    </Row>}
-
-                    {service?.id === "house-chores" && <Row gutter={[15,15]} className='md:!pr-9 !relative'>
-                        <Col lg={12} sm={12} xs={12} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[0] && <Image src={service?.images[0]} alt='service 1' className='!rounded-[12px] object-cover !h-[166px] md:!h-[218px]' />}
-                        {service?.images?.[1] && <Image src={service?.images[1]} alt='service 1' className='!rounded-[12px] object-cover !h-[186px] md:!h-[213px]' />}
-                       </Col>
-
-                       <Col lg={12} sm={12} xs={12}>
-                        {service?.images?.[2] && <Image src={service.images[2]} alt='service 1' className='!rounded-[12px] object-cover !h-full md:!h-[442px]' />}
-                       </Col>
-                    </Row>}
-
-                    {service?.id === "support-workers" && <Row gutter={[5,15]} className='md:!pr-9 !relative'>
-                        <Col lg={14} sm={14} xs={14} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[0] && <Image src={service?.images[0]} alt='service 1' className='!rounded-[12px] object-cover !h-[320px] md:!h-[442px]' />}
-                       </Col>
-
-                       <Col lg={10} sm={10} xs={10}>
-                        {service?.images?.[1] && <Image src={service.images[1]} alt='service 1' className='!rounded-[12px] object-cover !h-[320px] md:!h-[442px]' />}
-                       </Col>
-                    </Row>}
-
-                    {service?.id === "companion-workers" && <Row gutter={[5,15]} className='md:!pr-9 !relative'>
-                        <Col lg={10} sm={10} xs={10} className='md:!pr-5 !pl-2 md:!pl-0 !flex flex-col !gap-4 !h-full'>
-                        {service?.images?.[0] && <Image src={service?.images[0]} alt='service 1' className='!rounded-[12px] object-cover !h-[320px] md:!h-[442px]' />}
-                       
-                       </Col>
-
-                       <Col lg={14} sm={14} xs={14}>
-                        {service?.images?.[1] && <Image src={service.images[1]} alt='service 1' className='!rounded-[12px] object-cover !h-[320px] md:!h-[442px]' />}
-                       </Col>
-                    </Row>}
+                <Col lg={12} sm={24} xs={24}>
+                    <ServiceCollage images={service?.images ?? []} title={service?.title || "Service"} />
                 </Col>
             </Row>
         </div>
-  )
-}
+    );
+};
 
-export default ServiceLanding
+export default ServiceLanding;

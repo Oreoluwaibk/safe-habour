@@ -15,6 +15,7 @@ import { getServiceWorkerMetrics } from '@/redux/action/serviceWorker';
 import { createErrorMessage } from '../../../../utils/errorInstance';
 import { EarningsSummary } from '../../../../utils/interface';
 import { LoadingOutlined } from '@ant-design/icons';
+import { Reveal } from '@/components/motion/Reveal';
 
 const Page = () => {
   const router = useRouter();
@@ -100,7 +101,7 @@ const Page = () => {
 
   return (
     <WorkerContainer active='Dashboard'>
-      <div >
+      <Reveal immediate>
         <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.firstName}! {loading && <LoadingOutlined spin/>}</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
@@ -112,8 +113,9 @@ const Page = () => {
             message.info(isDocumentUploaded ? 'Profile will be completed and verified after the documents are reviewed by our team.' : "You have not uploaded any document, kindly upload a document to be verified")
           }}
         />}
-      </div>
+      </Reveal>
 
+      <Reveal immediate delay={0.08}>
       <Row className='mt-6' gutter={[15, 15]}>
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
@@ -152,6 +154,7 @@ const Page = () => {
           />
         </Col>
       </Row>
+      </Reveal>
 
       <Row className='mt-6 pb-6' gutter={[15, 15]}>
         <Col lg={14} sm={12} xs={24}>

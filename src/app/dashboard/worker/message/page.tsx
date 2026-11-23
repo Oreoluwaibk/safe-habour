@@ -173,8 +173,12 @@ const Message = () => {
         />}
         </div>
       
-        <div className='flex flex-col text-sm'>
-          <p className='font-medium' style={{ color: "#344054", display: "flex", gap:10}}>{activeChat.otherUserName} {isConnected &&<span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0 rounded-2xl flex items-center gap-2'> <BsRecordFill color='#12B76A' size={8} className='' /> connected</span>}</p>              <p style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
+        <div className='flex flex-col text-sm min-w-0'>
+          <p className='font-medium min-w-0' style={{ color: "#344054", display: "flex", gap:10, alignItems: "center", flexWrap: "wrap"}}>
+            <span className='truncate max-w-[180px] sm:max-w-[280px]'>{activeChat.otherUserName}</span>
+            {isConnected && <span className='text-[#12B76A] bg-[#ECFDF3] text-xs px-2 py-0.5 rounded-2xl inline-flex items-center gap-1'> <BsRecordFill color='#12B76A' size={8} /> connected</span>}
+          </p>
+          <p className='truncate max-w-[220px] sm:max-w-[320px]' style={{ color: "#667085", fontWeight: 300}}>@{activeChat.otherUserName}</p>
         </div>
     </div>}
     </>
@@ -182,13 +186,13 @@ const Message = () => {
   return (
     <WorkerContainer active='Message'>
       <Row gutter={[15,15]}>
-        <Col lg={8} sm={12} xs={24}>
+        <Col lg={8} sm={24} xs={24} className={activeChat ? "hidden lg:block" : ""}>
           <Card 
             variant="borderless" 
             style={{boxShadow: "none"}}
             styles={{header: {border: "none", boxShadow: "none"}}}
             title={<div className='px-2'>
-              <p className='text-[#1e1e1e] text-lg font-semibold'>Messages <span className='bg-[#FFF7F8] h-8 w-8 rounded-[100px] text-[#670316] text-xs ml-2'>{chatList.length}</span></p>
+              <p className='text-[#1e1e1e] text-lg font-semibold flex items-center'>Messages <span className='inline-flex items-center justify-center min-w-8 h-8 px-2 rounded-full bg-[#FFF7F8] text-[#670316] text-xs ml-2'>{chatList.length}</span></p>
               
               </div>}
             extra={<div className='px-2 border p-2 h-10 w-10 rounded-lg border-[#D0D5DD] flex items-center justify-center'><Image src={EditSVG} alt='edit svg' /> </div>}
@@ -214,22 +218,27 @@ const Message = () => {
           </Card>
         </Col>
 
-        <Col lg={16} sm={12} xs={24}>
+        <Col lg={16} sm={24} xs={24} className={!activeChat ? "hidden lg:block" : ""}>
           <Card
             variant="borderless" 
             style={{boxShadow: "none", backgroundColor:"#F9FAFB"}}
-            styles={{header: { backgroundColor: "#fff", padding: "20px 10px"}, body: {height: "80vh", display: "flex", flexDirection: "column", position: "relative"}}}
-            title={title}
+            styles={{header: { backgroundColor: "#fff", padding: "20px 10px"}, body: {height: "min(80vh, 720px)", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden"}}}
+            title={
+              <div className='flex items-center gap-2 min-w-0'>
+                {activeChat && <button type='button' className='lg:hidden text-sm text-[#670316] shrink-0' onClick={() => setActiveChat(null)}>Back</button>}
+                <div className='min-w-0'>{title}</div>
+              </div>
+            }
           >
-            <div className={`h-[80%] ${!activeChat && "flex flex-col items-center justify-center"}`}>
+            <div className={`flex-1 min-h-0 overflow-y-auto ${!activeChat && "flex flex-col items-center justify-center"}`}>
               {activeChat && (
                 fetchLoading ? <p className='text-center text-lg'>Loading chat history...<LoadingOutlined spin /></p> :
                 <Messages messages={messages} />
               )}
-              {!activeChat && <p className='text-center text-lg'>No current chat, select a chat to send messages!</p>}
+              {!activeChat && <p className='text-center text-lg px-4'>No current chat, select a chat to send messages!</p>}
             </div>
             
-            {activeChat && <div className='min-h-26 border border-[#D0D5DD] rounded-lg p-2 justify-end'>
+            {activeChat && <div className='shrink-0 mt-3 border border-[#D0D5DD] rounded-lg p-2'>
               <Input.TextArea 
                 placeholder='Send a message' 
                 className='border-none! bg-[#F9FAFB]!' 

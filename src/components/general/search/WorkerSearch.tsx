@@ -80,7 +80,7 @@ const WorkerSearch: React.FC<props> = ({ width }) => {
         {showSearch && <Select
             showSearch
             allowClear
-            placeholder="Search Workers"
+            placeholder="Search jobs"
             onSearch={(value) => setSearchValue(value)}
             onSelect={handleSelect}
             filterOption={false} // ensures we use server search

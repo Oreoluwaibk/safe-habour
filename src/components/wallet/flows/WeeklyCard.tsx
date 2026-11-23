@@ -3,6 +3,7 @@ import RoundBtn from '@/components/general/RoundBtn';
 import Status from '@/components/general/Status';
 import { Icon } from '@iconify/react';
 import { Card } from 'antd'
+import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import EditSchdedule from '../modal/EditSchdedule';
 import { GroupedSchedule } from '../../../../utils/converters';
@@ -17,13 +18,13 @@ interface props {
 }
 
 
-const WeeklyCard = ({ available, title, days, refresh, allSchedule }: props) => {
+const WeeklyCard = ({ title, refresh, allSchedule }: props) => {
     const [ openEdit, setOpenEdit ] = useState(false);
     const [ current, setCurrent ] = useState<Schedule[]>([])
 
     useEffect(() => {
         if(allSchedule) getSchedulesByDay(allSchedule, title)
-    }, [allSchedule])
+    }, [allSchedule, title])
 
     const getSchedulesByDay = (
         data: DaySchedule[],
@@ -45,9 +46,17 @@ const WeeklyCard = ({ available, title, days, refresh, allSchedule }: props) => 
             status={ <Status size={12} title={isAvailable ? 'Available' : "Unavailable"} bg={isAvailable ? "#F4FFFA" : "#FFF5F5"} color={isAvailable ? "#039855" : "#FF0004"} />} 
         />}
         extra={
-            <div className='flex gap-4 items-center'>
-                {days &&days.startTime.map((time: string,i:number) => (
-                    <p key={i} className='text-[#1E1E1E]'>{time} - {days.endTime[i]}</p>
+            <div className='flex flex-wrap gap-3 items-center justify-end'>
+                {current.map((slot, i) => (
+                    <p key={slot.id || i} className='text-[#1E1E1E] text-sm whitespace-nowrap'>
+                        {moment(slot.startTime, ["HH:mm:ss", "HH:mm"]).isValid()
+                            ? moment(slot.startTime, ["HH:mm:ss", "HH:mm"]).format("h:mm A")
+                            : slot.startTime}
+                        {" - "}
+                        {moment(slot.endTime, ["HH:mm:ss", "HH:mm"]).isValid()
+                            ? moment(slot.endTime, ["HH:mm:ss", "HH:mm"]).format("h:mm A")
+                            : slot.endTime}
+                    </p>
                 ))}
                <RoundBtn title='Edit' onClick={() => setOpenEdit(true)} width={86} height={40} icon={<Icon icon="flowbite:edit-outline" />} />
             </div>

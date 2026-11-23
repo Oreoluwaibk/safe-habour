@@ -37,9 +37,9 @@ const JobHistoryCard = ({ job, user, refresh }: props) => {
                     status={<Status title={statusTitle} color={colors.color} bg={colors.bg} />} 
                 /> 
 
-                <div className='flex items-center gap-5 text-sm'>
+                <div className='flex flex-wrap items-center gap-3 text-sm'>
                     <div className='flex items-center gap-2'>
-                        <ClockCircleOutlined className='#343434' />
+                        <ClockCircleOutlined className='!text-[#343434]' />
                         <span>Completed at: {moment(job?.completedAt).format("DD/MM/YYYY")}</span>
                     </div>
                     <Status 
@@ -59,8 +59,8 @@ const JobHistoryCard = ({ job, user, refresh }: props) => {
         </div>}
         classNames={{ header: "!pb-4", body:` ${job.clientReviewComment ? "flex flex-col gap-6 py-0! my-0!" :"h-0! p-0!"}`}}
         actions={[
-            <div className='flex items-center justify-end px-4' key={1}>
-                <div className='flex items-center gap-4 px-6 py-4'>
+            <div className='flex flex-wrap items-center justify-end gap-3 px-4 py-2' key={1}>
+                <div className='flex flex-wrap items-center justify-end gap-3'>
 
                 {!job.serviceWorkerReviewComment && <Button icon={<StarOutlined />} type="default" className='md:!min-w-[129px] !h-[48px] !text-[#670316]' style={{borderRadius: 50}} onClick={() => setOpenModal(true)}>Rate Experience</Button>}
 
@@ -72,7 +72,7 @@ const JobHistoryCard = ({ job, user, refresh }: props) => {
         {job.clientReviewComment && <div>
             <p className='text-[#343434] text-base font-semibold'>Client Review:</p>
 
-            <span className='border-[#B1FFDC] text-[#1e1e1e] text-sm mt-2 rounded-xl bg-[#F3FFF9]'>{job.clientReviewComment}</span>
+            <span className='block border border-[#B1FFDC] text-[#1e1e1e] text-sm mt-2 px-3 py-2 rounded-xl bg-[#F3FFF9]'>{job.clientReviewComment}</span>
         </div>}
        
 

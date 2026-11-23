@@ -1,5 +1,6 @@
 "use client"
 import "@/styles/client.css"
+import "@/styles/workers.css"
 import { MenuOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Image as AntDImage, App, Button } from 'antd';
 import Link from 'next/link';
@@ -123,38 +124,37 @@ const WorkerContainer = ({
      <Layout >
         <Layout>
             <Content className="bg-white">
-                <Header className="client-nav prim-bg bg-white sticky top-5 z-[2]" >
-                    <div className='flex items-center justify-between w-[60%]'>
-                        <Link href="/dashboard/worker" className=''>
+                <Header className="client-nav worker-nav prim-bg bg-white sticky top-5 z-30" >
+                    <div className='flex items-center justify-start min-w-0'>
+                        <Link href="/dashboard/worker" className='shrink-0 flex items-center'>
                         <Image 
                             src={Logo}
                             alt='Safe Habour'
-                            className="bg-white md:hidden mt-8"
+                            className="bg-white md:hidden h-8 w-auto"
                         />
                         <Image 
                             src={MaskedLogo}
                             alt='Safe Habour'
-                            className="md:block"
+                            className="hidden md:block h-8 w-auto"
                         />
 
                         </Link>
-                       
+                    </div>
 
-                        <div className="md:flex items-center gap-8 hidden">
-                            <NavItem href="/dashboard/worker" label="Dashboard" active={active === 'Dashboard'} /> 
-                            <NavItem href="/dashboard/worker/jobs" label="Jobs" active={active === 'Jobs'} /> 
-                            <NavItem href="/dashboard/worker/schedule" label="Schedule" active={active === 'Schedule'} /> 
-                            <NavItem href="/dashboard/worker/wallet" label="Wallet" active={active === 'Wallet'} /> 
-                            <NavItem href="/dashboard/worker/message" label="Message" active={active === 'Message'} /> 
-                            <NavItem href="/dashboard/worker/settings" label="Settings" active={active === 'Settings'} /> 
-                        </div>
+                    <div className="worker-nav-links hidden md:flex items-center justify-center gap-3 xl:gap-6">
+                        <NavItem href="/dashboard/worker" label="Dashboard" active={active === 'Dashboard'} /> 
+                        <NavItem href="/dashboard/worker/jobs" label="Jobs" active={active === 'Jobs'} /> 
+                        <NavItem href="/dashboard/worker/schedule" label="Schedule" active={active === 'Schedule'} /> 
+                        <NavItem href="/dashboard/worker/wallet" label="Wallet" active={active === 'Wallet'} /> 
+                        <NavItem href="/dashboard/worker/message" label="Message" active={active === 'Message'} /> 
+                        <NavItem href="/dashboard/worker/settings" label="Settings" active={active === 'Settings'} /> 
                     </div>
                     
 
-                    <div className='hidden md:flex items-center gap-4'>
-                    <WorkerSearch width={300} />
+                    <div className='hidden md:flex items-center justify-end gap-3'>
+                    <WorkerSearch width={220} />
                     <NotificationToast />
-                    <div className="mt-2">
+                    <div className="flex items-center">
                         <NotificationBell />
                     </div>
                         {/* <NotificationBell /> */}
@@ -177,9 +177,8 @@ const WorkerContainer = ({
                     {/* <Button type='primary' className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' onClick={() => setOpenJobModal(true)}><PlusOutlined className="" /> Post a Job</Button> */}
                 </div>
 
-                <div className='flex md:hidden items-center gap-2'>
-                    {/* <SearchOutlined className="!text-black !text-lg" /> */}
-                    <div className="mt-2">
+                <div className='flex md:hidden items-center justify-end gap-2'>
+                    <div className="flex items-center">
                         <NotificationBell />
                     </div>
                     
@@ -197,7 +196,7 @@ const WorkerContainer = ({
                             <Image src={CheckedCircle} alt="image" className="!text-[#039855] " />
                         </div>}
                     </div>
-                    {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
+                    {<MenuOutlined className='md:!hidden text-2xl !text-[#1E1E1E]' onClick={() => setOpen(!open)} />}
                 </div>
 
                 </Header>
@@ -209,7 +208,7 @@ const WorkerContainer = ({
                             notification={notification}
                         />
                     </div>}
-                    <div className="md:px-[50px] px-1 pt-8 md:pt-0 w-full! bg-[#f6f6f6] min-h-[100vh]">
+                    <div className="worker-shell md:px-[50px] px-4 pt-8 md:pt-0 w-full! bg-[#f6f6f6] min-h-[100vh]">
                     {children}
                     </div>   
                 </Layout>

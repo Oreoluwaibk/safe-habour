@@ -26,15 +26,15 @@ const Page = () => {
       </div>
 
       <Row gutter={[15, 15]} className='pb-6'>
-        {active === "Browse Jobs" &&  <Col lg={24} sm={24} xs={24} className=' h-[58vh] overflow-y-auto'>
+        {active === "Browse Jobs" &&  <Col lg={24} sm={24} xs={24}>
           <AvailableContainer isJobs />
         </Col>}
 
-        {active === "Job History" && <Col lg={24} sm={24} xs={24} className=' h-[58vh] overflow-y-auto'>
+        {active === "Job History" && <Col lg={24} sm={24} xs={24}>
            <WorkerJobHistory />
         </Col>}
 
-         {active === "My Applications" && <Col lg={24} sm={24} xs={24} className='h-[60vh] overflow-y-auto scrollbar-hide'>
+         {active === "My Applications" && <Col lg={24} sm={24} xs={24}>
            <WorkerJobApplication />
         </Col>}
       </Row>

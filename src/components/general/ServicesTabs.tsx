@@ -126,7 +126,7 @@ const ServicesTabs = () => {
                 <ListItem label="Grocery shopping" />
                 <ListItem label="Kitchen cleanup" />
               </div>
-              <Button className='w-full !h-[58px]'  onClick={() => router.push("/services/personal-cooks")}>Learn More</Button>
+              <Button className='w-full h-14.5!'  onClick={() => router.push("/services/personal-cooks")}>Learn More</Button>
             </div>
           </Col>
 

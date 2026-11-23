@@ -135,14 +135,16 @@ const FilterCard = ({ filter, setFilter }: Props) => {
           onChange={handlePriceRange}
         />
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-2">
           <InputNumber
+            className="min-w-0 flex-1"
             placeholder="Min"
             value={filter.minPrice}
             onChange={(v) => setFilter(prev => ({ ...prev, minPrice: v || 0, pageNumber: 1 }))}
           />
-          -
+          <span>-</span>
           <InputNumber
+            className="min-w-0 flex-1"
             placeholder="Max"
             value={filter.maxPrice}
             onChange={(v) => setFilter(prev => ({ ...prev, maxPrice: v || 1000, pageNumber: 1 }))}
@@ -152,7 +154,7 @@ const FilterCard = ({ filter, setFilter }: Props) => {
 
       <div className="filter-container">
         <p className="t-pri text-base">Availability</p>
-        <RangePicker onChange={handleDate} />
+        <RangePicker className="w-full" onChange={handleDate} />
       </div>
 
       <div className="filter-container">

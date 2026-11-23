@@ -8,7 +8,7 @@ import UpcomingJobCard from './cards/UpcomingJobCard'
 import { useRouter } from 'next/navigation'
 import { getServiceWorkerUpcomingJobs } from '@/redux/action/jobs'
 import { createErrorMessage } from '../../../utils/errorInstance'
-import { EarningsSummary, IJobApplication } from '../../../utils/interface'
+import { EarningsSummary, IJobApplication, review } from '../../../utils/interface'
 import { getWorkerReview } from '@/redux/action/review'
 import { useAppSelector } from '@/hook'
 
@@ -21,8 +21,7 @@ const UpcomingContainer = ({ metrics }: props) => {
     const { modal } = App.useApp();
     const [ loading, setLoading ] = useState(false);
     const [ upcomingJobs, setUpcomingJobs ] = useState<IJobApplication[]>([]);
-    const [ reviews, setReviews ] = useState([]);
-    const [ rating ] = useState("0.0");
+    const [ reviews, setReviews ] = useState<review[]>([]);
     const [isPending, startTransition] = useTransition();
 
     const handleGetUpcomingJobs = useCallback(() => {
@@ -55,12 +54,10 @@ const UpcomingContainer = ({ metrics }: props) => {
     }, [modal])
 
     const handleGetWorkerReview = useCallback((id: string) => {
-        setLoading(true);
         getWorkerReview(id)
         .then(res => {
             if(res.status === 200) {
-                setLoading(false);
-                setReviews(res.data.data);
+                setReviews(Array.isArray(res.data.data) ? res.data.data : []);
             }
         })
         .catch(err => {
@@ -70,7 +67,6 @@ const UpcomingContainer = ({ metrics }: props) => {
                 ? createErrorMessage(err.response.data)
                 : err.message,
             });
-             setLoading(false)
         })
     }, [modal])
 
@@ -83,6 +79,11 @@ const UpcomingContainer = ({ metrics }: props) => {
         if(user?.id) handleGetWorkerReview(user?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
+
+    const reviewList = reviews.filter((item) => typeof item?.rating === "number");
+    const rating = reviewList.length
+        ? (reviewList.reduce((sum, item) => sum + item.rating, 0) / reviewList.length).toFixed(1)
+        : "0.0";
 
      const handleRedirect = () => {
         startTransition(() => {
@@ -107,7 +108,7 @@ const UpcomingContainer = ({ metrics }: props) => {
             loading={isPending} 
             onClick={handleRedirect} 
             type="default" 
-            className='md:!w-full !h-[48px] !border-[#A9A9A9]' 
+            className='!w-full !h-[48px] !border-[#A9A9A9]' 
             style={{borderRadius: 50}} 
             icon={<Icon icon="stash:data-date-light" fontSize={16} />}>
                 View Full Schedule
@@ -143,23 +144,23 @@ const UpcomingContainer = ({ metrics }: props) => {
     className='!mt-6'
     loading={loading}
     >
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-wrap items-center justify-between gap-2'>
             <p className='text-lg text-[#1e1e1e]'>Rating</p>
             <div className='flex items-center gap-1'>
                 <StarFilled className='!text-[#ffdd33]' />
                 <span className='t-pri font-medium'>{rating}</span>
-                <span className='text-[#585858]'>({reviews.length} Reviews)</span>
+                <span className='text-[#585858]'>({reviewList.length} {reviewList.length === 1 ? "Review" : "Reviews"})</span>
             </div>
         </div>
 
-        <div className='flex items-center justify-between'>
-            <p className='text-lg text-[#1e1e1e]'>Job Completed</p>
+        <div className='flex items-center justify-between gap-3'>
+            <p className='text-lg text-[#1e1e1e]'>Jobs Completed</p>
              <p className='text-lg text-[#1e1e1e] font-medium'>{metrics.totalCompletedJobs}</p>
         </div>
 
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between gap-3'>
             <p className='text-lg text-[#1e1e1e]'>Response Rate</p>
-             <p className='text-lg text-[#1e1e1e] font-medium'>{metrics.responseRate}%</p>
+             <p className='text-lg text-[#1e1e1e] font-medium'>{Number(metrics.responseRate || 0)}%</p>
         </div>
 </Card>
 </>

@@ -169,10 +169,10 @@ const Page = () => {
                         title={application?.jobTitle || "Hire Service"} 
                         status={<Status title={statusTitle} bg={colors.bg} color={colors.color} />}
                     />
-                    <div className='flex items-center gap-3'>
-                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {application?.location}</span>
-                        <Rating />
-                        <p className='text-lg text-[#646464] font-medium'>${application?.budget}</p>
+                    <div className='flex flex-wrap items-center gap-3'>
+                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {application?.location || "Location not specified"}</span>
+                        <Rating value={application?.client?.clientRating} count={application?.client?.reviews?.length} />
+                        <p className='text-lg text-[#646464] font-medium'>${Number(application?.budget || 0).toFixed(2)}</p>
                     </div>
                     <div className='flex items-center gap-4'>
                         <Status size={12} title={application && handleDisplayServices(application.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
@@ -210,7 +210,7 @@ const Page = () => {
                                 size={56} 
                                 className='h-[56px] w-[56px] rounded-full object-cover' 
                             />}
-                            <CardTitle title={application?.client?.name || ""} description={<Rating />} />
+                            <CardTitle title={application?.client?.name || "Client"} description={<Rating value={application?.client?.clientRating} count={application?.client?.reviews?.length} />} />
                         </div>
                     </div>
                 }
@@ -219,17 +219,12 @@ const Page = () => {
                 loading={loading}
             >
 
-                    <div className='flex items-center justify-between'>
+                    <div className='flex items-center justify-between gap-3'>
                         <p className='text-lg text-[#1e1e1e]'>Member Since</p>
-                        <p className='text-lg text-[#1e1e1e] font-medium'>{application?.client && moment(application?.client?.createdAt).format("YYYY")}</p>
+                        <p className='text-lg text-[#1e1e1e] font-medium'>{application?.client?.createdAt ? moment(application.client.createdAt).format("YYYY") : "—"}</p>
                     </div>
 
-                    <div className='flex items-center justify-between'>
-                        <p className='text-lg text-[#1e1e1e]'>Response Rate</p>
-                        <p className='text-lg text-[#1e1e1e] font-medium'>87%</p>
-                    </div>
-
-                    <div className='flex items-center justify-between'>
+                    <div className='flex items-center justify-between gap-3'>
                         <p className='text-lg text-[#1e1e1e]'>Verification</p>
                         <Status bg='' color={application?.client?.isVerified ? "#039855" : "#ff0004"} title={application?.client?.isVerified ? 'Verified' : "Not Verified"} />
                     </div>

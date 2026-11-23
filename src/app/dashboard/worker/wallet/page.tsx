@@ -183,9 +183,9 @@ const Page = () => {
     <Col lg={6} sm={12} xs={24}>
       <InfoWalletCards 
         title='Pending in Escrow'
-        amount={metrics.pendingInEscrow}
+        amount={`$${Number(metrics.pendingInEscrow || 0).toFixed(2)}`}
         info="Being processed"
-        icon={<ClockCircleOutlined className='tetx-[#670316]' />}
+        icon={<ClockCircleOutlined className='!text-[#670316]' />}
         isWallet
       />
     </Col>
@@ -208,23 +208,27 @@ const Page = () => {
           header: "",
           body: "flex flex-col gap-2"
         }}
-        actions={[<div key={1} className='flex items-center justify-between px-6 font-medium'>
-          <Button type="primary" className='md:!w-full !h-[48px]' style={{borderRadius: 50}} icon={<Icon icon="fluent:payment-48-regular" />}>Instant Payment ($2.99 fee)</Button>
+        actions={[<div key={1} className='px-4 sm:px-6 font-medium'>
+          <Button type="primary" className='!w-full !h-auto min-h-[48px] !whitespace-normal' style={{borderRadius: 50}} icon={<Icon icon="fluent:payment-48-regular" />}>Instant Payment ($2.99 fee)</Button>
         </div>]}
       >
-        <div className='flex items-center justify-between bg-[#FFF4F6] border-[#FFD6DE] rounded-[5px] p-4'>
+        <div className='flex flex-wrap items-start justify-between gap-3 bg-[#FFF4F6] border border-[#FFD6DE] rounded-[5px] p-4'>
           <div className='flex flex-col gap-0'>
-            <p className='text-sm text-[#343433]'>{bankInfo ? "Available for payout" : "Payout not set"}</p>
-            {/* <p className='text-lg text-[#101828] font-medium'>$1,432.00</p> */}
+            <p className='text-sm text-[#343433]'>{bankInfo?.bankAccount ? "Available for payout" : "Payout not set"}</p>
+            <p className='text-lg text-[#101828] font-medium'>${Number(metrics.clearedBalance || 0).toFixed(2)}</p>
           </div>
 
           <div className='flex flex-col gap-0'>
             <p className='text-sm text-[#343433]'>Next payout</p>
-            {bankInfo &&  <p className='text-lg text-[#101828] font-medium'>{moment(bankInfo.payoutSchedule.nextPayoutDate).format("ddd, MMM YY")}</p>}
+            <p className='text-lg text-[#101828] font-medium'>
+              {bankInfo?.payoutSchedule?.nextPayoutDate && moment(bankInfo.payoutSchedule.nextPayoutDate).isValid()
+                ? moment(bankInfo.payoutSchedule.nextPayoutDate).format("ddd, MMM D")
+                : "Not scheduled"}
+            </p>
           </div>
         </div>
 
-        <p className='text-[#343434] text-sm'>Automatic weekly payouts are processed every Friday</p>
+        <p className='text-[#343434] text-sm'>{bankInfo?.payoutSchedule?.intervalDescription || "Payout schedule will appear here once your bank account is connected."}</p>
       </Card>
     </Col>
     
@@ -235,19 +239,19 @@ const Page = () => {
           header: "linear",
           body: "flex flex-col gap-4"
         }}
-        actions={[<div key={1} className='flex items-center justify-between px-6 font-medium'>
+        actions={[<div key={1} className='flex flex-wrap items-center justify-between gap-2 px-6 font-medium'>
           <p className='text-lg text-[#191919]'>Net Earnings</p>
-          <p className='text-lg text-[#191919] font-medium'>${metrics.totalEarnings.toFixed(2)}</p>
+          <p className='text-lg text-[#191919] font-medium'>${Number(metrics.totalEarnings || 0).toFixed(2)}</p>
         </div>]}
       >
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-wrap items-center justify-between gap-2'>
           <p className='text-lg text-[#343433]'>Gross Earnings</p>
-          <p className='text-lg text-[#323232] font-medium'>${metrics.totalGrossEarnings.toFixed(2)}</p>
+          <p className='text-lg text-[#323232] font-medium'>${Number(metrics.totalGrossEarnings || 0).toFixed(2)}</p>
         </div>
 
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-wrap items-center justify-between gap-2'>
           <p className='text-lg text-[#343433]'>Platform Fees (10%)</p>
-          <p className='text-lg text-[#ff0044] font-medium'>-${metrics.totalPlatformFees.toFixed(2)}</p>
+          <p className='text-lg text-[#ff0044] font-medium'>-${Number(metrics.totalPlatformFees || 0).toFixed(2)}</p>
         </div>
       </Card>
     </Col>

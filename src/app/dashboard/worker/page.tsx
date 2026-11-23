@@ -98,12 +98,15 @@ const Page = () => {
   }, []);
 
   const isDocumentUploaded = authentication?.hasIdentificationDocument && authentication.hasLocationDocument
+  const monthChange = Number(metrics.percentageChangeFromLastMonth || 0);
+  const monthChangeUp = monthChange >= 0;
+  const money = (value: number) => `$${Number(value || 0).toFixed(2)}`;
 
   return (
     <WorkerContainer active='Dashboard'>
       <Reveal immediate>
-        <h1 className='t-pri !font-semibold text-[32px]'>Welcome Back, {user?.firstName}! {loading && <LoadingOutlined spin/>}</h1>
-        <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
+        <h1 className='t-pri !font-semibold text-[32px] leading-tight break-words'>Welcome Back, {user?.firstName?.trim() || "there"}! {loading && <LoadingOutlined spin/>}</h1>
+        <p className='t-pri mb-6'>Track your jobs, schedule, and earnings in one place.</p>
 
         {closeInfo && <CompleteInfo 
           title={isDocumentUploaded ? 'Your Documents are under review' : "You are yet to upload any document"}
@@ -120,16 +123,16 @@ const Page = () => {
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
             title='Total Earnings'
-            amount={`$${metrics.totalEarnings.toFixed(2)}`}
+            amount={money(metrics.totalEarnings)}
             isWallet
-            info={<p className='text-xs'><span className='bg-[#ECFDF3] text-[#027A48] px-2 py-1 rounded-[16px]'>{metrics.percentageChangeFromLastMonth}%</span>  vs last month</p>}
+            info={<p className='text-xs flex flex-wrap items-center gap-1'><span className={`${monthChangeUp ? "bg-[#ECFDF3] text-[#027A48]" : "bg-[#FEF3F2] text-[#B42318]"} px-2 py-1 rounded-[16px]`}>{monthChangeUp ? "+" : ""}{monthChange}%</span> vs last month</p>}
             icon={<Icon icon="bx:dollar" color='#670316' />}
           />
         </Col>
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
             title='Pending Earnings'
-            amount={metrics.pendingInEscrow}
+            amount={money(metrics.pendingInEscrow)}
             isWallet
             info='In escrow'
             icon={<Icon icon="mingcute:time-line"  color='#670316' />}
@@ -139,7 +142,7 @@ const Page = () => {
           <InfoWalletCards 
             title='Completed Jobs'
             amount={metrics.totalCompletedJobs}
-            info={<p className='text-xs'><span className='bg-[#ECFDF3] text-[#027A48] px-2 py-1 rounded-[16px]'>8%</span>  vs last month</p>}
+            info="All time"
             icon={<Icon icon="nrk:media-media-complete" color='#670316' />}
             isWallet
           />
@@ -147,9 +150,9 @@ const Page = () => {
         <Col lg={6} sm={12} xs={24}>
           <InfoWalletCards 
             title='Response Rate'
-            amount={metrics.responseRate}
+            amount={`${Number(metrics.responseRate || 0)}%`}
             isWallet
-            info="Keep it high"
+            info={metrics.responseRateDescription || "Keep it high"}
             icon={<Icon icon="carbon:analytics" color='#670316' />}
           />
         </Col>
@@ -157,11 +160,11 @@ const Page = () => {
       </Reveal>
 
       <Row className='mt-6 pb-6' gutter={[15, 15]}>
-        <Col lg={14} sm={12} xs={24}>
+        <Col lg={14} sm={24} xs={24}>
          <AvailableContainer />
         </Col>
 
-        <Col lg={10} sm={12} xs={24}>
+        <Col lg={10} sm={24} xs={24}>
           <UpcomingContainer metrics={metrics} />
         </Col>
         

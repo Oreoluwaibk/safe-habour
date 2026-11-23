@@ -13,7 +13,7 @@ const CompleteInfo = ({ title, description, nav, onCancel, icon=<InfoCircleOutli
   return (
     <div className='incomplete relative'>
       {icon}
-      <div className='flex flex-col gap-1 w-full'>
+      <div className='flex flex-col gap-1 w-full pr-6'>
           <p className='font-semibold'>{title}</p>
           <p className='incomplete-des'>{description}</p>
           {nav}

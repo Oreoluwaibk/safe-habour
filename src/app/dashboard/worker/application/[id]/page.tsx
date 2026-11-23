@@ -171,10 +171,10 @@ const Page = () => {
                 title={application?.jobDetails.jobTitle || "Hire Service"} 
                 status={<Status title={statusTitle} bg={colors.bg} color={colors.color} />}
               />
-              <div className='flex items-center gap-3'>
-                <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {application?.jobDetails.location}</span>
-                <Rating />
-                <p className='text-lg text-[#646464] font-medium'>${application?.jobDetails.budget}</p>
+              <div className='flex flex-wrap items-center gap-3'>
+                <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {application?.jobDetails.location || "Location not specified"}</span>
+                <Rating value={application?.client?.clientRating} count={application?.client?.reviews?.length} />
+                <p className='text-lg text-[#646464] font-medium'>${Number(application?.jobDetails.budget || 0).toFixed(2)}</p>
               </div>
               <div className='flex items-center gap-4'>
                 <Status size={12} title={application && handleDisplayServices(application.jobDetails.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
@@ -186,7 +186,7 @@ const Page = () => {
           extra={
             <>
             {application.jobDetails.status === 5 && <Button onClick={() => setOpenRateModal(true)} icon={<StarOutlined />} type="default" className='!text-[#670316] !h-[48px]' style={{borderRadius: 50}}>Rate Experience</Button>}
-            {application.jobDetails.isHireDirectly && application.status === 1 && <div className='flex items-center gap-2'>
+            {application.jobDetails.isHireDirectly && application.status === 1 && <div className='flex flex-wrap items-center justify-end gap-2'>
               <RoundBtn width={89} onClick={() => handleAcceptDecline(false)} title='Decline' />
               <RoundBtn primary width={89} onClick={() => handleAcceptDecline(true)} title='Accept' />
             </div>}
@@ -226,15 +226,15 @@ const Page = () => {
           classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
           className='!mt-3'
           actions={[
-          <div className='px-4 flex items-center gap-6' key={1}>
+          <div className='px-4 flex flex-wrap items-center gap-x-6 gap-y-3' key={1}>
             <div className='flex items-center gap-3'>
-              <span className='text-[#646464] flex items-center gap-1'><Icon icon="lets-icons:date-today-light" fontSize={14} />State Date:</span>
-              <span>{moment(application?.jobDetails.dateNeeded).format("DD/MM/YYYY")}</span>
+              <span className='text-[#646464] flex items-center gap-1'><Icon icon="lets-icons:date-today-light" fontSize={14} />Start Date:</span>
+              <span>{application?.jobDetails.dateNeeded ? moment(application.jobDetails.dateNeeded).format("DD/MM/YYYY") : "Not set"}</span>
             </div>
 
             <div className='flex items-center gap-3'>
-              <span className='text-[#646464] flex items-center gap-1'><Icon icon="si:dollar-line" fontSize={14} />Payment:</span>
-              <span>Hourly rate paid weekly</span>
+              <span className='text-[#646464] flex items-center gap-1'><Icon icon="si:dollar-line" fontSize={14} />Budget:</span>
+              <span>${Number(application?.jobDetails.budget || 0).toFixed(2)}</span>
             </div>
 
             <div className='flex items-center gap-3'>
@@ -260,7 +260,7 @@ const Page = () => {
                   size={56} 
                   className='h-[56px] w-[56px] rounded-full object-cover' 
                 />}
-                <CardTitle title={application?.client?.name || ""} description={<Rating />} />
+                <CardTitle title={application?.client?.name || "Client"} description={<Rating value={application?.client?.clientRating} count={application?.client?.reviews?.length} />} />
               </div>
             </div>
           }
@@ -269,19 +269,14 @@ const Page = () => {
           loading={loading}
         >
 
-          <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-between gap-3'>
             <p className='text-lg text-[#1e1e1e]'>Member Since</p>
-            <p className='text-lg text-[#1e1e1e] font-medium'>{application?.client && moment(application?.client?.createdAt).format("YYYY")}</p>
+            <p className='text-lg text-[#1e1e1e] font-medium'>{application?.client?.createdAt ? moment(application.client.createdAt).format("YYYY") : "—"}</p>
           </div>
 
-          <div className='flex items-center justify-between'>
-            <p className='text-lg text-[#1e1e1e]'>Response Rate</p>
-            <p className='text-lg text-[#1e1e1e] font-medium'>87%</p>
-          </div>
-
-          <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-between gap-3'>
             <p className='text-lg text-[#1e1e1e]'>Verification</p>
-            <Status bg='' color={application?.client?.isVerified ? "#039855" : "#ff0004"} title={application.client?.isVerified ? 'Verified' : "Not Verified"} />
+            <Status bg='' color={application?.client?.isVerified ? "#039855" : "#ff0004"} title={application?.client?.isVerified ? 'Verified' : "Not Verified"} />
           </div>
         </Card>
       </Col>

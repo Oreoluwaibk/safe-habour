@@ -31,8 +31,8 @@ const InfoWalletCards = ({
         <div  className='bg-[#FFEAEE] flex items-center justify-center !h-6 !w-6 rounded-[100px]'>{icon ? icon :<Image src={Lightening} alt={title} />} </div>
         
       </div>}
-      <p className='text-[36px] font-semibold' style={{color: red? "#ff0004" : ""}}>{amount}</p>
-      {info && <span className='text-[#646464] text-sm'>{info}</span>}
+      <p className='text-[28px] md:text-[32px] font-semibold leading-none break-words' style={{color: red? "#ff0004" : ""}}>{amount}</p>
+      {info && <span className='text-[#646464] text-sm leading-snug break-words'>{info}</span>}
     </div>
   )
 }

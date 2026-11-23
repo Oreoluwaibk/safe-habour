@@ -104,12 +104,14 @@ const AvailableContainer = ({ isJobs }: { isJobs?: boolean }) => {
   }, [hasMore, loading, isJobs]);
 
   return (
-    <Row>
-      <Col lg={isJobs ? 6 : 0} sm={isJobs ? 24 : 0} xs={isJobs ? 24: 0} className="h-[58vh] overflow-y-auto">
-        <FilterCard filter={filters} setFilter={setFilters} />
-      </Col>
+    <Row gutter={[15, 15]}>
+      {isJobs && (
+        <Col lg={6} sm={24} xs={24} className="lg:h-[58vh] lg:overflow-y-auto">
+          <FilterCard filter={filters} setFilter={setFilters} />
+        </Col>
+      )}
 
-      <Col lg={isJobs ? 18 : 24} sm={24} xs={24} className={`${isJobs && "h-[58vh] overflow-y-auto"}`}>
+      <Col lg={isJobs ? 18 : 24} sm={24} xs={24} className={isJobs ? "lg:h-[58vh] lg:overflow-y-auto" : ""}>
         <Card
           loading={loading && filters.pageNumber === 1}
           title="Available Jobs"
@@ -117,17 +119,20 @@ const AvailableContainer = ({ isJobs }: { isJobs?: boolean }) => {
         >
           <Row gutter={[15, 15]}>
             {allJobs.map((job, i) => (
-              <Col key={i} lg={24}>
+              <Col key={job.id || i} lg={24}>
                 <AvailableJobCard job={job} verified={authentication?.isVerified || false} />
               </Col>
             ))}
           </Row>
 
-          {/* Loader */}
+          {!loading && allJobs.length === 0 && (
+            <p className="text-center text-gray-400 mt-3">No jobs available right now</p>
+          )}
+
           {loading && filters.pageNumber > 1 && (
             <p className="text-center text-gray-400 mt-3">Loading more...</p>
           )}
-          {!hasMore && (
+          {!hasMore && allJobs.length > 0 && (
             <p className="text-center text-gray-400 mt-3">No more jobs available</p>
           )}
 

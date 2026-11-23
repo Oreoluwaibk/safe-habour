@@ -83,6 +83,17 @@ body {
     display: none;
 }
 
+.no-scrollbar,
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
 .footer-menu {
     display: flex;
     flex-direction: column;

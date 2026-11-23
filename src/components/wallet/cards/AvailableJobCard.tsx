@@ -37,30 +37,30 @@ const AvailableJobCard = ({ job, verified }: props) => {
   return (
      <Card
         title={<CardTitle title={job?.jobTitle || "Hire Service"} description={`Client: ${job?.client?.name.split(" ")[0] || ""}`} />}
-        extra={<Rating />}
+        extra={<Rating value={job.client?.clientRating} count={job.client?.reviews?.length} />}
         actions={[
-          <div className='flex items-center justify-between px-4' key={1}>
+          <div className='flex flex-wrap items-center justify-between gap-3 px-4 py-2' key={1}>
             <span className='text-[#3E3E3E] text-sm bg-[#fafafa] px-2 py-1 rounded-full'>Posted: {job.createdAt && timeAgo(job.createdAt)}</span>
 
-            <div className='flex items-center gap-4 px-6 py-4'>
+            <div className='flex flex-wrap items-center gap-3'>
             <Button 
               loading={isPending} 
               icon={<EyeOutlined />} 
               type="default" 
-              className='md:!w-[129px] !h-[48px] !text-[#670316]' 
+              className='!h-[44px] !px-4 !text-[#670316]' 
               style={{borderRadius: 50}} 
               onClick={handleRedirect}>
                 View Details
             </Button>
-            <Button  type="primary" onClick={handleApply} className='md:!w-[129px] !h-[48px]' style={{borderRadius: 50}}>Apply Now</Button>
+            <Button  type="primary" onClick={handleApply} className='!h-[44px] !px-4' style={{borderRadius: 50}}>Apply Now</Button>
           </div>
           </div>
         ]}
         classNames={{ body: "flex flex-col gap-2 !py-1" }}
     >
-       <p className='text-[#343434]'>{job.jobDescription}</p>
+       <p className='text-[#343434] line-clamp-3'>{job.jobDescription}</p>
 
-       <div className='flex items-center justify-between'>
+       <div className='flex flex-wrap items-center justify-between gap-2'>
         <span className='text-[#646464]'><EnvironmentOutlined className='!text-[#670316] mr-1' /> {job.location || "Location not specified"}</span>
         <span className='text-[#646464]'><ClockCircleOutlined className='!text-[#670316] mr-2' /> {moment(job.dateNeeded).format("DD/MM/YYYY")} {job && savedPreferredTime.find(time => time.id === job?.timePreference)?.title}</span>
        </div>

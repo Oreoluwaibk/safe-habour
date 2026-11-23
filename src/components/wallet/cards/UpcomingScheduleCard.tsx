@@ -61,15 +61,15 @@ const UpcomingScheduleCard = ({ application, onRefresh }: props) => {
     <>
     <Card
         title={
-        <div className='flex flex-col gap-1 pb-5'>
+        <div className='flex flex-col gap-2 min-w-0'>
             <CardTitle 
                 title={application.jobDetails.jobTitle || "Hire Service"} 
-                description={`Client: ${application.jobDetails.jobDescription}`}
+                description={application.client?.name ? `Client: ${application.client.name}` : undefined}
                 status={ <Status title={statusTitle} bg={colors.bg} color={colors.color} />} 
             />
-            <div className='flex items-center gap-2 mt-[-20px]'>
+            <div className='flex items-center gap-2'>
                 <EnvironmentOutlined color='#670316' className='!text-[#670316]'/>
-                <p className='text-[#343434] font-normal'>{application.jobDetails.location}</p>
+                <p className='text-[#343434] font-normal break-words'>{application.jobDetails.location || "Location not specified"}</p>
             </div>
             <div className='flex items-center gap-2'>
                 <ClockCircleOutlined color='#670316' className='!text-[#670316]' />
@@ -78,9 +78,9 @@ const UpcomingScheduleCard = ({ application, onRefresh }: props) => {
 
         </div>}
         extra={
-            <div className='flex flex-col justify-center gap-2 items-end'>
+            <div className='flex flex-col justify-center gap-2 items-stretch sm:items-end'>
                 <p className='text-[#039855] font-semibold text-xl'>CAD {application.jobDetails.budget}</p>
-                {application.status === 2 && <div className='flex items-center gap-2'>
+                {application.status === 2 && <div className='flex flex-wrap items-center justify-end gap-2'>
                     {application.jobDetails.status ===2 && 
                         <RoundBtn 
                             onClick={handleMarkAsComplete} 
@@ -98,7 +98,7 @@ const UpcomingScheduleCard = ({ application, onRefresh }: props) => {
                         icon={<EyeOutlined className='text-[#670316]' />} 
                     />
                 </div>}
-                {!application.jobDetails.isHireDirectly && application.status !== 2 && <div className='flex items-center gap-2'>
+                {!application.jobDetails.isHireDirectly && application.status !== 2 && <div className='flex flex-wrap items-center justify-end gap-2'>
                     <RoundBtn   
                         onClick={() => router.push(`/dashboard/worker/application/${application.id}`)} 
                         title='View Details' 
@@ -106,7 +106,7 @@ const UpcomingScheduleCard = ({ application, onRefresh }: props) => {
                     />
                     {/* <RoundBtn primary onClick={handleAccept} loading={loading} title='Accept' /> */}
                 </div>}
-                {application.jobDetails.isHireDirectly && application.status === 1 && <div className='flex items-center gap-2'>
+                {application.jobDetails.isHireDirectly && application.status === 1 && <div className='flex flex-wrap items-center justify-end gap-2'>
                     <RoundBtn 
                         onClick={() => router.push(`/dashboard/worker/application/${application.id}`)} 
                         title='View Details' 

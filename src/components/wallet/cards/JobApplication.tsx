@@ -80,7 +80,7 @@ const JobApplication = ({ application, onRefresh }: props) => {
         }
         extra={
             <>
-                {application.status === 2 && <div className='flex items-center gap-2'>
+                {application.status === 2 && <div className='flex flex-wrap items-center justify-end gap-2'>
                     {application.jobDetails.status === 2 && 
                     <RoundBtn 
                         onClick={handleMarkAsComplete} 
@@ -98,14 +98,14 @@ const JobApplication = ({ application, onRefresh }: props) => {
                         icon={<EyeOutlined className='text-[#670316]' />} 
                     />
                 </div>}
-                {!application.jobDetails.isHireDirectly && application.status !== 2 && <div className='flex items-center gap-2'>
+                {!application.jobDetails.isHireDirectly && application.status !== 2 && <div className='flex flex-wrap items-center justify-end gap-2'>
                     <RoundBtn 
                         onClick={() => router.push(`/dashboard/worker/application/${application.id}`)} 
                         title='View Details' 
                         icon={<EyeOutlined className='text-[#670316]' />}
                     />
                 </div>}
-                {application.jobDetails.isHireDirectly && application.status === 1 && <div className='flex items-center gap-2'>
+                {application.jobDetails.isHireDirectly && application.status === 1 && <div className='flex flex-wrap items-center justify-end gap-2'>
                     <RoundBtn 
                         icon={<EyeOutlined className='text-[#670316]' />} 
                         onClick={() => router.push(`/dashboard/worker/application/${application.id}`)} 
@@ -130,14 +130,6 @@ const JobApplication = ({ application, onRefresh }: props) => {
 
             <span className='border-[#C5C5C5]! border text-[#1e1e1e] text-sm px-3 py-4 rounded-xl bg-[#FBFBFB]'>
             {application.message || "No message for this job"}
-            </span>
-        </div>}
-
-        {application.status === 6 && <div className='flex flex-col gap-4'>
-            <p className='text-[#343434] text-base font-semibold'>Client Review:</p>
-
-            <span className='border-[#B1FFDC] text-[#1e1e1e] text-sm px-2 py-3 rounded-xl bg-[#F3FFF9]'>
-            Exceptional care and attention. Sarah was punctual, professional, and genuinely caring with my mother. Highly recommend!
             </span>
         </div>}
 

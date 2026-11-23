@@ -44,7 +44,7 @@ const AdminContainer = ({
     const [ loading, setLoading ] = useState(false);
     const [open, setOpen] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType, tokenExpiry } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const [ isPending, startTransition ] = useTransition();
     const [ notification ] = useState<INotification>({
         "id": "string",
@@ -101,8 +101,8 @@ const AdminContainer = ({
     }
 
     useEffect(() => {
-        if (!isAuthenticated) handleLogout();
-    }, [isAuthenticated, handleLogout]); 
+        if (!isAuthenticated) router.replace("/auth/login");
+    }, [isAuthenticated, router]);
 
     useEffect(() => {
         //SuperAdmin  ServiceWorker
@@ -112,14 +112,6 @@ const AdminContainer = ({
         } 
             
     }, [loginType, isAuthenticated, router])
-
-    useEffect(() => {
-        if (tokenExpiry) {
-            const expiryTime = new Date(tokenExpiry).getTime();
-            const currentTime = Date.now();
-            if (expiryTime < currentTime) handleLogout();
-        }
-    }, [tokenExpiry])
 
   return (
      <Layout className="bg-[#f6f6f6]!" >

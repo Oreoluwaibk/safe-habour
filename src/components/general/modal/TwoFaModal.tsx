@@ -2,9 +2,9 @@ import { loginAction, verifyTwoFASetting } from '@/redux/action/auth';
 import { App, Button, Input, Modal } from 'antd';
 import React, { useState } from 'react'
 import { createErrorMessage } from '../../../../utils/errorInstance';
-import { useAppDispatch, useAppSelector } from '@/hook';
-import { setLastRoute } from '@/redux/reducer/auth/auth';
+import { useAppDispatch } from '@/hook';
 import { useRouter } from 'next/navigation';
+import { clearLastRoute, readLastRoute } from '../../../../utils/session';
 
 interface props {
     open: boolean;
@@ -15,7 +15,6 @@ const TwoFaModal = ({ open, onCancel, email }: props) => {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { modal, message } = App.useApp();
-    const { lastRoute } = useAppSelector(state => state.auth)
     const [ loading, setLoading ] = useState(false);
     const [ otp, setOtp ] = useState("");
     
@@ -34,12 +33,12 @@ const TwoFaModal = ({ open, onCancel, email }: props) => {
                     content: res.data.message,
                     onOk: async () => {
                         setLoading(false);
-                        const result = await dispatch(loginAction(res.data.data));
-                        console.log("result:", result)
+                        await dispatch(loginAction(res.data.data));
                         const role = res.data.data?.roles?.[0];
-                        if (lastRoute) {
-                            router.push(lastRoute);
-                            dispatch(setLastRoute(null)); // clear it
+                        const returnTo = readLastRoute();
+                        if (returnTo) {
+                            clearLastRoute();
+                            router.push(returnTo);
                         } 
                         else if (role === "ClientUser") router.push("/dashboard/client");
                         else if (role === "ServiceWorker") {

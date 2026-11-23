@@ -95,10 +95,10 @@ const Page = () => {
             title={
                 <div className='flex flex-col gap-1'>
                     <CardTitle title={job?.jobTitle || "Hire Service"} />
-                    <div className='flex items-center gap-3'>
-                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {job?.location}</span>
-                        <Rating />
-                        <p className='text-lg text-[#646464] font-medium'>${job?.budget}</p>
+                    <div className='flex flex-wrap items-center gap-3'>
+                        <span className='text-[#646464]'><EnvironmentOutlined className='mr-1' /> {job?.location || "Location not specified"}</span>
+                        <Rating value={job?.client?.clientRating} count={job?.client?.reviews?.length} />
+                        <p className='text-lg text-[#646464] font-medium'>${Number(job?.budget || 0).toFixed(2)}</p>
                     </div>
                     <div className='flex items-center gap-4'>
                         <Status size={12} title={job && handleDisplayServices(job.serviceCategoryId, categories)?.name || ""} bg='#F6F6F6' color='#343434' />
@@ -146,15 +146,15 @@ const Page = () => {
             classNames={{ header: "!py-4", body: "!h-0 !p-0", }}
             className='!mt-3'
             actions={[
-                <div className='px-4 flex items-center gap-6' key={1}>
+                <div className='px-4 flex flex-wrap items-center gap-x-6 gap-y-3' key={1}>
                     <div className='flex items-center gap-3'>
-                        <span className='text-[#646464] flex items-center gap-1'><Icon icon="lets-icons:date-today-light" fontSize={14} />State Date:</span>
-                        <span>{moment(job?.dateNeeded).format("DD/MM/YYYY")}</span>
+                        <span className='text-[#646464] flex items-center gap-1'><Icon icon="lets-icons:date-today-light" fontSize={14} />Start Date:</span>
+                        <span>{job?.dateNeeded ? moment(job.dateNeeded).format("DD/MM/YYYY") : "Not set"}</span>
                     </div>
 
                     <div className='flex items-center gap-3'>
-                        <span className='text-[#646464] flex items-center gap-1'><Icon icon="si:dollar-line" fontSize={14} />Payment:</span>
-                        <span>Hourly rate paid weekly</span>
+                        <span className='text-[#646464] flex items-center gap-1'><Icon icon="si:dollar-line" fontSize={14} />Budget:</span>
+                        <span>${Number(job?.budget || 0).toFixed(2)}</span>
                     </div>
 
                     <div className='flex items-center gap-3'>
@@ -190,17 +190,12 @@ const Page = () => {
                 loading={loading}
             >
 
-                    <div className='flex items-center justify-between'>
+                    <div className='flex items-center justify-between gap-3'>
                         <p className='text-lg text-[#1e1e1e]'>Member Since</p>
-                        <p className='text-lg text-[#1e1e1e] font-medium'>{job?.client && moment(job?.client?.createdAt).format("YYYY")}</p>
+                        <p className='text-lg text-[#1e1e1e] font-medium'>{job?.client?.createdAt ? moment(job.client.createdAt).format("YYYY") : "—"}</p>
                     </div>
 
-                    <div className='flex items-center justify-between'>
-                        <p className='text-lg text-[#1e1e1e]'>Response Rate</p>
-                        <p className='text-lg text-[#1e1e1e] font-medium'>87%</p>
-                    </div>
-
-                    <div className='flex items-center justify-between'>
+                    <div className='flex items-center justify-between gap-3'>
                         <p className='text-lg text-[#1e1e1e]'>Verification</p>
                         <Status bg='' color={job?.client?.isVerified ? "#039855" : "#ff0004"} title={job?.client?.isVerified ? 'Verified' : "Not Verified"} />
                     </div>

@@ -25,12 +25,9 @@ export const loginAction = createAsyncThunk(
     // ✅ Persist data
     localStorage.setItem("safehabour_user", JSON.stringify(user));
     localStorage.setItem("safehabour_login_type", JSON.stringify(roles?.[0]));
-    localStorage.setItem(
-      "safehabour_token",
-      JSON.stringify(token)
-    );
+    localStorage.setItem("safehabour_token", token);
     if (tokenExpiry)
-      localStorage.setItem("safehabour_token_expiry", JSON.stringify(tokenExpiry));
+      localStorage.setItem("safehabour_token_expiry", String(tokenExpiry));
 
     // ✅ Return payload for Redux
     return {

@@ -10,6 +10,7 @@ import { IClientDashboardMetrics, PaymentTransaction } from '../../../../../util
 import { getClientMetrics } from '@/redux/action/client'
 import { createErrorMessage } from '../../../../../utils/errorInstance'
 import { getClientFee } from '@/redux/action/transaction'
+import { motion } from 'framer-motion'
 
 const Page = () => {
   const [ isHistory, setIsHistory ] = useState(false);
@@ -113,20 +114,24 @@ const Page = () => {
             <EscrowInfo />
           </Col>}
           {!isHistory && <Col lg={8} sm={12} xs={24}>
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}>
             <InfoCards 
-              title='Fund Helds'
-              amount={`$${metrics.activeJobs} CAD`}
+              title='Funds Held'
+              amount={metrics.activeJobs}
               isWallet
-              info='Currently in Escrow'
+              info='Jobs currently in escrow'
             />
+            </motion.div>
           </Col>}
           {!isHistory && <Col lg={8} sm={12} xs={24}>
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.12 }}>
             <InfoCards 
               title='Released'
               isWallet
-              amount="$24.00 CAD"
-              info='Paid to Workers'
+              amount={`$${Number(metrics.totalSpent || 0).toFixed(2)} CAD`}
+              info='Paid to workers'
             />
+            </motion.div>
           </Col>}
           <Col lg={8} sm={12} xs={24}>
             <InfoCards 
@@ -139,7 +144,7 @@ const Page = () => {
           {isHistory && <Col lg={8} sm={12} xs={24}>
             <InfoCards 
               title='Net Amount'
-              amount={`$${metrics.totalSpent.toFixed(2)} CAD`}
+              amount={`$${Number(metrics.totalSpent || 0).toFixed(2)} CAD`}
               isWallet
               info='Debit'
               red

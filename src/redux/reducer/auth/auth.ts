@@ -2,6 +2,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import { IUser, signinReducer } from "../../../../utils/interface";
+import { clearLastRoute, expiryToStore } from "../../../../utils/session";
 // import { loginAction } from "@/redux/action/auth";
 
 
@@ -37,7 +38,7 @@ const initialState: signinReducer = {
   user: storedUser ? JSON.parse(storedUser) : null,
   isAuthenticated: !!storedUser,
   token: storedToken || null,
-  tokenExpiry: storedExpiry ? storedExpiry : null,
+  tokenExpiry: storedExpiry ? expiryToStore(storedExpiry) : null,
   loading: false,
   success: false,
   error: null,
@@ -51,13 +52,14 @@ export const signinSlice = createSlice({
   reducers: {
     // ✅ update access token after refresh
     setToken: (state, action: PayloadAction<{ token: string; tokenExpiry: string }>) => {
+      const tokenExpiry = expiryToStore(action.payload.tokenExpiry);
       state.token = action.payload.token;
-      state.tokenExpiry = action.payload.tokenExpiry;
+      state.tokenExpiry = tokenExpiry;
       state.isAuthenticated = true;
 
       if (isBrowser) {
         localStorage.setItem("safehabour_token", action.payload.token);
-        localStorage.setItem("safehabour_token_expiry", action.payload.tokenExpiry);
+        localStorage.setItem("safehabour_token_expiry", tokenExpiry);
       }
     },
      setLastRoute: (state, action) => {
@@ -81,6 +83,7 @@ export const signinSlice = createSlice({
         localStorage.removeItem("safehabour_token");
         localStorage.removeItem("safehabour_token_expiry");
         localStorage.removeItem("safehabour_login_type");
+        clearLastRoute();
       }
     },
   },
@@ -97,7 +100,7 @@ export const signinSlice = createSlice({
         state.error = null;
 
         const token = payload?.token;
-        const tokenExpiry = payload?.tokenExpiry || Date.now() + 3600 * 1000; // fallback: 1 hour
+        const tokenExpiry = expiryToStore(payload?.tokenExpiry) || String(Date.now() + 3600 * 1000);
         const user = payload?.user || null;
         const type = payload?.type || null;
 

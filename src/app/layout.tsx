@@ -8,6 +8,7 @@ import { store } from "../store";
 import { Inter, Open_Sans } from "next/font/google";
 import "react-phone-input-2/lib/style.css";
 import StripeProvider from "@/components/general/StripeProvider";
+import SessionWatcher from "@/components/auth/SessionWatcher";
 
 
 // Fonts
@@ -50,6 +51,7 @@ export default function RootLayout({
          {/* {loading && <LoadingOverlay />} */}
         <StripeProvider>
           <Provider store={store}>
+            <SessionWatcher />
             <ConfigProvider theme={theme}>
               <AntApp>{children}</AntApp>
             </ConfigProvider>

@@ -44,7 +44,7 @@ const WorkerContainer = ({
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType, tokenExpiry } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const [ notification ] = useState<INotification>({
         "id": "string",
         "title": "string",
@@ -102,16 +102,8 @@ const WorkerContainer = ({
     }
 
     useEffect(() => {
-        if (!isAuthenticated) handleLogout();
-    }, [isAuthenticated, handleLogout]);
-    
-    useEffect(() => {
-        if (tokenExpiry) {
-            const expiryTime = new Date(tokenExpiry).getTime();
-            const currentTime = Date.now();
-            if (expiryTime < currentTime) handleLogout();
-        }
-    }, [tokenExpiry])    
+        if (!isAuthenticated) router.replace("/auth/login");
+    }, [isAuthenticated, router]);
 
     useEffect(() => {
         if(isAuthenticated && loginType !== "ServiceWorker") {

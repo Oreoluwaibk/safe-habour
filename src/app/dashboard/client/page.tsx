@@ -16,6 +16,7 @@ import { getClientMetrics } from '@/redux/action/client';
 import { IClientDashboardMetrics } from '../../../../utils/interface';
 import { useRouter } from 'next/navigation';
 import { Reveal } from '@/components/motion/Reveal';
+import { motion } from 'framer-motion';
 
 const Page = () => {
   const router = useRouter();
@@ -127,7 +128,7 @@ const Page = () => {
   return (
     <ClientContainer active='Dashboard'>
       <Reveal immediate>
-        <h1 className='t-pri font-semibold! text-[32px]'>Welcome Back, {user?.firstName}! {loading && <LoadingOutlined spin/>}</h1>
+        <h1 className='t-pri font-semibold! text-[32px] leading-tight break-words'>Welcome Back, {user?.firstName?.trim() || "there"}! {loading && <LoadingOutlined spin/>}</h1>
         <p className='t-pri mb-6'>Manage your services and connect with trusted workers in your area.</p>
 
         {closeInfo && <CompleteInfo 
@@ -146,40 +147,32 @@ const Page = () => {
         />}
       </Reveal>
 
-      <Reveal immediate delay={0.08}>
       <Row className='mt-6' gutter={[15, 15]}>
-        <Col lg={6} sm={12} xs={24}>
-          <InfoCards 
-            title='Active Bookings'
-            amount={metrics.activeJobs}
-          />
-        </Col>
-        <Col lg={6} sm={12} xs={24}>
-          <InfoCards 
-            title='Total Spent'
-            amount={`$${metrics.totalSpent.toFixed(2)} CAD`}
-          />
-        </Col>
-        <Col lg={6} sm={12} xs={24}>
-          <InfoCards 
-            title='Refund Issued'
-            amount={`$${metrics.refundsIssued.toFixed(2)} CAD`}
-          />
-        </Col>
-        <Col lg={6} sm={12} xs={24}>
-          <InfoCards 
-            title='Pending Transactions'
-            amount={metrics.pendingTransactions}
-          />
-        </Col>
+        {[
+          { title: "Active Bookings", amount: metrics.activeJobs },
+          { title: "Total Spent", amount: `$${Number(metrics.totalSpent || 0).toFixed(2)} CAD` },
+          { title: "Refunds Issued", amount: `$${Number(metrics.refundsIssued || 0).toFixed(2)} CAD` },
+          { title: "Pending Transactions", amount: metrics.pendingTransactions },
+        ].map((card, index) => (
+          <Col lg={6} sm={12} xs={24} key={card.title}>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut", delay: 0.08 * index }}
+            >
+              <InfoCards title={card.title} amount={card.amount} />
+            </motion.div>
+          </Col>
+        ))}
       </Row>
-      </Reveal>
 
+      <Reveal immediate delay={0.2}>
       <Row className='mt-6' gutter={[15, 15]}>
         <WorkerComponent 
           isDashboard
         />
       </Row>
+      </Reveal>
 
     </ClientContainer>
   )

@@ -29,7 +29,7 @@ const InfoCards = ({
         <div  className='bg-[#FFF9FA] flex items-center justify-center !h-6 !w-6'><Image src={Lightening} alt={title} /> </div>
         
       </div>}
-      <p className='text-[36px] font-semibold' style={{color: red? "#ff0004" : ""}}>{amount}</p>
+      <p className='text-[28px] md:text-[32px] font-semibold leading-none break-words' style={{color: red? "#ff0004" : ""}}>{amount}</p>
       {info && <p className='text-[#646464] text-sm'>{info}</p>}
     </div>
   )

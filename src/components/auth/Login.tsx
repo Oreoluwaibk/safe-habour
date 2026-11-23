@@ -8,9 +8,9 @@ import Socialbtn from '../general/Socialbtn';
 import { LinkedinFilled } from '@ant-design/icons';
 import { login, loginAction } from '@/redux/action/auth';
 import { createErrorMessage } from '../../../utils/errorInstance';
-import { useAppDispatch, useAppSelector } from '@/hook';
+import { useAppDispatch } from '@/hook';
 import { useRouter } from 'next/navigation';
-import { setLastRoute } from '@/redux/reducer/auth/auth';
+import { clearLastRoute, readLastRoute } from '../../../utils/session';
 import TwoFaModal from '../general/modal/TwoFaModal';
 
 const FormItem = Form.Item;
@@ -20,7 +20,6 @@ const Login = () => {
     const [ rememberMe, setRememberMe ] = useState(false);
     const { modal, message } = App.useApp();
     const [isPending, startTransition] = useTransition();
-    const { lastRoute } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [ open2FAModal, setOpen2FAModal ] = useState(false);
@@ -52,12 +51,13 @@ const Login = () => {
                 if (rememberMe)  localStorage.setItem("safehabour_credentials", JSON.stringify({ email, password }));
                 else  localStorage.removeItem("safehabour_credentials");
 
-                const result = await dispatch(loginAction(res.data.data));
+                await dispatch(loginAction(res.data.data));
                 
                 const role = res.data.data?.roles?.[0];
-                if (lastRoute) {
-                    router.push(lastRoute);
-                    dispatch(setLastRoute(null)); 
+                const returnTo = readLastRoute();
+                if (returnTo) {
+                    clearLastRoute();
+                    router.push(returnTo);
                 } 
                 else if (role === "ClientUser"){  
                     if(!isActive) {

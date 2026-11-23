@@ -19,6 +19,7 @@ import { NotificationBell } from "../notification/NotificationBell";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { logoutUser } from "@/redux/reducer/auth/auth";
 import moment from "moment";
+import { motion } from "framer-motion";
 
 const { Content, Header } = Layout;
 
@@ -44,7 +45,7 @@ const ClientContainer = ({
     const [open, setOpen] = useState(false);
     const [ openJobModal, setOpenJobModal ] = useState(false);
     const [ showNotification, setShowNotification ] = useState(false);
-    const { isAuthenticated, loginType, tokenExpiry } = useAppSelector(state => state.auth);
+    const { isAuthenticated, loginType } = useAppSelector(state => state.auth);
     const { authentication } = useAuthentication();
     const [ isPending, startTransition ] = useTransition();
     const [ loading, setLoading ] = useState(false);
@@ -102,16 +103,8 @@ const ClientContainer = ({
     }
 
     useEffect(() => {
-        if (!isAuthenticated) handleLogout();
-    }, [isAuthenticated, handleLogout]);
-    
-    useEffect(() => {
-        if (tokenExpiry) {
-            const expiryTime = new Date(tokenExpiry).getTime();
-            const currentTime = Date.now();
-            if (expiryTime < currentTime) handleLogout();
-        }
-    }, [tokenExpiry])
+        if (!isAuthenticated) router.replace("/auth/login");
+    }, [isAuthenticated, router]);
 
     useEffect(() => {
         if(isAuthenticated && loginType !== "ClientUser") {
@@ -134,44 +127,47 @@ const ClientContainer = ({
      <Layout >
         <Layout>
             <Content className="bg-white">
-                <Header className="client-nav prim-bg bg-white" >
-                    <div className='flex items-center justify-between w-[50%]'>
-                        <Link href="/dashboard/client" className=''>
+                <Header className="client-nav client-bar prim-bg bg-white sticky top-5 z-30" >
+                    <div className='flex items-center justify-start min-w-0'>
+                        <Link href="/dashboard/client" className='shrink-0 flex items-center'>
                         <Image 
                             src={Logo}
                             alt='Safe Habour'
-                            className="bg-white md:hidden mt-8"
+                            className="bg-white md:hidden h-8 w-auto"
                         />
                         <Image 
                             src={MaskedLogo}
                             alt='Safe Habour'
-                            className="md:block"
+                            className="hidden md:block h-8 w-auto"
                         />
 
                         </Link>
-                       
+                    </div>
 
-                        <div className="md:flex items-center gap-8 hidden">
+                    <div className="client-nav-links hidden md:flex items-center justify-center">
+                        <motion.div
+                            className="flex items-center gap-3 xl:gap-6"
+                            initial={{ opacity: 0, y: -8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.35, ease: "easeOut" }}
+                        >
                             <NavItem href="/dashboard/client" label="Dashboard" active={active === 'Dashboard'} /> 
                             <NavItem href="/dashboard/client/worker" label="Worker" active={active === 'Worker'} /> 
                             <NavItem href="/dashboard/client/wallet" label="Wallet" active={active === 'Wallet'} /> 
                             <NavItem href="/dashboard/client/message" label="Messages" active={active === 'Messages'} /> 
                             <NavItem href="/dashboard/client/profile" label="Profile" active={active === 'Profile'} /> 
-                        </div>
+                        </motion.div>
                     </div>
                     
 
-                    <div className='hidden md:flex items-center gap-4'>
-                        {/* <div className="icon-div icon-bg">
-                            <SearchOutlined className="!text-white !text-lg" />
-                        </div> */}
+                    <div className='hidden md:flex items-center justify-end gap-3'>
                         <NotificationToast />
-                        <div className="mt-2">
+                        <div className="flex items-center">
                             <NotificationBell />
                         </div>
                         <Button 
                             type='primary' 
-                            className='!h-[50px] w-[160px] !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' 
+                            className='!h-[44px] !px-4 !rounded-[50px] !bg-white color-bg !font-medium hover:!text-[#670316]' 
                             onClick={handlePostJob}>
                                 <PlusOutlined className="" /> 
                                 Post a Job
@@ -180,12 +176,11 @@ const ClientContainer = ({
                         <Button type='text' className="text-white! text-xs!" loading={loading} onClick={handleAskLogout}>Logout</Button>
                     </div>
 
-                    <div className='flex md:hidden items-center gap-2'>
-                        {/* <SearchOutlined className="!text-black !text-lg" /> */}
-                        <div className="mt-2">
+                    <div className='flex md:hidden items-center justify-end gap-2'>
+                        <div className="flex items-center">
                             <NotificationBell />
                         </div>
-                        {<MenuOutlined className='md:!hidden text-2xl' onClick={() => setOpen(!open)} />}
+                        {<MenuOutlined className='md:!hidden text-2xl !text-[#1E1E1E]' onClick={() => setOpen(!open)} />}
                     </div>
 
                 </Header>
@@ -197,9 +192,14 @@ const ClientContainer = ({
                             notification={notification}
                         />
                     </div>}
-                    <div className="md:px-[50px] px-4">
+                    <motion.div
+                        className="client-shell md:px-[50px] px-4 pb-8"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.45, ease: "easeOut" }}
+                    >
                     {children}
-                    </div>   
+                    </motion.div>   
                 </Layout>
                 {open && <ClientSidemenu loading={loading || isPending} 
                         handleLogout={handleAskLogout} openJob={() => setOpenJobModal(true)} active={active} open={open} onCancel={() => setOpen(false)} />}

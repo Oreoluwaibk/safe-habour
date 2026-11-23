@@ -10,6 +10,51 @@
     /* width: 100%; */
 }
 
+.client-nav.client-bar.ant-layout-header {
+    height: auto !important;
+    min-height: 80px;
+    line-height: normal !important;
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px !important;
+    overflow: visible;
+}
+
+@media (min-width: 768px) {
+    .client-nav.client-bar.ant-layout-header {
+        grid-template-columns: 1fr auto 1fr;
+    }
+}
+
+.client-bar .menu-link {
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.client-shell .ant-card-head {
+    height: auto;
+    min-height: 56px;
+}
+
+.client-shell .ant-card-head-wrapper {
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.client-shell .ant-card-head-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    flex: 1 1 220px;
+}
+
+.client-shell .ant-card-extra {
+    margin-inline-start: auto;
+    white-space: normal;
+}
+
 .icon-div {
     height: 26px;
     width: 26px;
@@ -75,9 +120,14 @@
 /* cards and other components */
 .info-card {
     min-height: 112px;
+    height: auto;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 /* workers component */

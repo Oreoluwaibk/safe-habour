@@ -54,7 +54,7 @@ const ClientSidemenu = ({
                 <NavItem href="/dashboard/client" label="Dashboard" active={active === 'Dashboard'} /> 
                 <NavItem href="/dashboard/client/worker" label="Worker" active={active === 'Worker'} /> 
                 <NavItem href="/dashboard/client/wallet" label="Wallet" active={active === 'Wallet'} /> 
-                <NavItem href="/dashboard/client/messages" label="Messages" active={active === 'Messages'} /> 
+                <NavItem href="/dashboard/client/message" label="Messages" active={active === 'Messages'} /> 
                 <NavItem href="/dashboard/client/profile" label="Profile" active={active === 'Profile'} /> 
             </div>
 
